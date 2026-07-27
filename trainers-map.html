@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Trainer · Art of Breath</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+<style>
+  :root {
+    /* ---- Surface & ink (primary neutrals) ---- */
+    --bg:          #F3F0EC;
+    --bg-sink:     #EDE9E3;
+    --card:        #FBFAF7;
+    --ink:         #383530;
+    --muted:       #7C705C;
+    --faint:       #8D8271;
+    --inverse:     #F2EEE9;
+    --line:        #E1DBD1;
+    --line-soft:   #EAE6DF;
+
+    /* ---- Accent & action ---- */
+    --accent:      #B45C43;
+    --btn:         #6B6150;
+    --btn-hover:   #5B5244;
+
+    /* ---- Radii ---- */
+    --r-card:  18px;
+    --r-btn:   18px;
+    --r-input: 18px;
+    --r-tab:   9px;
+    --r-pill:  999px;
+
+    /* ---- Type ---- */
+    --serif: 'Athelas', 'Playfair Display', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+    --sans:  'Raleway', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    /* ---- Shadow (very soft) ---- */
+    --shadow:   0 1px 2px rgba(56,53,48,.04), 0 14px 30px -20px rgba(56,53,48,.28);
+    --shadow-h: 0 2px 4px rgba(56,53,48,.05), 0 22px 44px -22px rgba(56,53,48,.34);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-weight: 400; font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  a { color: inherit; }
+  button { font-family: inherit; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(243,240,236,.92); border-bottom: 1px solid var(--line);
+  }
+  @supports (backdrop-filter: blur(6px)) {
+    .nav { backdrop-filter: saturate(1.1) blur(8px); background: rgba(243,240,236,.82); }
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+  .brand .mark { width: 30px; height: 30px; display: block; color: var(--ink); }
+  .brand-name { font-family: var(--serif); font-weight: 600; font-size: 20px; letter-spacing: .01em; line-height: 1; }
+  .nav-links { display: flex; align-items: center; gap: 6px; }
+  .nav-link {
+    font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    padding: 9px 16px; border-radius: var(--r-tab);
+    background: transparent; border: 0; cursor: pointer; position: relative;
+    transition: color .2s ease, background .2s ease;
+  }
+  .nav-link:hover { color: var(--ink); background: rgba(124,112,92,.10); }
+  .nav-link.is-active { color: var(--ink); }
+  .nav-link.is-active::after {
+    content: ""; position: absolute; left: 16px; right: 16px; bottom: 3px;
+    height: 2px; border-radius: 2px; background: var(--accent);
+  }
+
+  /* ============ HEADER ============ */
+  .header { padding: 64px 0 26px; }
+  .eyebrow {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .28em; color: var(--muted); margin: 0 0 22px;
+  }
+  .header h1 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(34px, 5vw, 54px); line-height: 1.1; letter-spacing: .005em;
+    margin: 0; max-width: 16ch; color: var(--ink);
+  }
+  .header h1 em { font-style: italic; color: var(--muted); }
+  .header .lede {
+    margin: 22px 0 0; max-width: 58ch; font-size: 18px; line-height: 1.7;
+    color: var(--muted); font-weight: 400;
+  }
+
+  /* ============ CONTROLS ============ */
+  .controls {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px;
+    padding: 8px 0 18px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: inherit; font-size: 12.5px; font-weight: 600; letter-spacing: .01em;
+    color: var(--muted); background: transparent;
+    border: 1px solid var(--line); border-radius: var(--r-pill);
+    padding: 8px 15px; cursor: pointer;
+    transition: color .18s ease, background .18s ease, border-color .18s ease;
+  }
+  .chip:hover { color: var(--ink); border-color: #D2C8BC; }
+  .chip.on { color: var(--inverse); background: var(--btn); border-color: var(--btn); }
+  .chip:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,112,92,.28); }
+
+  .plz { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .plz label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .16em; color: var(--faint); }
+  .plz-field {
+    display: flex; align-items: center; background: var(--card);
+    border: 1px solid var(--line); border-radius: var(--r-input); overflow: hidden;
+    transition: border-color .18s ease, box-shadow .18s ease;
+  }
+  .plz-field:focus-within { border-color: var(--muted); box-shadow: 0 0 0 3px rgba(124,112,92,.14); }
+  .plz-field.err { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(180,92,67,.16); }
+  .plz-field input {
+    border: 0; background: transparent; outline: none;
+    padding: 10px 6px 10px 15px; width: 116px; font-family: inherit; font-size: 14px;
+    color: var(--ink); font-variant-numeric: tabular-nums;
+  }
+  .plz-field input::placeholder { color: var(--faint); }
+  .plz-field button {
+    border: 0; background: transparent; cursor: pointer; color: var(--muted);
+    padding: 0 13px; height: 40px; display: grid; place-items: center;
+    transition: color .18s ease;
+  }
+  .plz-field button:hover { color: var(--ink); }
+  .plz-field button svg { width: 17px; height: 17px; }
+
+  /* ============ MAP ============ */
+  .map-card {
+    position: relative; border-radius: var(--r-card); overflow: visible;
+    border: 1px solid var(--line); box-shadow: var(--shadow);
+    height: clamp(430px, 72vh, 780px); background: var(--land, #E4DDD6);
+  }
+  /* #map (not .map-card) clips the tiles to rounded corners, so the trainer card
+     can be centered on the map and overflow the frame without being clipped. */
+  #map { position: absolute; inset: 0; border-radius: var(--r-card); overflow: hidden;
+         opacity: 0; transition: opacity .8s ease; }
+  #map.is-ready { opacity: 1; }
+  .map-cap {
+    margin: 16px 2px 0; font-size: 13px; letter-spacing: .02em; color: var(--faint);
+    display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+  }
+  .map-cap b { color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .map-cap .sep { color: var(--line); }
+
+  /* Pins (MapLibre markers) */
+  /* NB: MapLibre positions the marker element via position:absolute — do NOT set
+     position on .pin, or markers fall into flow and drift. The absolute .pin-label
+     already anchors correctly to the absolutely-positioned marker. */
+  .pin { display: block; cursor: pointer; border: 0; background: none; padding: 0; --s: 1; }
+  .pin .pin-dot {
+    display: block; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--accent); border: 3px solid var(--card);
+    box-shadow: 0 2px 5px rgba(56,53,48,.38);
+    transform: scale(var(--s));
+    transition: transform .2s ease, background .16s ease, box-shadow .16s ease, filter .16s ease;
+  }
+  .pin.duo .pin-dot { box-shadow: 0 0 0 3px rgba(180,92,67,.28), 0 2px 5px rgba(56,53,48,.38); }
+  /* Filter emphasis: matching pins grow, non-matching shrink. --s drives dot size;
+     later rules win when several apply (equal specificity → source order). */
+  .pin.match { --s: 1.4; }
+  .pin.dim   { --s: .5; opacity: .3; pointer-events: none; }
+  .pin:hover, .pin.hot { --s: 1.55; }
+  .pin.active { --s: 1.6; }
+  .pin .pin-label {
+    position: absolute; bottom: 100%; left: 50%; transform: translate(-50%, -7px);
+    white-space: nowrap;
+    font-family: var(--serif); font-size: 15px; font-weight: 500; letter-spacing: .005em;
+    color: var(--ink); background: var(--card);
+    padding: 7px 15px; border-radius: 12px; border: 1px solid var(--line);
+    opacity: 0; pointer-events: none; transition: opacity .14s ease;
+    box-shadow: 0 12px 26px -12px rgba(56,53,48,.5);
+  }
+  .pin:hover .pin-dot, .pin.hot .pin-dot { background: #984F3B; }
+  .pin.active .pin-dot {
+    background: #7D4332;
+    box-shadow: 0 0 0 4px rgba(180,92,67,.24), 0 2px 6px rgba(56,53,48,.42);
+  }
+  .pin:hover .pin-label, .pin.hot .pin-label, .pin.active .pin-label { opacity: 1; }
+  .pin:focus-visible { outline: none; }
+  .pin:focus-visible .pin-dot { box-shadow: 0 0 0 3px rgba(180,92,67,.5); }
+  .pin.dim .pin-dot { filter: grayscale(.6); }
+  .pin.dim .pin-label { display: none; }
+
+  /* Floating trainer card + scrim — centered over the map card */
+  .scrim {
+    position: absolute; inset: 0; z-index: 5; border-radius: var(--r-card);
+    background: rgba(40,37,33,.34); opacity: 0; pointer-events: none;
+    transition: opacity .22s ease;
+  }
+  @supports (backdrop-filter: blur(2px)) { .scrim { backdrop-filter: blur(3px); } }
+  .scrim.show { opacity: 1; pointer-events: auto; }
+  .tcard {
+    position: absolute; z-index: 6; left: 50%; top: 50%;
+    transform: translate(-50%, -48%) scale(.98); opacity: 0; pointer-events: none;
+    width: min(460px, calc(100% - 40px));
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card);
+    box-shadow: var(--shadow-h); overflow: hidden;
+    transition: opacity .22s ease, transform .22s ease;
+  }
+  .tcard.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+  .tcard-body { position: relative; padding: 30px; }
+  /* Portrait banner (experimental — gated by SHOW_PHOTOS in the script) */
+  .tcard-photo { position: relative; width: 100%; height: 320px; background: var(--bg-sink); }
+  .tcard-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block; }
+  /* Duo: the two portraits share the banner, split down the middle. */
+  .tcard-photo.duo { display: flex; gap: 2px; }
+  .tcard-photo.duo img { width: 50%; }
+  .photo-fade {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 62px; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(251,250,247,0), var(--card));
+  }
+  .tcard.has-photo .tcard-body { padding-top: 10px; }
+  .tcard-titles { margin-bottom: 16px; }
+  @media (max-height: 680px) { .tcard-photo { height: 220px; } }
+  .tcard-body .wm {
+    position: absolute; right: -8px; bottom: -12px; width: 140px; height: 140px;
+    color: var(--ink); opacity: .05; pointer-events: none;
+  }
+  .tcard-close {
+    position: absolute; top: 16px; right: 16px; z-index: 2;
+    width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer;
+    background: rgba(124,112,92,.10); color: var(--muted);
+    display: grid; place-items: center; transition: background .18s ease, color .18s ease;
+  }
+  .tcard-close:hover { background: rgba(124,112,92,.18); color: var(--ink); }
+  .tcard.has-photo .tcard-close { background: rgba(40,37,33,.42); color: #F5F1EC; }
+  .tcard.has-photo .tcard-close:hover { background: rgba(40,37,33,.58); color: #fff; }
+  .tcard-close svg { width: 16px; height: 16px; }
+  .tcard-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; position: relative; z-index: 1; }
+  .avatar { flex: none; position: relative; width: 52px; height: 52px; }
+  .mono {
+    position: absolute; inset: 0; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--serif); font-weight: 600; font-size: 19px; letter-spacing: .01em;
+  }
+  .avatar.duo { width: 78px; }
+  .avatar.duo .mono { width: 48px; height: 48px; border: 2px solid var(--card); }
+  .avatar.duo .mono.m1 { left: 0; top: 2px; z-index: 2; }
+  .avatar.duo .mono.m2 { right: 0; top: 2px; left: auto; z-index: 1; font-size: 17px; }
+  .mono-a { background: #E4DDD6; color: #776B5C; }
+  .mono-b { background: #DED9D0; color: #5B5244; }
+  .mono-c { background: #EAE5DE; color: #857E72; }
+  .mono-d { background: #E2DFD3; color: #756F54; }
+  .tcard-name { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1.15; color: var(--ink); margin: 0 0 4px; }
+  .tcard-city { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); letter-spacing: .02em; }
+  .tcard-city svg { width: 12px; height: 12px; color: var(--faint); }
+  .duo-badge {
+    display: inline-block; margin-left: 9px; vertical-align: middle;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--faint); border: 1px solid var(--line); border-radius: var(--r-pill); padding: 2px 8px;
+  }
+  .tcard-bio { position: relative; z-index: 1; font-size: 15px; line-height: 1.62; color: var(--muted); margin: 0 0 18px; }
+  .tcard-tags { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 22px; }
+  .tag { font-size: 11px; font-weight: 600; letter-spacing: .02em; padding: 5px 11px; border-radius: var(--r-pill); white-space: nowrap; }
+  .cta {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 13px 22px; border-radius: var(--r-btn);
+    background: var(--btn); color: var(--inverse);
+    font-size: 14px; font-weight: 600; letter-spacing: .03em;
+    text-decoration: none; border: 0; cursor: pointer; transition: background .2s ease;
+  }
+  .cta:hover { background: var(--btn-hover); }
+  .cta:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,112,92,.4); }
+  .cta svg { width: 15px; height: 15px; }
+  /* Duo cards show one button per person, side by side (wrapping if tight). */
+  .tcard-ctas { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 10px; }
+  .cta-split { flex: 1 1 160px; justify-content: center; padding: 12px 16px; font-size: 13px; }
+
+  /* ============ FOOTER ============ */
+  .foot { border-top: 1px solid var(--line); background: var(--bg-sink); margin-top: 72px; }
+  .foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 34px 0; }
+  .foot .mark { width: 26px; height: 26px; color: var(--muted); display: block; }
+  .foot small { color: var(--faint); font-size: 12.5px; letter-spacing: .03em; }
+
+  /* ============ MapLibre control restyling (quiet, on-brand) ============ */
+  .maplibregl-ctrl-group {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px !important; box-shadow: var(--shadow); overflow: hidden;
+  }
+  .maplibregl-ctrl-group button + button { border-top: 1px solid var(--line-soft); }
+  .maplibregl-ctrl-group button { width: 34px; height: 34px; }
+  .maplibregl-ctrl-attrib.maplibregl-compact { background: rgba(251,250,247,.82); border-radius: var(--r-pill); }
+  .maplibregl-ctrl-attrib { font-family: var(--sans); font-size: 10px; }
+  .maplibregl-ctrl-attrib a { color: var(--faint); }
+  .maplibregl-ctrl-bottom-right { margin: 0 10px 10px 0; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 720px) {
+    .plz { margin-left: 0; width: 100%; }
+    .plz-field { flex: 1 1 auto; }
+    .plz-field input { width: 100%; }
+    .map-card { height: clamp(400px, 64vh, 620px); }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 20px; }
+    .nav-inner { height: 62px; }
+    .brand-name { display: none; }
+    .nav-links { gap: 2px; }
+    .nav-link { padding: 8px 12px; font-size: 12px; letter-spacing: .04em; }
+    .nav-link.is-active::after { left: 12px; right: 12px; bottom: 2px; }
+    .header { padding: 44px 0 22px; }
+    .foot-inner { flex-direction: column; text-align: center; gap: 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="index.html">
+        <span class="mark" data-seal aria-hidden="true"></span>
+        <span class="brand-name">Art of Breath</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="index.html">Startseite</a>
+        <a class="nav-link is-active" href="trainers-map.html" aria-current="page">Trainer</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HEADER ============ -->
+  <header class="header">
+    <div class="wrap">
+      <p class="eyebrow">Art&nbsp;of&nbsp;Breath · Trainer</p>
+      <h1>Finde jemanden <em>in deiner Nähe.</em></h1>
+      <p class="lede">
+        Die Art of Breath Trainer arbeiten in Deutschland und der Schweiz. Wähle einen Schwerpunkt oder gib deine
+        Postleitzahl ein, und finde auf der Karte die Begleitung, die zu dir passt.
+      </p>
+    </div>
+  </header>
+
+  <!-- ============ MAP SECTION ============ -->
+  <main class="wrap">
+    <div class="controls">
+      <div class="chips" id="chips"></div>
+      <form class="plz" id="plz-form">
+        <label for="plz-input">Postleitzahl</label>
+        <div class="plz-field" id="plz-field">
+          <input id="plz-input" name="plz" inputmode="numeric" autocomplete="postal-code"
+                 maxlength="5" placeholder="z. B. 10115" aria-label="Postleitzahl eingeben" />
+          <button type="submit" aria-label="Zur Postleitzahl springen">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.2-3.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="map-card">
+      <div id="map"></div>
+      <div class="scrim" id="scrim"></div>
+      <div class="tcard" id="tcard" role="dialog" aria-modal="true" aria-label="Trainer-Profil"></div>
+    </div>
+
+    <p class="map-cap">
+      <span>Bewege die Karte, zoome hinein und wähle einen Trainer.</span>
+      <span class="sep">·</span>
+      <span><b id="stat-tr">12</b> Trainer</span>
+      <span class="sep">·</span>
+      <span>Deutschland &amp; Schweiz</span>
+    </p>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span class="mark" data-seal aria-hidden="true"></span>
+      <small>Art of Breath · Trainer-Ausbildung · Karte © OpenStreetMap-Mitwirkende</small>
+    </div>
+  </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+  /* ---- Brand marks & icons ---- */
+  const SEAL = '<svg viewBox="0 0 1080 1080" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M600.311 924.135C547.881 924.666 496.585 925.201 445.289 925.723C421.337 925.967 397.383 926.113 373.432 926.435C339.253 926.895 305.057 928.375 270.902 927.694C247.5 927.227 224.101 924.288 200.814 921.502C191.903 920.436 183.024 917.432 174.626 914.072C154.447 906 142.886 890.815 141.727 868.973C140.842 852.283 140.858 835.51 141.281 818.795C141.788 798.705 143.291 778.643 144.113 758.558C145.508 724.456 147.645 690.347 147.7 656.238C147.746 627.844 145.199 599.447 143.898 571.047C143.117 554.001 142.206 536.951 141.941 519.894C141.7 504.456 148.564 495.41 163.633 492.371C175.087 490.061 186.872 488.573 198.543 488.327C232.756 487.606 266.996 488.09 301.207 487.313C323.156 486.814 345.066 484.759 367.008 483.714C379.531 483.117 392.083 482.99 404.624 482.926C427.828 482.808 451.034 482.892 474.239 482.892C477.933 482.892 481.627 482.892 485.44 482.892C485.015 462.328 484.5 443.054 484.299 423.778C484.249 418.902 485.347 414.025 485.661 409.131C486.201 400.696 491.448 396.853 499.014 396.301C511.474 395.392 524.012 394.41 536.465 394.876C548.91 395.343 561.278 397.669 573.702 398.963C588.093 400.463 591.316 405.454 590.738 419.571C589.861 441.004 590.509 462.5 590.509 484.699C605.573 485.117 619.155 485.505 632.737 485.86C635.398 485.93 638.063 485.827 640.725 485.877C668.436 486.395 696.149 487.465 723.855 487.318C756.881 487.143 789.905 486.033 822.923 485.125C842.638 484.582 862.343 483.027 882.05 483.079C899.898 483.126 916.534 487.432 929.549 501.29C940.461 512.908 943.211 527.349 944.43 542.128C945.955 560.635 946.698 579.226 947.15 597.796C948.045 634.598 948.947 671.41 948.999 708.219C949.035 733.252 947.213 758.284 947.03 783.322C946.922 798.081 949.425 812.893 948.841 827.605C948.335 840.343 946.473 853.371 942.863 865.576C932.8 899.6 904.841 920.629 869.413 921.763C841.714 922.65 813.997 923.192 786.285 923.381C724.673 923.801 663.059 923.903 600.311 924.135ZM808.583 556.705C791.923 557.446 775.258 558.908 758.603 558.814C639.624 558.145 520.632 560.692 401.66 556.838C364.071 555.62 326.397 556.113 288.786 556.946C276.093 557.228 263.19 559.966 250.908 563.437C239.331 566.709 234.218 575.467 234.475 586.465C234.765 598.916 233.14 611.415 232.274 623.888C230.308 652.213 227.991 680.519 226.469 708.868C225.945 718.642 227.221 728.529 227.908 738.348C229.626 762.914 231.303 787.486 233.417 812.019C233.86 817.156 234.96 822.899 237.721 827.061C250.853 846.853 269.027 860.14 292.576 864.517C300.909 866.065 309.773 864.646 318.391 864.792C346.099 865.26 373.802 866.049 401.511 866.294C431.557 866.561 461.61 866.573 491.654 866.229C501.083 866.121 510.557 864.917 519.901 863.494C543.023 859.971 565.823 855.931 589.633 856.71C617.955 857.636 646.395 854.014 674.802 853.604C699.446 853.249 724.153 853.968 748.763 855.406C777.854 857.106 806.377 853.667 834.674 847.879C849.655 844.815 858.645 834.201 857.986 818.718C857.519 807.731 858.574 796.687 858.445 785.675C858.379 780.039 857.351 774.393 856.5 768.791C854.821 757.742 847.827 750.885 837.538 748.379C827.677 745.977 817.394 743.93 807.315 744.015C693.719 744.978 580.075 740.809 466.516 747.422C446.913 748.564 427.11 746.391 407.404 745.633C394.186 745.124 382.204 740.635 370.988 733.838C363.554 729.334 361.399 726.053 363.715 717.982C369.722 697.047 380.719 679.151 398.273 665.769C403.003 662.164 408.146 660.744 414.306 662.539C422.296 664.868 430.447 667.483 438.661 668.048C466.253 669.942 493.897 671.909 521.534 672.128C562.166 672.449 602.817 670.578 643.446 670.983C676.426 671.311 709.302 667.551 742.336 669.845C760.126 671.08 778.074 670.041 795.95 670.072C811.937 670.099 826.602 665.234 840.387 657.64C850.786 651.911 856.926 642.313 857.489 630.891C858.215 616.181 857.255 601.329 856.141 586.604C855.069 572.439 846.712 563.704 832.946 560.605C825.594 558.95 818.05 558.147 808.583 556.705Z"/><path d="M237.309 285.627C236.407 293.197 234.31 300.25 235.655 306.57C240.13 327.603 240.212 348.78 240.025 370.053C239.92 381.841 239.751 393.638 240.072 405.418C240.401 417.516 234.314 425.45 224.506 431.222C214.113 437.337 202.736 439.975 190.777 440.221C183.935 440.362 177.086 440.306 170.242 440.237C154.976 440.085 141.383 428.034 141.365 412.718C141.335 387.689 142.406 362.652 143.381 337.633C144.076 319.834 145.113 302.038 146.476 284.277C148.042 263.876 149.772 243.489 158.544 224.46C170.07 199.458 188.062 183.451 216.556 181.551C228.649 180.745 240.741 179.664 252.848 179.394C295.364 178.445 337.889 177.914 380.406 176.981C402.017 176.507 423.623 175.641 445.222 174.724C478.546 173.311 511.861 171.657 545.183 170.192C564.501 169.343 583.824 168.574 603.149 167.932C628.935 167.075 654.726 166.378 680.514 165.611C705.922 164.856 731.327 163.91 756.74 163.391C791.663 162.678 826.598 161.75 861.518 162.062C873.051 162.165 884.84 164.835 895.999 168.091C912.167 172.809 922.839 184.251 925.79 200.909C929.084 219.507 932.487 238.366 932.718 257.15C932.971 277.871 930.192 298.696 927.765 319.362C925.795 336.147 925.571 352.623 929.875 369.054C933.826 384.135 937.085 399.287 936.23 415.091C935.477 429.01 929.398 437.969 915.545 439.433C898.274 441.257 880.773 441.03 863.365 441.34C856.575 441.461 849.764 440.259 842.969 440.327C833.125 440.427 827.081 435.448 824.28 426.662C820.332 414.277 818.472 401.337 820.041 388.475C823.797 357.672 828.453 326.98 832.533 296.215C833.329 290.214 833.414 284.083 833.378 278.015C833.317 267.66 829.59 262.502 819.34 260.39C810.472 258.562 801.361 257.593 792.309 257.051C765.079 255.42 737.804 254.504 710.586 252.723C660.502 249.444 610.393 249.626 560.267 250.846C536.757 251.418 513.249 252.173 489.752 253.124C455.282 254.52 420.711 254.932 386.386 258.021C344.186 261.819 302.185 267.866 260.121 273.119C251.346 274.215 242.89 276.514 237.309 285.627Z"/></svg>';
+  const MARKER = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.686-7-11a7 7 0 1114 0c0 5.314-7 11-7 11z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.8"/></svg>';
+  const CLOSE = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const ARROW = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  /* ---- Tag taxonomy (from trainers/README.md). Full labels go on the card,
+     short labels on the filter chips. `one-to-one` is left out of the filters
+     because every trainer carries it, so it never narrows the map. ---- */
+  const TAGS = {
+    'one-to-one': '1:1 Sessions',
+    'groups-circles': 'Gruppen & Kreise',
+    'training-mentoring': 'Ausbildung & Mentoring',
+    'trauma-informed': 'Traumasensibel',
+    'nervous-system-somatics': 'Nervensystem & Körper',
+    'coaching': 'Coaching & Entwicklung',
+    'retreats': 'Retreats',
+    'yoga-meditation': 'Yoga & Meditation',
+    'business-leadership': 'Business & Leadership',
+    'ceremony-spirituality': 'Zeremonie & Spiritualität',
+    'psychedelic-integration': 'Psychedelische Integration',
+    'clinical-background': 'Klinischer Hintergrund',
+    'women-motherhood': 'Frauen & Mutterschaft',
+    'sound-creative': 'Klang & kreativer Ausdruck',
+    'online': 'Online',
+  };
+  const FILTER_TAGS = ['training-mentoring', 'trauma-informed', 'coaching',
+    'retreats', 'yoga-meditation', 'business-leadership', 'ceremony-spirituality',
+    'psychedelic-integration', 'clinical-background', 'women-motherhood',
+    'sound-creative', 'online'];
+  const TAG_SHORT = {
+    'groups-circles': 'Gruppen', 'training-mentoring': 'Ausbildung',
+    'trauma-informed': 'Traumasensibel', 'nervous-system-somatics': 'Nervensystem',
+    'coaching': 'Coaching', 'retreats': 'Retreats', 'yoga-meditation': 'Yoga',
+    'business-leadership': 'Business', 'ceremony-spirituality': 'Zeremonie',
+    'psychedelic-integration': 'Psychedelisch', 'clinical-background': 'Klinisch',
+    'women-motherhood': 'Frauen', 'sound-creative': 'Klang', 'online': 'Online',
+  };
+  const TAG_STYLE = {
+    'one-to-one': ['#E4DDD6', '#5D5348'], 'groups-circles': ['#E2DFD3', '#5B5642'],
+    'training-mentoring': ['#E9DBC4', '#866530'], 'trauma-informed': ['#E9D2CA', '#7D4332'],
+    'nervous-system-somatics': ['#DDE0D5', '#4E5646'], 'coaching': ['#E7E4E0', '#635E59'],
+    'retreats': ['#D8CFC7', '#5C4636'], 'yoga-meditation': ['#DCE1DA', '#4C5A4C'],
+    'business-leadership': ['#E0DACB', '#6A5F3F'], 'ceremony-spirituality': ['#E7D9CE', '#7A5A3F'],
+    'psychedelic-integration': ['#D9D3CC', '#4A4238'], 'clinical-background': ['#D8D3CC', '#4A4238'],
+    'women-motherhood': ['#EAD5D0', '#8A5347'], 'sound-creative': ['#E5DBDE', '#6B5560'],
+    'online': ['#DDE2E4', '#4F5A5E'],
+  };
+
+  /* ---- Trainer roster (from trainers/*.md). Bios condensed and translated to
+     German from each trainer's own intro. Coordinates are approximate town
+     centres; the two Leipzig and two Berlin pins are nudged apart so they do
+     not overlap. Carmen has no fixed base (she calls herself a nomad), so her
+     pin sits on the training venue she names, the Seminar- und Ferienhotel
+     Idyll in Gais AR. `img: null` falls back to a monogram card. ---- */
+  const TRAINERS = [
+    { id: 'antonia-gehrke', city: 'Hannover', lon: 9.732, lat: 52.375,
+      people: [{ name: 'Antonia Gehrke', website: 'https://breathwork-hannover.com', img: 'trainers/images/cards/antonia-gehrke.jpg' }],
+      tags: ['training-mentoring', 'coaching'],
+      bio: 'Antonia arbeitet mit dem, was der Kopf allein nicht erreicht: Erlebtes sitzt im Körper, im Nervensystem, bis in die Zellen. Sie verbindet Atemarbeit mit Coaching in 1:1-Sessions, hält Gruppen in Hannover und bildet in eigenen Programmen aus.' },
+    { id: 'berlin-duo', city: 'Berlin', lon: 13.420, lat: 52.517,
+      people: [
+        { name: 'Aris Pandelis', website: 'https://www.arispandelisbreathwork.de', img: 'trainers/images/cards/aris-pandelis.jpg' },
+        { name: 'Jana Meinel', website: 'https://www.holistic-psychotherapy.de', img: 'trainers/images/cards/jana-meinel.jpg' },
+      ],
+      tags: ['ceremony-spirituality', 'psychedelic-integration', 'trauma-informed', 'clinical-background', 'sound-creative'],
+      bio: 'Ein Berliner Duo mit zwei Zugängen zur selben Arbeit. Aris bringt Atem, Bewegung und Klang aus über fünfzehn Jahren Praxis, dazu Retreats und Zeremonienerfahrung. Jana ist klinische Psychologin und arbeitet mit verbundenem Atmen im therapeutischen Rahmen, inklusive psychedelischer Integration. Tiefe und Sicherheit, aus zwei Perspektiven.' },
+    { id: 'carmen-strobel', city: 'Gais, Appenzellerland, CH', lon: 9.454, lat: 47.353,
+      people: [{ name: 'Carmen Strobel', website: 'https://atemcode.com', img: 'trainers/images/cards/carmen-strobel.jpg' }],
+      tags: ['training-mentoring', 'trauma-informed', 'yoga-meditation', 'retreats'],
+      bio: 'Carmen bildet Coaches und Therapeuten zu Atem-Facilitatoren aus, mit tiefer Selbsterfahrung zuerst und Technik danach. Traumasensibles Arbeiten zieht sich durch alles. Die Ausbildung läuft im Seminar- und Ferienhotel Idyll im Appenzellerland. Daneben unterrichtet sie Yoga und Meditation und leitet Retreats an wechselnden Orten.' },
+    { id: 'caroline-nyfeler', city: 'Büren an der Aare, CH', lon: 7.383, lat: 47.144,
+      people: [{ name: 'Caroline Nyfeler', website: 'https://www.carolinenyfeler.ch', img: 'trainers/images/cards/caroline-nyfeler.jpg' }],
+      tags: ['training-mentoring', 'trauma-informed', 'yoga-meditation', 'online'],
+      bio: 'Geerdet, traumasensibel, präsent, so beschreibt Caroline ihre Arbeit. Über Yoga kam sie zur Atemarbeit, ausgebildet bei Daniel Alan und lizenziert über Art of Breath. Ihre fünfmonatige Facilitator-Ausbildung stellt Selbst- und Ko-Regulation in den Mittelpunkt.' },
+    { id: 'christiane-walter', city: 'Karlsbad', lon: 8.505, lat: 48.905,
+      people: [{ name: 'Christiane Walter', website: 'https://atemtraum.de', img: 'trainers/images/cards/christiane-walter.jpg' }],
+      tags: ['training-mentoring', 'trauma-informed', 'women-motherhood'],
+      bio: 'Zwanzig Jahre war Christiane Hebamme, seit fast dreißig begleitet sie Menschen durch schwere Übergänge. Eine Atemsession sieht sie wie eine Geburt: einen Prozess, den sie halten und weisen kann, gehen musst du ihn selbst. Ihre Reihe Mutterlinien bringt Bindung und Nervensystem zusammen.' },
+    { id: 'hanna-kutschke', city: 'Augsburg', lon: 10.898, lat: 48.371,
+      people: [{ name: 'Hanna Kutschke', website: 'https://www.atemwege-breathwork.de', img: 'trainers/images/cards/hanna-kutschke.jpg' }],
+      tags: ['training-mentoring', 'trauma-informed', 'coaching', 'clinical-background'],
+      bio: 'Zwanzig Jahre in Pädagogik und Psychologie haben Hanna gelehrt: Einsicht allein verändert niemanden. Als zertifizierte Art of Breath Trainerin und Somatic-Release-Praktikerin baut sie ihre Arbeit in Stufen auf, von Kreisen über Mentoring bis zur 1:1-Begleitung.' },
+    { id: 'leipzig-duo', city: 'Leipzig', lon: 12.375, lat: 51.340,
+      people: [
+        { name: 'Emi Müller', website: 'https://emi-atmet.de', img: 'trainers/images/cards/emi-mueller.jpg', pos: '62% 30%' },
+        { name: 'Rouven Dittes', website: 'https://atemkontakt.de', img: 'trainers/images/cards/rouven-dittes.jpg' },
+      ],
+      tags: ['trauma-informed', 'ceremony-spirituality', 'psychedelic-integration', 'women-motherhood'],
+      bio: 'Ein Leipziger Duo für tiefe, traumasensible Prozessarbeit. Emi arbeitet nach Art of Breath Standard an Integration statt Optimierung, jeder Weg beginnt bei ihr mit einem freien Erstgespräch. Rouven führt mit integrativer Prozessbegleitung raus aus dem Kopf, hinein in den Körper, wo die Muster sitzen. Zwei Wege, ein Ort.' },
+    { id: 'manisha-du', city: 'Aachen', lon: 6.083, lat: 50.776,
+      people: [{ name: 'Manisha Du', website: 'https://yaohealing.me', img: 'trainers/images/cards/manisha-du.jpg' }],
+      tags: ['coaching', 'ceremony-spirituality', 'sound-creative', 'psychedelic-integration'],
+      bio: 'Manisha ist Künstlerin und Coach, und beides trennt sie in ihrer Arbeit nicht. Ihre Sessions folgen keinem festen Ablauf, sondern dem, was da ist: verbundenes Atmen, Circling, systemisches Coaching, Körperarbeit, Teezeremonie, Klang und kreativer Ausdruck über Stimme, Kunst und Musik. Sanft kann das sein, konfrontierend auch, meistens beides.' },
+    { id: 'martin-gross', city: 'Oberhaching bei München', lon: 11.594, lat: 48.023,
+      people: [{ name: 'Martin Groß', website: 'https://martingross.org', img: 'trainers/images/cards/martin-gross.jpg' }],
+      tags: ['business-leadership', 'coaching'],
+      bio: 'Martin kommt aus der Führungskräfteentwicklung, hat ein Startup gegründet und in großen Beratungen gearbeitet. Heute begleitet er Führungskräfte und Teams vom Kopf ins Herz, mit Atemarbeit für die Regulation des Nervensystems neben klassischem Coaching.' },
+    { id: 'sandra-gutheber', city: 'Obenhausen', lon: 10.205, lat: 48.285,
+      people: [{ name: 'Sandra Gutheber', website: 'https://sandragutheber.com', img: 'trainers/images/cards/sandra-gutheber.jpg' }],
+      tags: ['training-mentoring', 'coaching', 'yoga-meditation', 'ceremony-spirituality', 'sound-creative'],
+      bio: 'Sandra arbeitet mit der größten Bandbreite auf dieser Liste: Atem-Facilitatorin, Yogalehrerin, NLP-Trainerin, dazu Klang und Meditation. Ihre Linie: Veränderung beginnt dort, wo du Verantwortung für dich übernimmst, aus Selbstliebe statt Druck. Retreats in Kroatien und Österreich.' },
+  ];
+
+  /* ---- 2-digit PLZ region centroids (from the full German PLZ set) ---- */
+  const PLZ2 = {"01":[13.769,51.112],"02":[14.613,51.154],"03":[13.98,51.702],"04":[12.593,51.298],"06":[11.8,51.514],"07":[11.761,50.738],"08":[12.37,50.594],"09":[12.891,50.798],"10":[13.383,52.509],"11":[10.452,51.166],"12":[13.462,52.458],"13":[13.283,52.541],"14":[12.802,52.326],"15":[13.702,52.213],"16":[13.06,52.751],"17":[13.382,53.65],"18":[12.532,54.127],"19":[11.5,53.462],"20":[10.01,53.459],"21":[9.897,53.446],"22":[10.077,53.588],"23":[10.725,53.847],"24":[9.823,54.38],"25":[9.283,54.1],"26":[7.75,53.331],"27":[8.859,53.185],"28":[8.853,53.051],"29":[10.543,52.857],"30":[9.728,52.383],"31":[9.549,52.252],"32":[8.803,52.14],"33":[8.617,51.878],"34":[9.343,51.258],"35":[8.608,50.695],"36":[9.723,50.698],"37":[9.933,51.566],"38":[10.649,52.189],"39":[11.592,52.205],"40":[6.889,51.225],"41":[6.494,51.167],"42":[7.144,51.232],"44":[7.35,51.511],"45":[7.099,51.493],"46":[6.759,51.664],"47":[6.545,51.468],"48":[7.436,52.08],"49":[7.869,52.499],"50":[6.866,50.931],"51":[7.246,50.974],"52":[6.275,50.809],"53":[7.071,50.637],"54":[6.677,49.921],"55":[7.826,49.874],"56":[7.498,50.335],"57":[7.894,50.821],"58":[7.584,51.333],"59":[8.016,51.569],"60":[8.717,50.151],"61":[8.662,50.278],"63":[9.121,50.048],"64":[8.753,49.788],"65":[8.373,50.253],"66":[7.183,49.331],"67":[8.078,49.523],"68":[8.523,49.457],"69":[8.768,49.422],"70":[9.178,48.778],"71":[9.169,48.858],"72":[9.043,48.435],"73":[9.737,48.759],"74":[9.378,49.232],"75":[8.719,48.884],"76":[8.31,49.024],"77":[8.065,48.493],"78":[8.699,48.001],"79":[8.0,47.996],"80":[11.55,48.163],"81":[11.567,48.121],"82":[11.229,47.97],"83":[12.222,47.964],"84":[12.419,48.422],"85":[11.614,48.449],"86":[10.824,48.383],"87":[10.395,47.845],"88":[9.646,47.911],"89":[10.136,48.489],"90":[11.044,49.464],"91":[10.841,49.41],"92":[12.011,49.481],"93":[12.301,49.072],"94":[13.075,48.797],"95":[11.804,50.081],"96":[10.995,50.085],"97":[9.984,49.937],"98":[10.732,50.588],"99":[10.844,51.071]};
+
+  const MONO = ['mono-a', 'mono-b', 'mono-c', 'mono-d'];
+  const initials = (n) => n.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const esc = (s) => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // A spot holds one trainer or a duo (two). displayName joins the names.
+  // hasPhoto is true only when every person has a portrait; a solo trainer
+  // without one (img: null) falls back to an on-brand monogram card.
+  const isDuo = (t) => t.people.length > 1;
+  const displayName = (t) => t.people.map(p => p.name).join(' & ');
+  const hasPhoto = (t) => t.people.every(p => Boolean(p.img));
+
+  const activeTags = new Set();
+  let openId = null;
+  const refs = {};
+
+  /* ---- Inject seals & stats ---- */
+  document.querySelectorAll('[data-seal]').forEach(el => { el.innerHTML = SEAL; });
+  document.getElementById('stat-tr').textContent = TRAINERS.reduce((n, t) => n + t.people.length, 0);
+
+  /* ---- Map ---- */
+  const BRAND = { land: '#E4DDD6', land2: '#DED9CE', water: '#D2CBBE', border: '#A2998A', road: '#DAD3C7', building: '#DCD6CB', label: '#5B5244', halo: '#F3F0EC' };
+
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://tiles.openfreemap.org/styles/positron',
+    center: [9.9, 50.55], zoom: 4.95, minZoom: 4.5, maxZoom: 15,
+    maxBounds: [[3.5, 46.4], [17.8, 56.2]],
+    attributionControl: { compact: true },
+    cooperativeGestures: false,
+  });
+  map.dragRotate.disable();
+  map.touchZoomRotate.disableRotation();
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+  // reveal the map only after the brand recolor has painted, so the default style never flashes
+  setTimeout(() => document.getElementById('map').classList.add('is-ready'), 2500); // safety fallback
+
+  map.on('load', () => {
+    // Recolor the base map to the brand palette
+    for (const layer of map.getStyle().layers) {
+      const id = layer.id, t = layer.type;
+      const set = (p, v) => { try { map.setPaintProperty(id, p, v); } catch (e) {} };
+      try {
+        if (t === 'background') set('background-color', BRAND.land);
+        else if (t === 'fill') {
+          if (/water|ocean|sea|lake|river|bay/i.test(id)) set('fill-color', BRAND.water);
+          else if (/building/i.test(id)) { set('fill-color', BRAND.building); set('fill-opacity', 0.5); }
+          else set('fill-color', BRAND.land2);
+        } else if (t === 'line') {
+          if (/water|river|waterway|canal/i.test(id)) set('line-color', BRAND.water);
+          else if (/bound|admin|border/i.test(id)) set('line-color', BRAND.border);
+          else { set('line-color', BRAND.road); set('line-opacity', 0.55); }
+        } else if (t === 'symbol') {
+          if (/poi|aerodrome|airport|station|housenumber|continent/i.test(id)) {
+            try { map.setLayoutProperty(id, 'visibility', 'none'); } catch (e) {}
+          } else {
+            set('text-color', BRAND.label);
+            set('text-halo-color', BRAND.halo);
+            set('text-halo-width', 1.4);
+          }
+        }
+      } catch (e) {}
+    }
+    addPins();
+    map.once('idle', () => document.getElementById('map').classList.add('is-ready'));
+  });
+
+  /* ---- Pins ---- */
+  function addPins() {
+    TRAINERS.forEach(t => {
+      const el = document.createElement('button');
+      el.className = 'pin' + (isDuo(t) ? ' duo' : '');
+      el.type = 'button';
+      el.setAttribute('aria-label', displayName(t) + ', ' + t.city);
+      el.innerHTML = '<span class="pin-label">' + esc(displayName(t)) + '</span><span class="pin-dot"></span>';
+      el.addEventListener('mouseenter', () => setHot(t.id, true));
+      el.addEventListener('mouseleave', () => setHot(t.id, false));
+      el.addEventListener('focus', () => setHot(t.id, true));
+      el.addEventListener('blur', () => setHot(t.id, false));
+      el.addEventListener('click', (e) => { e.stopPropagation(); openCard(t.id); });
+      const marker = new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([t.lon, t.lat]).addTo(map);
+      refs[t.id] = { el, marker };
+    });
+    applyFilter();
+  }
+
+  function setHot(id, on) {
+    const r = refs[id]; if (r) r.el.classList.toggle('hot', on);
+  }
+
+  /* ---- Trainer card ---- */
+  const scrim = document.getElementById('scrim');
+  const tcard = document.getElementById('tcard');
+
+  function cardHTML(t) {
+    const photo = hasPhoto(t), duo = isDuo(t);
+    const name = displayName(t);
+    const tags = t.tags.map(s => {
+      const [bg, fg] = TAG_STYLE[s];
+      return '<span class="tag" style="background:' + bg + ';color:' + fg + '">' + TAGS[s] + '</span>';
+    }).join('');
+    const badge = duo ? ' <span class="duo-badge">Duo</span>' : '';
+    const title =
+      '<h2 class="tcard-name">' + esc(name) + badge + '</h2>' +
+      '<span class="tcard-city">' + MARKER + esc(t.city) + '</span>';
+
+    let banner = '', head;
+    if (photo) {
+      // duo -> the two portraits side by side; solo -> a single portrait
+      const imgs = t.people.map(p =>
+        '<img src="' + p.img + '"' + (p.pos ? ' style="object-position:' + p.pos + '"' : '') +
+        ' alt="Portrait von ' + esc(p.name) + '" />').join('');
+      banner = '<div class="tcard-photo' + (duo ? ' duo' : '') + '">' + imgs +
+               '<span class="photo-fade"></span></div>';
+      head = '<div class="tcard-titles">' + title + '</div>';
+    } else {
+      const i = TRAINERS.indexOf(t);
+      const m1 = MONO[i % MONO.length];
+      const avatar =
+        '<span class="avatar solo">' +
+          '<span class="mono m1 ' + m1 + '">' + initials(t.people[0].name) + '</span>' +
+        '</span>';
+      head = '<div class="tcard-head">' + avatar + '<div>' + title + '</div></div>';
+    }
+
+    // one website button per person (duos get two, labelled by name)
+    const ctas = t.people.map(p =>
+      '<a class="cta' + (duo ? ' cta-split' : '') + '" href="' + p.website +
+      '" target="_blank" rel="noopener">' + (duo ? esc(p.name) : 'Zur Website') + ARROW + '</a>'
+    ).join('');
+
+    return (
+      '<button class="tcard-close" type="button" aria-label="Schließen">' + CLOSE + '</button>' +
+      banner +
+      '<div class="tcard-body">' +
+        '<span class="wm" aria-hidden="true">' + SEAL + '</span>' +
+        head +
+        '<p class="tcard-bio">' + esc(t.bio) + '</p>' +
+        '<div class="tcard-tags">' + tags + '</div>' +
+        '<div class="tcard-ctas">' + ctas + '</div>' +
+      '</div>'
+    );
+  }
+
+  function openCard(id) {
+    const t = TRAINERS.find(x => x.id === id); if (!t) return;
+    openId = id;
+    tcard.innerHTML = cardHTML(t);
+    tcard.classList.toggle('has-photo', hasPhoto(t));
+    tcard.querySelector('.tcard-close').addEventListener('click', closeCard);
+    scrim.classList.add('show');
+    tcard.classList.add('show');
+    TRAINERS.forEach(x => refs[x.id].el.classList.toggle('active', x.id === id));
+    // ease the selected pin into view
+    map.easeTo({ center: [t.lon, t.lat], duration: 500, padding: { bottom: 40 } });
+  }
+  function closeCard() {
+    openId = null;
+    scrim.classList.remove('show');
+    tcard.classList.remove('show');
+    TRAINERS.forEach(x => refs[x.id].el.classList.remove('active'));
+  }
+  scrim.addEventListener('click', closeCard);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && openId) closeCard(); });
+
+  /* ---- Filter chips (multi-select) ---- */
+  const chipsEl = document.getElementById('chips');
+  const allChip = mkChip('Alle', null);
+  allChip.classList.add('on');
+  chipsEl.appendChild(allChip);
+  FILTER_TAGS.forEach(key => chipsEl.appendChild(mkChip(TAG_SHORT[key], key)));
+  function mkChip(label, key) {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.type = 'button'; b.textContent = label; b.dataset.key = key || '';
+    b.setAttribute('aria-pressed', key ? 'false' : 'true');
+    b.addEventListener('click', () => {
+      if (!key) { activeTags.clear(); }
+      else { activeTags.has(key) ? activeTags.delete(key) : activeTags.add(key); }
+      syncChips(); applyFilter();
+    });
+    return b;
+  }
+  function syncChips() {
+    chipsEl.querySelectorAll('.chip').forEach(c => {
+      const k = c.dataset.key;
+      const on = k ? activeTags.has(k) : activeTags.size === 0;
+      c.classList.toggle('on', on);
+      c.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+  function applyFilter() {
+    const filtering = activeTags.size > 0;
+    TRAINERS.forEach(t => {
+      const r = refs[t.id]; if (!r) return;
+      const match = t.tags.some(s => activeTags.has(s));
+      r.el.classList.toggle('match', filtering && match);
+      r.el.classList.toggle('dim', filtering && !match);
+    });
+  }
+
+  /* ---- Postcode search ---- */
+  const plzForm = document.getElementById('plz-form');
+  const plzInput = document.getElementById('plz-input');
+  const plzField = document.getElementById('plz-field');
+  plzForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const digits = (plzInput.value.match(/\d/g) || []).join('');
+    const key = digits.slice(0, 2);
+    const c = PLZ2[key];
+    if (c) {
+      plzField.classList.remove('err');
+      map.flyTo({ center: c, zoom: 8.6, duration: 1300, essential: true });
+    } else {
+      plzField.classList.add('err');
+      setTimeout(() => plzField.classList.remove('err'), 1200);
+    }
+  });
+</script>
+</body>
+</html>

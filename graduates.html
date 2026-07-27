@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Art of Breath — Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* ---- Surface & ink (primary neutrals) ---- */
+    --bg:          #F3F0EC; /* Weathered Bone 00 */
+    --bg-sink:     #EDE9E3; /* a touch deeper for footer/section shift */
+    --card:        #FBFAF7; /* warm near-white surface */
+    --ink:         #383530; /* Charcoal Smoke — text-primary */
+    --muted:       #7C705C; /* Ash Fog — text-muted */
+    --faint:       #8D8271; /* Ash Fog 40 — text-faint */
+    --inverse:     #F2EEE9; /* text on dark */
+    --line:        #E1DBD1; /* soft hairline */
+    --line-soft:   #EAE6DF;
+
+    /* ---- Accent & action ---- */
+    --accent:      #B45C43; /* Ember — text-accent, links, pin */
+    --btn:         #6B6150; /* Ash Fog 60 — solid button */
+    --btn-hover:   #5B5244; /* Ash Fog 70 */
+
+    /* ---- Radii ---- */
+    --r-card:  18px;
+    --r-btn:   18px; /* brand standard: buttons use an 18px corner radius */
+    --r-input: 18px; /* dropdowns / inputs match the button radius */
+    --r-tab:   9px;  /* nav tabs are text links, kept crisper than buttons */
+
+    /* ---- Type ---- */
+    --serif: 'Athelas', 'Playfair Display', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+    --sans:  'Raleway', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    /* ---- Shadow (very soft) ---- */
+    --shadow:   0 1px 2px rgba(56,53,48,.04), 0 14px 30px -20px rgba(56,53,48,.28);
+    --shadow-h: 0 2px 4px rgba(56,53,48,.05), 0 22px 44px -22px rgba(56,53,48,.34);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  a { color: inherit; }
+  button { font-family: inherit; }
+
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(243,240,236,.92);
+    border-bottom: 1px solid var(--line);
+  }
+  @supports (backdrop-filter: blur(6px)) {
+    .nav { backdrop-filter: saturate(1.1) blur(8px); background: rgba(243,240,236,.82); }
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+  .brand .mark { width: 30px; height: 30px; display: block; color: var(--ink); }
+  .brand-name {
+    font-family: var(--serif); font-weight: 600; font-size: 20px; letter-spacing: .01em;
+    line-height: 1;
+  }
+  .nav-links { display: flex; align-items: center; gap: 6px; }
+  .nav-link {
+    font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    padding: 9px 16px; border-radius: var(--r-tab);
+    background: transparent; border: 0; cursor: pointer;
+    position: relative;
+    transition: color .2s ease, background .2s ease;
+  }
+  .nav-link:hover { color: var(--ink); background: rgba(124,112,92,.10); }
+  .nav-link.is-active { color: var(--ink); }
+  .nav-link.is-active::after {
+    content: ""; position: absolute; left: 16px; right: 16px; bottom: 3px;
+    height: 2px; border-radius: 2px; background: var(--accent);
+  }
+
+  /* ============ HEADER ============ */
+  .header { padding: 78px 0 40px; }
+  .eyebrow {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .28em; color: var(--muted); margin: 0 0 22px;
+  }
+  .header h1 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(34px, 5vw, 54px); line-height: 1.1; letter-spacing: .005em;
+    margin: 0; max-width: 15ch; color: var(--ink);
+  }
+  .header h1 em { font-style: italic; color: var(--muted); }
+  .header .lede {
+    margin: 24px 0 0; max-width: 56ch; font-size: 18px; line-height: 1.7;
+    color: var(--muted); font-weight: 400;
+  }
+
+  /* ============ FILTER BAR ============ */
+  .filters {
+    display: flex; flex-wrap: wrap; align-items: flex-end; gap: 20px 24px;
+    padding: 24px 0 8px;
+    border-top: 1px solid var(--line-soft);
+    margin-top: 44px;
+  }
+  .field { display: flex; flex-direction: column; gap: 8px; min-width: 210px; }
+  .field label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .16em;
+    color: var(--faint);
+  }
+  .select-shell { position: relative; }
+  .select-shell select {
+    appearance: none; -webkit-appearance: none;
+    width: 100%; padding: 12px 42px 12px 16px;
+    font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--ink);
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r-input);
+    cursor: pointer; line-height: 1.2;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .select-shell select:hover { border-color: #D2C8BC; }
+  .select-shell select:focus-visible {
+    outline: none; border-color: var(--muted);
+    box-shadow: 0 0 0 3px rgba(124,112,92,.16);
+  }
+  .select-shell .chev {
+    position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+    width: 13px; height: 13px; pointer-events: none; color: var(--muted);
+  }
+  .filter-meta {
+    margin-left: auto; display: flex; align-items: center; gap: 18px;
+    padding-bottom: 4px;
+  }
+  .count { font-size: 14px; color: var(--muted); }
+  .count b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .reset {
+    background: none; border: 0; cursor: pointer;
+    font-size: 13px; font-weight: 600; letter-spacing: .02em; color: var(--accent);
+    padding: 0; opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  }
+  .reset.show { opacity: 1; pointer-events: auto; }
+  .reset:hover { text-decoration: underline; }
+
+  /* ============ GRID ============ */
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+    gap: 26px; padding: 34px 0 90px;
+  }
+
+  /* ============ CARD (flip) ============ */
+  .card {
+    position: relative; height: 408px; perspective: 1600px;
+    background: none; border: 0; padding: 0; margin: 0;
+    text-align: left; cursor: pointer; font-family: inherit; color: inherit;
+    border-radius: var(--r-card);
+  }
+  .card:focus-visible { outline: none; }
+  .card:focus-visible .face { box-shadow: var(--shadow), 0 0 0 3px rgba(124,112,92,.35); }
+
+  .card-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform .7s cubic-bezier(.4,.05,.2,1);
+    transform-style: preserve-3d;
+  }
+  .card.flipped .card-inner { transform: rotateY(180deg); }
+
+  .face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    background: var(--card); border: 1px solid var(--line-soft);
+    border-radius: var(--r-card); box-shadow: var(--shadow);
+    padding: 30px 28px; display: flex; flex-direction: column;
+    transition: box-shadow .3s ease;
+    overflow: hidden;
+  }
+  .card:hover .face { box-shadow: var(--shadow-h); }
+  .face--back { transform: rotateY(180deg); }
+
+  /* ---- Front ---- */
+  .face--front { align-items: center; text-align: center; }
+  .avatar {
+    width: 94px; height: 94px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--serif); font-size: 32px; font-weight: 500; letter-spacing: .01em;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+  .t-name {
+    font-family: var(--serif); font-weight: 500; font-size: 25px; line-height: 1.15;
+    letter-spacing: .005em; margin: 0 0 8px; color: var(--ink);
+  }
+  .t-loc {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    font-size: 13.5px; font-weight: 500; letter-spacing: .02em; color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .t-loc .pin { width: 13px; height: 13px; color: var(--accent); flex: none; }
+  .tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .tag {
+    font-size: 12px; font-weight: 600; letter-spacing: .015em;
+    padding: 6px 13px; border-radius: 999px; white-space: nowrap;
+  }
+  .flip-hint {
+    margin-top: auto; padding-top: 20px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--faint);
+  }
+  .flip-hint svg { width: 16px; height: 16px; }
+
+  /* ---- Back ---- */
+  .face--back { justify-content: flex-start; }
+  .watermark {
+    position: absolute; right: -26px; bottom: -30px;
+    width: 168px; height: 168px; color: var(--ink); opacity: .045;
+    pointer-events: none;
+  }
+  .back-eyebrow {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .2em;
+    color: var(--faint); margin: 0 0 10px;
+  }
+  .back-name {
+    font-family: var(--serif); font-weight: 500; font-size: 22px; letter-spacing: .005em;
+    margin: 0 0 14px; color: var(--ink);
+  }
+  .back-bio {
+    font-size: 14.5px; line-height: 1.62; color: var(--muted); margin: 0 0 18px;
+    position: relative; z-index: 1;
+  }
+  .back-spec { margin: 0 0 auto; position: relative; z-index: 1; }
+  .back-spec .lbl {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .16em;
+    color: var(--faint); display: block; margin-bottom: 9px;
+  }
+  .back-spec ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .back-spec li {
+    font-size: 14px; color: var(--ink); font-weight: 500;
+    display: flex; align-items: center; gap: 9px;
+  }
+  .back-spec li::before {
+    content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex: none;
+  }
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    margin-top: 22px; width: 100%;
+    padding: 13px 20px; border-radius: var(--r-btn);
+    background: var(--btn); color: var(--inverse);
+    font-size: 14px; font-weight: 600; letter-spacing: .03em;
+    text-decoration: none; border: 0; cursor: pointer;
+    transition: background .2s ease;
+    position: relative; z-index: 1;
+  }
+  .cta:hover { background: var(--btn-hover); }
+  .cta:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,112,92,.4); }
+  .cta svg { width: 15px; height: 15px; }
+  .back-return {
+    position: absolute; top: 22px; right: 22px;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--faint); z-index: 2;
+  }
+  .back-return svg { width: 15px; height: 15px; }
+
+  /* ---- Tag color roles (secondary palette, soft) ---- */
+  .tag--corporate     { background: #E9DBC4; color: #866530; } /* Ochre */
+  .tag--sleep         { background: #E7E4E0; color: #635E59; } /* Dust */
+  .tag--grief         { background: #D8CFC7; color: #4C3529; } /* Wood */
+  .tag--trauma        { background: #E2DFD3; color: #5B5642; } /* Moss */
+  .tag--relationships { background: #E9D2CA; color: #7D4332; } /* Ember */
+  .tag--foundations   { background: #E4DDD6; color: #5D5348; } /* Rooted Earth */
+  .tag--anxiety       { background: #D8D3CC; color: #4A4238; } /* Ash Fog */
+
+  /* ---- Avatar tones ---- */
+  .mono-a { background: #E4DDD6; color: #776B5C; }
+  .mono-b { background: #DED9D0; color: #5B5244; }
+  .mono-c { background: #EAE5DE; color: #857E72; }
+  .mono-d { background: #E2DFD3; color: #756F54; }
+
+  /* ============ EMPTY STATE ============ */
+  .empty {
+    grid-column: 1 / -1; text-align: center; padding: 70px 20px;
+    color: var(--muted);
+  }
+  .empty .mark { width: 46px; height: 46px; color: var(--ink); opacity: .22; margin-bottom: 20px; }
+  .empty h3 { font-family: var(--serif); font-weight: 500; font-size: 24px; color: var(--ink); margin: 0 0 8px; }
+  .empty p { margin: 0 0 20px; font-size: 15px; }
+  .empty button {
+    background: var(--btn); color: var(--inverse); border: 0; cursor: pointer;
+    padding: 11px 22px; border-radius: var(--r-btn); font-weight: 600; font-size: 14px; letter-spacing: .03em;
+  }
+  .empty button:hover { background: var(--btn-hover); }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    background: var(--bg-sink); border-top: 1px solid var(--line);
+    padding: 40px 0; margin-top: 20px;
+  }
+  .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .footer .brand-name { font-size: 17px; }
+  .footer .mark { width: 24px; height: 24px; }
+  .footer small { color: var(--faint); font-size: 13px; letter-spacing: .02em; }
+
+  /* ============ ENTRANCE ANIMATION ============ */
+  .card { opacity: 0; transform: translateY(14px); }
+  .card.in { animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 620px) {
+    .wrap { padding: 0 20px; }
+    .header { padding: 54px 0 30px; }
+    .filters { gap: 16px; }
+    .field { min-width: 100%; }
+    .filter-meta { margin-left: 0; width: 100%; justify-content: space-between; }
+  }
+  /* On narrow screens the navbar collapses to the seal mark so the
+     logo + both links never force the page wider than the viewport. */
+  @media (max-width: 560px) {
+    .nav-inner { height: 62px; }
+    .brand-name { display: none; }
+    .nav-links { gap: 2px; }
+    .nav-link { padding: 8px 12px; font-size: 12px; letter-spacing: .04em; }
+    .nav-link.is-active::after { left: 12px; right: 12px; bottom: 2px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; }
+    .card-inner { transition: none; }
+    .card { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#" aria-label="Art of Breath — Startseite">
+        <span class="mark" data-seal aria-hidden="true"></span>
+        <span class="brand-name">Art of Breath</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="#">Startseite</a>
+        <a class="nav-link is-active" href="#" aria-current="page">Trainer</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HEADER ============ -->
+  <header class="header">
+    <div class="wrap">
+      <p class="eyebrow">Art&nbsp;of&nbsp;Breath · Trainer</p>
+      <h1>Finde die Begleitung, <em>die zu deinem Atem passt.</em></h1>
+      <p class="lede">
+        Jeder unserer ausgebildeten Trainer bringt einen eigenen Schwerpunkt mit —
+        vom Umgang mit Stress im Beruf bis zur Begleitung durch Trauer. Filtere nach Thema
+        und Ort und klicke auf eine Karte, um mehr zu erfahren.
+      </p>
+
+      <!-- ============ FILTERS ============ -->
+      <div class="filters">
+        <div class="field">
+          <label for="f-spec">Spezialisierung</label>
+          <div class="select-shell">
+            <select id="f-spec" aria-label="Nach Spezialisierung filtern">
+              <option value="">Alle Themen</option>
+            </select>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-loc">Ort</label>
+          <div class="select-shell">
+            <select id="f-loc" aria-label="Nach Ort filtern">
+              <option value="">Alle Orte</option>
+            </select>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-meta">
+          <button class="reset" id="reset" type="button">Filter zurücksetzen</button>
+          <span class="count"><b id="count">0</b> <span id="count-label">Trainer</span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ GRID ============ -->
+  <main class="wrap">
+    <div class="grid" id="grid" aria-live="polite"></div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <a class="brand" href="#" aria-label="Art of Breath">
+        <span class="mark" data-seal aria-hidden="true"></span>
+        <span class="brand-name">Art of Breath</span>
+      </a>
+      <small>Breathwork-Trainer-Ausbildung · Vorschau mit Platzhalter-Daten</small>
+    </div>
+  </footer>
+
+<script>
+  // ---- Seal mark (from the Art of Breath logo) ----
+  const SEAL = '<svg viewBox="0 0 1080 1080" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M600.311 924.135C547.881 924.666 496.585 925.201 445.289 925.723C421.337 925.967 397.383 926.113 373.432 926.435C339.253 926.895 305.057 928.375 270.902 927.694C247.5 927.227 224.101 924.288 200.814 921.502C191.903 920.436 183.024 917.432 174.626 914.072C154.447 906 142.886 890.815 141.727 868.973C140.842 852.283 140.858 835.51 141.281 818.795C141.788 798.705 143.291 778.643 144.113 758.558C145.508 724.456 147.645 690.347 147.7 656.238C147.746 627.844 145.199 599.447 143.898 571.047C143.117 554.001 142.206 536.951 141.941 519.894C141.7 504.456 148.564 495.41 163.633 492.371C175.087 490.061 186.872 488.573 198.543 488.327C232.756 487.606 266.996 488.09 301.207 487.313C323.156 486.814 345.066 484.759 367.008 483.714C379.531 483.117 392.083 482.99 404.624 482.926C427.828 482.808 451.034 482.892 474.239 482.892C477.933 482.892 481.627 482.892 485.44 482.892C485.015 462.328 484.5 443.054 484.299 423.778C484.249 418.902 485.347 414.025 485.661 409.131C486.201 400.696 491.448 396.853 499.014 396.301C511.474 395.392 524.012 394.41 536.465 394.876C548.91 395.343 561.278 397.669 573.702 398.963C588.093 400.463 591.316 405.454 590.738 419.571C589.861 441.004 590.509 462.5 590.509 484.699C605.573 485.117 619.155 485.505 632.737 485.86C635.398 485.93 638.063 485.827 640.725 485.877C668.436 486.395 696.149 487.465 723.855 487.318C756.881 487.143 789.905 486.033 822.923 485.125C842.638 484.582 862.343 483.027 882.05 483.079C899.898 483.126 916.534 487.432 929.549 501.29C940.461 512.908 943.211 527.349 944.43 542.128C945.955 560.635 946.698 579.226 947.15 597.796C948.045 634.598 948.947 671.41 948.999 708.219C949.035 733.252 947.213 758.284 947.03 783.322C946.922 798.081 949.425 812.893 948.841 827.605C948.335 840.343 946.473 853.371 942.863 865.576C932.8 899.6 904.841 920.629 869.413 921.763C841.714 922.65 813.997 923.192 786.285 923.381C724.673 923.801 663.059 923.903 600.311 924.135ZM808.583 556.705C791.923 557.446 775.258 558.908 758.603 558.814C639.624 558.145 520.632 560.692 401.66 556.838C364.071 555.62 326.397 556.113 288.786 556.946C276.093 557.228 263.19 559.966 250.908 563.437C239.331 566.709 234.218 575.467 234.475 586.465C234.765 598.916 233.14 611.415 232.274 623.888C230.308 652.213 227.991 680.519 226.469 708.868C225.945 718.642 227.221 728.529 227.908 738.348C229.626 762.914 231.303 787.486 233.417 812.019C233.86 817.156 234.96 822.899 237.721 827.061C250.853 846.853 269.027 860.14 292.576 864.517C300.909 866.065 309.773 864.646 318.391 864.792C346.099 865.26 373.802 866.049 401.511 866.294C431.557 866.561 461.61 866.573 491.654 866.229C501.083 866.121 510.557 864.917 519.901 863.494C543.023 859.971 565.823 855.931 589.633 856.71C617.955 857.636 646.395 854.014 674.802 853.604C699.446 853.249 724.153 853.968 748.763 855.406C777.854 857.106 806.377 853.667 834.674 847.879C849.655 844.815 858.645 834.201 857.986 818.718C857.519 807.731 858.574 796.687 858.445 785.675C858.379 780.039 857.351 774.393 856.5 768.791C854.821 757.742 847.827 750.885 837.538 748.379C827.677 745.977 817.394 743.93 807.315 744.015C693.719 744.978 580.075 740.809 466.516 747.422C446.913 748.564 427.11 746.391 407.404 745.633C394.186 745.124 382.204 740.635 370.988 733.838C363.554 729.334 361.399 726.053 363.715 717.982C369.722 697.047 380.719 679.151 398.273 665.769C403.003 662.164 408.146 660.744 414.306 662.539C422.296 664.868 430.447 667.483 438.661 668.048C466.253 669.942 493.897 671.909 521.534 672.128C562.166 672.449 602.817 670.578 643.446 670.983C676.426 671.311 709.302 667.551 742.336 669.845C760.126 671.08 778.074 670.041 795.95 670.072C811.937 670.099 826.602 665.234 840.387 657.64C850.786 651.911 856.926 642.313 857.489 630.891C858.215 616.181 857.255 601.329 856.141 586.604C855.069 572.439 846.712 563.704 832.946 560.605C825.594 558.95 818.05 558.147 808.583 556.705Z"/><path d="M237.309 285.627C236.407 293.197 234.31 300.25 235.655 306.57C240.13 327.603 240.212 348.78 240.025 370.053C239.92 381.841 239.751 393.638 240.072 405.418C240.401 417.516 234.314 425.45 224.506 431.222C214.113 437.337 202.736 439.975 190.777 440.221C183.935 440.362 177.086 440.306 170.242 440.237C154.976 440.085 141.383 428.034 141.365 412.718C141.335 387.689 142.406 362.652 143.381 337.633C144.076 319.834 145.113 302.038 146.476 284.277C148.042 263.876 149.772 243.489 158.544 224.46C170.07 199.458 188.062 183.451 216.556 181.551C228.649 180.745 240.741 179.664 252.848 179.394C295.364 178.445 337.889 177.914 380.406 176.981C402.017 176.507 423.623 175.641 445.222 174.724C478.546 173.311 511.861 171.657 545.183 170.192C564.501 169.343 583.824 168.574 603.149 167.932C628.935 167.075 654.726 166.378 680.514 165.611C705.922 164.856 731.327 163.91 756.74 163.391C791.663 162.678 826.598 161.75 861.518 162.062C873.051 162.165 884.84 164.835 895.999 168.091C912.167 172.809 922.839 184.251 925.79 200.909C929.084 219.507 932.487 238.366 932.718 257.15C932.971 277.871 930.192 298.696 927.765 319.362C925.795 336.147 925.571 352.623 929.875 369.054C933.826 384.135 937.085 399.287 936.23 415.091C935.477 429.01 929.398 437.969 915.545 439.433C898.274 441.257 880.773 441.03 863.365 441.34C856.575 441.461 849.764 440.259 842.969 440.327C833.125 440.427 827.081 435.448 824.28 426.662C820.332 414.277 818.472 401.337 820.041 388.475C823.797 357.672 828.453 326.98 832.533 296.215C833.329 290.214 833.414 284.083 833.378 278.015C833.317 267.66 829.59 262.502 819.34 260.39C810.472 258.562 801.361 257.593 792.309 257.051C765.079 255.42 737.804 254.504 710.586 252.723C660.502 249.444 610.393 249.626 560.267 250.846C536.757 251.418 513.249 252.173 489.752 253.124C455.282 254.52 420.711 254.932 386.386 258.021C344.186 261.819 302.185 267.866 260.121 273.119C251.346 274.215 242.89 276.514 237.309 285.627Z"/></svg>';
+
+  const PIN = '<svg class="pin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.686-7-11a7 7 0 1114 0c0 5.314-7 11-7 11z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.8"/></svg>';
+  const FLIP = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 3v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const ARROW = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // ---- Specializations (label + tag color role) ----
+  const SPECS = {
+    corporate:     'Corporate & High Performer',
+    sleep:         'Schlaf & Unruhe',
+    grief:         'Trauer & Verlust',
+    trauma:        'Trauma & Heilung',
+    relationships: 'Beziehung & Nähe',
+    foundations:   'Atem-Grundlagen',
+    anxiety:       'Angst & Panik',
+  };
+
+  // ---- Placeholder trainers ----
+  const TRAINERS = [
+    { name: 'Lena Hofmann',   city: 'Berlin',      specs: ['corporate','sleep'],
+      bio: 'Begleitet Führungskräfte und Teams dabei, unter Druck ruhig zu bleiben. Ihre Arbeit verbindet Leistungsfähigkeit mit echter Erholung.' },
+    { name: 'Jonas Berger',   city: 'München',     specs: ['foundations','anxiety'],
+      bio: 'Führt Einsteiger sanft an die Grundlagen des bewussten Atmens heran und arbeitet mit Menschen, die zur Ruhe finden möchten.' },
+    { name: 'Amira El-Sayed', city: 'Hamburg',     specs: ['trauma','grief'],
+      bio: 'Trauma-informierte Trainerin mit einem sicheren, geerdeten Raum. Sie begleitet durch schwere Zeiten in eigenem Tempo.' },
+    { name: 'Thomas Reinhardt',city:'Köln',        specs: ['corporate','foundations'],
+      bio: 'Bringt jahrelange Erfahrung aus der Unternehmenswelt mit und übersetzt Atemarbeit in einen klaren, alltagstauglichen Rahmen.' },
+    { name: 'Sophie Wagner',  city: 'Frankfurt',   specs: ['sleep','anxiety'],
+      bio: 'Spezialisiert auf innere Unruhe und Schlaf. Ihre Sitzungen helfen dem Nervensystem, wieder in einen ruhigen Grundton zu finden.' },
+    { name: 'Mateo Vogel',    city: 'Stuttgart',   specs: ['relationships','trauma'],
+      bio: 'Arbeitet mit Paaren und Einzelpersonen an Nähe, Vertrauen und Verbundenheit — durch den gemeinsamen Rhythmus des Atems.' },
+    { name: 'Clara Neumann',  city: 'Leipzig',     specs: ['grief','foundations'],
+      bio: 'Begleitet Menschen behutsam durch Abschied und Verlust und schafft dabei Raum für das, was gefühlt werden möchte.' },
+    { name: 'David Schuster', city: 'Düsseldorf',  specs: ['corporate','relationships'],
+      bio: 'Verbindet Hochleistung und Menschlichkeit. Er arbeitet mit Teams, die nicht nur besser performen, sondern besser zusammenarbeiten wollen.' },
+    { name: 'Yuki Brandt',    city: 'Berlin',      specs: ['trauma','sleep'],
+      bio: 'Schafft einen ruhigen, geschützten Raum für Regeneration. Ihr Fokus liegt auf Erholung nach anhaltender Anspannung.' },
+  ];
+
+  const MONO = ['mono-a','mono-b','mono-c','mono-d'];
+  const initials = (n) => n.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+
+  // ---- Populate filter dropdowns ----
+  const specSel = document.getElementById('f-spec');
+  const locSel  = document.getElementById('f-loc');
+  Object.entries(SPECS).forEach(([k,v]) => {
+    const o = document.createElement('option'); o.value = k; o.textContent = v; specSel.appendChild(o);
+  });
+  [...new Set(TRAINERS.map(t => t.city))].sort((a,b)=>a.localeCompare(b,'de')).forEach(c => {
+    const o = document.createElement('option'); o.value = c; o.textContent = c; locSel.appendChild(o);
+  });
+
+  // ---- Build a card ----
+  function buildCard(t, i) {
+    const card = document.createElement('button');
+    card.className = 'card';
+    card.type = 'button';
+    card.setAttribute('aria-pressed', 'false');
+    card.setAttribute('aria-label', t.name + ', ' + t.city + '. Karte umdrehen für mehr Informationen.');
+
+    const tags = t.specs.map(s => `<span class="tag tag--${s}">${SPECS[s]}</span>`).join('');
+    const specList = t.specs.map(s => `<li>${SPECS[s]}</li>`).join('');
+
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="face face--front">
+          <div class="avatar ${MONO[i % MONO.length]}" aria-hidden="true">${initials(t.name)}</div>
+          <h2 class="t-name">${t.name}</h2>
+          <div class="t-loc">${PIN}${t.city}</div>
+          <div class="tags">${tags}</div>
+          <div class="flip-hint">${FLIP}<span>Mehr erfahren</span></div>
+        </div>
+        <div class="face face--back">
+          <span class="mark watermark" aria-hidden="true">${SEAL}</span>
+          <span class="back-return">${FLIP}<span>Zurück</span></span>
+          <p class="back-eyebrow">Über</p>
+          <h3 class="back-name">${t.name}</h3>
+          <p class="back-bio">${t.bio}</p>
+          <div class="back-spec">
+            <span class="lbl">Schwerpunkte</span>
+            <ul>${specList}</ul>
+          </div>
+          <a class="cta" href="#" tabindex="-1" data-cta>Zur Website ${ARROW}</a>
+        </div>
+      </div>`;
+
+    // Flip on click (but not when following the website link)
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('[data-cta]')) return;
+      toggle(card);
+    });
+    card.addEventListener('keydown', (e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('[data-cta]')) {
+        e.preventDefault(); toggle(card);
+      }
+    });
+    return card;
+  }
+
+  function toggle(card) {
+    const flipped = card.classList.toggle('flipped');
+    card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+    // Keep only the visible face's link in the tab order
+    const cta = card.querySelector('[data-cta]');
+    if (cta) cta.tabIndex = flipped ? 0 : -1;
+  }
+
+  // ---- Render + filter ----
+  const grid = document.getElementById('grid');
+  const countEl = document.getElementById('count');
+  const countLabel = document.getElementById('count-label');
+  const resetBtn = document.getElementById('reset');
+
+  function render() {
+    const spec = specSel.value;
+    const loc  = locSel.value;
+    const list = TRAINERS.filter(t =>
+      (!spec || t.specs.includes(spec)) && (!loc || t.city === loc)
+    );
+
+    grid.innerHTML = '';
+    if (list.length === 0) {
+      grid.innerHTML = `
+        <div class="empty">
+          <span class="mark" aria-hidden="true">${SEAL}</span>
+          <h3>Noch niemand für diese Auswahl</h3>
+          <p>Für diese Kombination aus Thema und Ort gibt es aktuell keine Trainer.</p>
+          <button type="button" id="empty-reset">Filter zurücksetzen</button>
+        </div>`;
+      document.getElementById('empty-reset').addEventListener('click', reset);
+    } else {
+      list.forEach((t, i) => {
+        // keep monogram tone tied to the trainer, not the filtered position
+        const idx = TRAINERS.indexOf(t);
+        const card = buildCard(t, idx);
+        grid.appendChild(card);
+        requestAnimationFrame(() => {
+          setTimeout(() => card.classList.add('in'), i * 55);
+        });
+      });
+    }
+
+    countEl.textContent = list.length;
+    countLabel.textContent = 'Trainer';
+    resetBtn.classList.toggle('show', Boolean(spec || loc));
+  }
+
+  function reset() {
+    specSel.value = ''; locSel.value = ''; render();
+  }
+
+  specSel.addEventListener('change', render);
+  locSel.addEventListener('change', render);
+  resetBtn.addEventListener('click', reset);
+
+  // ---- Inject seal marks in nav/footer ----
+  document.querySelectorAll('[data-seal]').forEach(el => { el.innerHTML = SEAL; });
+
+  render();
+</script>
+</body>
+</html>
