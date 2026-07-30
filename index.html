@@ -571,8 +571,8 @@
   /* ---- Hero showcase map: a locked (non-interactive) preview of trainer locations.
          Reuses map.html's brand recolor + coordinates so it stays faithful to the real map. ---- */
   const BRAND = { land:'#E4DDD6', land2:'#DED9CE', water:'#D2CBBE', border:'#A2998A', road:'#DAD3C7', building:'#DCD6CB', label:'#5B5244', halo:'#F3F0EC' };
-  // [lon, lat, isDuo] — the real roster, mirroring trainers-map.html: 10 spots (12 trainers),
-  // with the Berlin and Leipzig duos merged, plus the two Swiss pins.
+  // [lon, lat, isDuo] - the real roster, mirroring trainers-map.html: 10 spots (13 trainers),
+  // with the Berlin, Leipzig and Obenhausen duos merged, plus the two Swiss pins.
   const HERO_PINS = [
     [9.732,52.375,0],   // Hannover
     [13.420,52.517,1],  // Berlin (Aris & Jana)
@@ -583,7 +583,7 @@
     [12.375,51.340,1],  // Leipzig (Emi & Rouven)
     [6.083,50.776,0],   // Aachen
     [11.594,48.023,0],  // Oberhaching
-    [10.205,48.285,0]   // Obenhausen
+    [10.205,48.285,1]   // Obenhausen (Sandra & Christian)
   ];
   const heroMapEl = document.getElementById('hero-map');
   if (heroMapEl && window.maplibregl) {

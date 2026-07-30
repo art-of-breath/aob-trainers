@@ -490,10 +490,13 @@
       people: [{ name: 'Martin Groß', website: 'https://martingross.org', img: 'trainers/images/cards/martin-gross.jpg' }],
       tags: ['business-leadership', 'coaching'],
       bio: 'Martin kommt aus der Führungskräfteentwicklung, hat ein Startup gegründet und in großen Beratungen gearbeitet. Heute begleitet er Führungskräfte und Teams vom Kopf ins Herz, mit Atemarbeit für die Regulation des Nervensystems neben klassischem Coaching.' },
-    { id: 'sandra-gutheber', city: 'Obenhausen', lon: 10.205, lat: 48.285,
-      people: [{ name: 'Sandra Gutheber', website: 'https://sandragutheber.com', img: 'trainers/images/cards/sandra-gutheber.jpg' }],
+    { id: 'obenhausen-duo', city: 'Obenhausen', lon: 10.205, lat: 48.285,
+      people: [
+        { name: 'Sandra Gutheber', website: 'https://sandragutheber.com', img: 'trainers/images/cards/sandra-gutheber.jpg' },
+        { name: 'Christian Korn', img: 'trainers/images/cards/christian-korn.jpg' },
+      ],
       tags: ['training-mentoring', 'coaching', 'yoga-meditation', 'ceremony-spirituality', 'sound-creative'],
-      bio: 'Sandra arbeitet mit der größten Bandbreite auf dieser Liste: Atem-Facilitatorin, Yogalehrerin, NLP-Trainerin, dazu Klang und Meditation. Ihre Linie: Veränderung beginnt dort, wo du Verantwortung für dich übernimmst, aus Selbstliebe statt Druck. Retreats in Kroatien und Österreich.' },
+      bio: 'Ein Duo in Obenhausen. Sandra arbeitet mit der größten Bandbreite auf dieser Liste: Atem-Facilitatorin, Yogalehrerin, NLP-Trainerin, dazu Klang und Meditation. Ihre Linie: Veränderung beginnt dort, wo du Verantwortung für dich übernimmst, aus Selbstliebe statt Druck, dazu Retreats in Kroatien und Österreich. Christian öffnet Räume, in denen über den Atem Transformation und Veränderung möglich werden.' },
   ];
 
   /* ---- 2-digit PLZ region centroids (from the full German PLZ set) ---- */
@@ -623,10 +626,14 @@
       head = '<div class="tcard-head">' + avatar + '<div>' + title + '</div></div>';
     }
 
-    // one website button per person (duos get two, labelled by name)
-    const ctas = t.people.map(p =>
-      '<a class="cta' + (duo ? ' cta-split' : '') + '" href="' + p.website +
-      '" target="_blank" rel="noopener">' + (duo ? esc(p.name) : 'Zur Website') + ARROW + '</a>'
+    // One website button per person who has one. A trainer without a site gets no button
+    // rather than a link to "undefined", so the split layout and the name labels key off
+    // how many buttons actually survive, not off how many people are on the card.
+    const linked = t.people.filter(p => p.website);
+    const split = linked.length > 1;
+    const ctas = linked.map(p =>
+      '<a class="cta' + (split ? ' cta-split' : '') + '" href="' + p.website +
+      '" target="_blank" rel="noopener">' + (split ? esc(p.name) : 'Zur Website') + ARROW + '</a>'
     ).join('');
 
     return (
