@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Art of Breath · Breathwork lernen</title>
 <meta name="description" content="Bei Art of Breath lernst du, mit deinem Atem zu arbeiten, für dich selbst oder um andere sicher zu begleiten. Von Trainern und Coaches, die bei Daniel Alan gelernt haben." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+<link rel="preload" as="font" type="font/woff2" href="fonts/raleway-v37-latin-regular.woff2" crossorigin />
+<link rel="preload" as="font" type="font/woff2" href="fonts/playfair-display-v40-latin-600.woff2" crossorigin />
+<link rel="stylesheet" href="css/fonts.css" />
+<link href="css/maplibre-gl.css" rel="stylesheet" />
 <style>
   :root {
     /* ---- Surface & ink (primary neutrals), shared with map.html ---- */
@@ -287,12 +287,32 @@
   .contact-inner .lede { margin: 20px auto 28px; }
 
   /* ============ FOOTER (shared with map.html) ============ */
-  .foot { border-top: 1px solid var(--line); background: var(--bg-sink); padding: 30px 0; }
-  .foot-inner { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; text-align: center; }
-  .foot .mark { width: 22px; height: 22px; color: var(--faint); display: block; }
-  .foot small { color: var(--faint); font-size: 13px; letter-spacing: .02em; }
-  .foot a { color: var(--muted); text-decoration: none; }
-  .foot a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  /* ============ FOOTER (identical on every page) ============
+     Vertical space above the footer belongs to the last section of each page, not to
+     the footer itself, so this block can stay byte-identical everywhere. */
+  .foot { border-top: 1px solid var(--line); background: var(--bg-sink); }
+  .foot-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px 28px; padding: 34px 0;
+  }
+  .foot-id { display: flex; align-items: center; gap: 12px; }
+  .foot .mark { width: 26px; height: 26px; color: var(--muted); display: block; flex: none; }
+  .foot small { color: var(--faint); font-size: 12.5px; letter-spacing: .03em; }
+  .foot-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; }
+  .foot-links a, .foot-links button {
+    font-family: inherit; font-size: 12.5px; letter-spacing: .03em; color: var(--muted);
+    background: none; border: 0; padding: 0; cursor: pointer; text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .foot-links a:hover, .foot-links button:hover { color: var(--ink); border-color: var(--line); }
+  .foot-links a:focus-visible, .foot-links button:focus-visible {
+    outline: none; color: var(--ink); border-color: var(--muted);
+  }
+  @media (max-width: 640px) {
+    .foot-inner { flex-direction: column; text-align: center; }
+    .foot-links { justify-content: center; }
+  }
 
   /* ============ LOAD-IN (hero only) ============ */
   .fade-up { opacity: 0; transform: translateY(14px); animation: fadeUp .9s cubic-bezier(.22,.61,.36,1) forwards; }
@@ -497,10 +517,10 @@
         <div>
           <p class="eyebrow">Die Trainer</p>
           <h2 class="band-title">Wer zu dir passt</h2>
-          <p class="lede">Dreizehn Trainer arbeiten unter Art of Breath, verteilt zwischen Nordsee und Alpen. Manche allein, manche im Team, und jeder mit eigenen Schwerpunkten. Auf der Karte siehst du, wer wo arbeitet und wofür er steht.</p>
+          <p class="lede">Vierzehn Trainer arbeiten unter Art of Breath, verteilt zwischen Nordsee und Alpen. Manche allein, manche im Team, und jeder mit eigenen Schwerpunkten. Auf der Karte siehst du, wer wo arbeitet und wofür er steht.</p>
           <p class="p-body">Nimm dir einen Moment und schau, wer dich anspricht.</p>
           <div class="find-stats">
-            <div><b>13</b><span>Trainer</span></div>
+            <div><b>14</b><span>Trainer</span></div>
             <div><b>DE&nbsp;·&nbsp;CH</b><span>Deutschland &amp; Schweiz</span></div>
           </div>
         </div>
@@ -546,19 +566,26 @@
       <p class="eyebrow">Kontakt</p>
       <h2 class="band-title" style="margin: 0 auto;">Noch etwas offen?</h2>
       <p class="lede">Vielleicht hast du eine konkrete Frage. Vielleicht merkst du nur, dass dich das hier nicht loslässt. Schreib in beiden Fällen. Deine Nachricht landet nicht in einem System, sondern bei einem Menschen, der sie liest und antwortet.</p>
-      <a class="btn btn-primary" href="mailto:hallo@art-of-breath.com">Schreib eine Nachricht <span data-arrow></span></a>
+      <a class="btn btn-primary" href="mailto:info@art-of-breath.com">Schreib eine Nachricht <span data-arrow></span></a>
     </div>
   </section>
 
   <!-- ============ FOOTER ============ -->
   <footer class="foot">
     <div class="wrap foot-inner">
-      <span class="mark" data-seal aria-hidden="true"></span>
-      <small>Art of Breath &middot; Breathwork-Trainer in Deutschland &amp; der Schweiz &middot; <a href="#">Impressum</a> &middot; <a href="#">Datenschutz</a></small>
+      <div class="foot-id">
+        <span class="mark" data-seal aria-hidden="true"></span>
+        <small>&copy; 2026 Art of Breath &middot; Breathwork-Trainer in Deutschland &amp; der Schweiz</small>
+      </div>
+      <nav class="foot-links" aria-label="Rechtliches">
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutzerklärung</a>
+        <button type="button" data-consent-open>Cookie-Einstellungen</button>
+      </nav>
     </div>
   </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="js/maplibre-gl.js"></script>
 <script>
   /* Brand seal: same mark used across the site (nav, hero, footer). */
   const SEAL = '<svg viewBox="0 0 1080 1080" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M600.311 924.135C547.881 924.666 496.585 925.201 445.289 925.723C421.337 925.967 397.383 926.113 373.432 926.435C339.253 926.895 305.057 928.375 270.902 927.694C247.5 927.227 224.101 924.288 200.814 921.502C191.903 920.436 183.024 917.432 174.626 914.072C154.447 906 142.886 890.815 141.727 868.973C140.842 852.283 140.858 835.51 141.281 818.795C141.788 798.705 143.291 778.643 144.113 758.558C145.508 724.456 147.645 690.347 147.7 656.238C147.746 627.844 145.199 599.447 143.898 571.047C143.117 554.001 142.206 536.951 141.941 519.894C141.7 504.456 148.564 495.41 163.633 492.371C175.087 490.061 186.872 488.573 198.543 488.327C232.756 487.606 266.996 488.09 301.207 487.313C323.156 486.814 345.066 484.759 367.008 483.714C379.531 483.117 392.083 482.99 404.624 482.926C427.828 482.808 451.034 482.892 474.239 482.892C477.933 482.892 481.627 482.892 485.44 482.892C485.015 462.328 484.5 443.054 484.299 423.778C484.249 418.902 485.347 414.025 485.661 409.131C486.201 400.696 491.448 396.853 499.014 396.301C511.474 395.392 524.012 394.41 536.465 394.876C548.91 395.343 561.278 397.669 573.702 398.963C588.093 400.463 591.316 405.454 590.738 419.571C589.861 441.004 590.509 462.5 590.509 484.699C605.573 485.117 619.155 485.505 632.737 485.86C635.398 485.93 638.063 485.827 640.725 485.877C668.436 486.395 696.149 487.465 723.855 487.318C756.881 487.143 789.905 486.033 822.923 485.125C842.638 484.582 862.343 483.027 882.05 483.079C899.898 483.126 916.534 487.432 929.549 501.29C940.461 512.908 943.211 527.349 944.43 542.128C945.955 560.635 946.698 579.226 947.15 597.796C948.045 634.598 948.947 671.41 948.999 708.219C949.035 733.252 947.213 758.284 947.03 783.322C946.922 798.081 949.425 812.893 948.841 827.605C948.335 840.343 946.473 853.371 942.863 865.576C932.8 899.6 904.841 920.629 869.413 921.763C841.714 922.65 813.997 923.192 786.285 923.381C724.673 923.801 663.059 923.903 600.311 924.135ZM808.583 556.705C791.923 557.446 775.258 558.908 758.603 558.814C639.624 558.145 520.632 560.692 401.66 556.838C364.071 555.62 326.397 556.113 288.786 556.946C276.093 557.228 263.19 559.966 250.908 563.437C239.331 566.709 234.218 575.467 234.475 586.465C234.765 598.916 233.14 611.415 232.274 623.888C230.308 652.213 227.991 680.519 226.469 708.868C225.945 718.642 227.221 728.529 227.908 738.348C229.626 762.914 231.303 787.486 233.417 812.019C233.86 817.156 234.96 822.899 237.721 827.061C250.853 846.853 269.027 860.14 292.576 864.517C300.909 866.065 309.773 864.646 318.391 864.792C346.099 865.26 373.802 866.049 401.511 866.294C431.557 866.561 461.61 866.573 491.654 866.229C501.083 866.121 510.557 864.917 519.901 863.494C543.023 859.971 565.823 855.931 589.633 856.71C617.955 857.636 646.395 854.014 674.802 853.604C699.446 853.249 724.153 853.968 748.763 855.406C777.854 857.106 806.377 853.667 834.674 847.879C849.655 844.815 858.645 834.201 857.986 818.718C857.519 807.731 858.574 796.687 858.445 785.675C858.379 780.039 857.351 774.393 856.5 768.791C854.821 757.742 847.827 750.885 837.538 748.379C827.677 745.977 817.394 743.93 807.315 744.015C693.719 744.978 580.075 740.809 466.516 747.422C446.913 748.564 427.11 746.391 407.404 745.633C394.186 745.124 382.204 740.635 370.988 733.838C363.554 729.334 361.399 726.053 363.715 717.982C369.722 697.047 380.719 679.151 398.273 665.769C403.003 662.164 408.146 660.744 414.306 662.539C422.296 664.868 430.447 667.483 438.661 668.048C466.253 669.942 493.897 671.909 521.534 672.128C562.166 672.449 602.817 670.578 643.446 670.983C676.426 671.311 709.302 667.551 742.336 669.845C760.126 671.08 778.074 670.041 795.95 670.072C811.937 670.099 826.602 665.234 840.387 657.64C850.786 651.911 856.926 642.313 857.489 630.891C858.215 616.181 857.255 601.329 856.141 586.604C855.069 572.439 846.712 563.704 832.946 560.605C825.594 558.95 818.05 558.147 808.583 556.705Z"/><path d="M237.309 285.627C236.407 293.197 234.31 300.25 235.655 306.57C240.13 327.603 240.212 348.78 240.025 370.053C239.92 381.841 239.751 393.638 240.072 405.418C240.401 417.516 234.314 425.45 224.506 431.222C214.113 437.337 202.736 439.975 190.777 440.221C183.935 440.362 177.086 440.306 170.242 440.237C154.976 440.085 141.383 428.034 141.365 412.718C141.335 387.689 142.406 362.652 143.381 337.633C144.076 319.834 145.113 302.038 146.476 284.277C148.042 263.876 149.772 243.489 158.544 224.46C170.07 199.458 188.062 183.451 216.556 181.551C228.649 180.745 240.741 179.664 252.848 179.394C295.364 178.445 337.889 177.914 380.406 176.981C402.017 176.507 423.623 175.641 445.222 174.724C478.546 173.311 511.861 171.657 545.183 170.192C564.501 169.343 583.824 168.574 603.149 167.932C628.935 167.075 654.726 166.378 680.514 165.611C705.922 164.856 731.327 163.91 756.74 163.391C791.663 162.678 826.598 161.75 861.518 162.062C873.051 162.165 884.84 164.835 895.999 168.091C912.167 172.809 922.839 184.251 925.79 200.909C929.084 219.507 932.487 238.366 932.718 257.15C932.971 277.871 930.192 298.696 927.765 319.362C925.795 336.147 925.571 352.623 929.875 369.054C933.826 384.135 937.085 399.287 936.23 415.091C935.477 429.01 929.398 437.969 915.545 439.433C898.274 441.257 880.773 441.03 863.365 441.34C856.575 441.461 849.764 440.259 842.969 440.327C833.125 440.427 827.081 435.448 824.28 426.662C820.332 414.277 818.472 401.337 820.041 388.475C823.797 357.672 828.453 326.98 832.533 296.215C833.329 290.214 833.414 284.083 833.378 278.015C833.317 267.66 829.59 262.502 819.34 260.39C810.472 258.562 801.361 257.593 792.309 257.051C765.079 255.42 737.804 254.504 710.586 252.723C660.502 249.444 610.393 249.626 560.267 250.846C536.757 251.418 513.249 252.173 489.752 253.124C455.282 254.52 420.711 254.932 386.386 258.021C344.186 261.819 302.185 267.866 260.121 273.119C251.346 274.215 242.89 276.514 237.309 285.627Z"/></svg>';
@@ -571,7 +598,7 @@
   /* ---- Hero showcase map: a locked (non-interactive) preview of trainer locations.
          Reuses map.html's brand recolor + coordinates so it stays faithful to the real map. ---- */
   const BRAND = { land:'#E4DDD6', land2:'#DED9CE', water:'#D2CBBE', border:'#A2998A', road:'#DAD3C7', building:'#DCD6CB', label:'#5B5244', halo:'#F3F0EC' };
-  // [lon, lat, isDuo] - the real roster, mirroring trainers-map.html: 10 spots (13 trainers),
+  // [lon, lat, isDuo] - the real roster, mirroring trainers-map.html: 11 spots (14 trainers),
   // with the Berlin, Leipzig and Obenhausen duos merged, plus the two Swiss pins.
   const HERO_PINS = [
     [9.732,52.375,0],   // Hannover
@@ -579,6 +606,7 @@
     [9.454,47.353,0],   // Carmen (Gais AR, her training venue)
     [7.383,47.144,0],   // Büren an der Aare, CH
     [8.505,48.905,0],   // Karlsbad
+    [9.920,47.537,0],   // Daniel (Oberreute, Allgäu, the Ausbildung venue)
     [10.898,48.371,0],  // Augsburg
     [12.375,51.340,1],  // Leipzig (Emi & Rouven)
     [6.083,50.776,0],   // Aachen
@@ -637,5 +665,6 @@
     setTimeout(() => heroMapEl.classList.add('is-ready'), 2500); // safety: never leave the panel blank
   }
 </script>
+<script src="js/cookie-consent.js" defer></script>
 </body>
 </html>

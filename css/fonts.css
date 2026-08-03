@@ -1,0 +1,93 @@
+/* Art of Breath — self-hosted web fonts.
+   Playfair Display (headings) and Raleway (body) are the licensable substitutes for the
+   proprietary Apple faces Athelas and Galvji. Both are SIL Open Font License; the license
+   files sit next to the woff2 files in fonts/.
+
+   Latin subset, woff2 only, generated from google-webfonts-helper (gwfh.mranftl.com) on
+   2026-08-03. Nothing here touches fonts.googleapis.com or fonts.gstatic.com: the remote
+   Google Fonts load was the site's single biggest legal exposure (LG München I,
+   3 O 17493/20) and is gone.
+
+   Weights are exactly the ones the pages use. If a page starts using a new weight, add the
+   file here rather than letting the browser synthesise it. */
+
+/* ---- Playfair Display (var(--serif)) ---- */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/playfair-display-v40-latin-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/playfair-display-v40-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/playfair-display-v40-latin-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/playfair-display-v40-latin-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/playfair-display-v40-latin-italic.woff2') format('woff2');
+}
+
+/* ---- Raleway (var(--sans)) ---- */
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('../fonts/raleway-v37-latin-300.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/raleway-v37-latin-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/raleway-v37-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/raleway-v37-latin-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/raleway-v37-latin-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/raleway-v37-latin-italic.woff2') format('woff2');
+}

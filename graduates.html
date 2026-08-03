@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Art of Breath — Trainer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+<link rel="preload" as="font" type="font/woff2" href="fonts/raleway-v37-latin-regular.woff2" crossorigin />
+<link rel="preload" as="font" type="font/woff2" href="fonts/playfair-display-v40-latin-600.woff2" crossorigin />
+<link rel="stylesheet" href="css/fonts.css" />
 <style>
   :root {
     /* ---- Surface & ink (primary neutrals) ---- */
@@ -305,14 +305,34 @@
   .empty button:hover { background: var(--btn-hover); }
 
   /* ============ FOOTER ============ */
-  .footer {
-    background: var(--bg-sink); border-top: 1px solid var(--line);
-    padding: 40px 0; margin-top: 20px;
+  main.wrap { padding-bottom: 72px; }
+
+  /* ============ FOOTER (identical on every page) ============
+     Vertical space above the footer belongs to the last section of each page, not to
+     the footer itself, so this block can stay byte-identical everywhere. */
+  .foot { border-top: 1px solid var(--line); background: var(--bg-sink); }
+  .foot-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px 28px; padding: 34px 0;
   }
-  .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-  .footer .brand-name { font-size: 17px; }
-  .footer .mark { width: 24px; height: 24px; }
-  .footer small { color: var(--faint); font-size: 13px; letter-spacing: .02em; }
+  .foot-id { display: flex; align-items: center; gap: 12px; }
+  .foot .mark { width: 26px; height: 26px; color: var(--muted); display: block; flex: none; }
+  .foot small { color: var(--faint); font-size: 12.5px; letter-spacing: .03em; }
+  .foot-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; }
+  .foot-links a, .foot-links button {
+    font-family: inherit; font-size: 12.5px; letter-spacing: .03em; color: var(--muted);
+    background: none; border: 0; padding: 0; cursor: pointer; text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .foot-links a:hover, .foot-links button:hover { color: var(--ink); border-color: var(--line); }
+  .foot-links a:focus-visible, .foot-links button:focus-visible {
+    outline: none; color: var(--ink); border-color: var(--muted);
+  }
+  @media (max-width: 640px) {
+    .foot-inner { flex-direction: column; text-align: center; }
+    .foot-links { justify-content: center; }
+  }
 
   /* ============ ENTRANCE ANIMATION ============ */
   .card { opacity: 0; transform: translateY(14px); }
@@ -349,13 +369,13 @@
   <!-- ============ NAV ============ -->
   <nav class="nav">
     <div class="wrap nav-inner">
-      <a class="brand" href="#" aria-label="Art of Breath — Startseite">
+      <a class="brand" href="index.html" aria-label="Art of Breath — Startseite">
         <span class="mark" data-seal aria-hidden="true"></span>
         <span class="brand-name">Art of Breath</span>
       </a>
       <div class="nav-links">
-        <a class="nav-link" href="#">Startseite</a>
-        <a class="nav-link is-active" href="#" aria-current="page">Trainer</a>
+        <a class="nav-link" href="index.html">Startseite</a>
+        <a class="nav-link" href="trainers-map.html">Trainer</a>
       </div>
     </div>
   </nav>
@@ -407,13 +427,17 @@
   </main>
 
   <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <div class="wrap footer-inner">
-      <a class="brand" href="#" aria-label="Art of Breath">
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-id">
         <span class="mark" data-seal aria-hidden="true"></span>
-        <span class="brand-name">Art of Breath</span>
-      </a>
-      <small>Breathwork-Trainer-Ausbildung · Vorschau mit Platzhalter-Daten</small>
+        <small>&copy; 2026 Art of Breath &middot; Breathwork-Trainer in Deutschland &amp; der Schweiz</small>
+      </div>
+      <nav class="foot-links" aria-label="Rechtliches">
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutzerklärung</a>
+        <button type="button" data-consent-open>Cookie-Einstellungen</button>
+      </nav>
     </div>
   </footer>
 
@@ -579,5 +603,6 @@
 
   render();
 </script>
+<script src="js/cookie-consent.js" defer></script>
 </body>
 </html>
