@@ -24,6 +24,11 @@
 
     /* ---- Accent & action ---- */
     --accent:      #B45C43;
+    /* The source-pin gold. Mirrors trainers-map.html; if one moves, move both. The dot is
+       filled with the brand's Gold Seam gradient; --source is that gradient's endpoint kept as
+       a solid for the ring. Gold Seam, never Kintsugi Gold. */
+    --source:      #C2923F;
+    --source-fill: linear-gradient(135deg, #C2923F 0%, #DFBB72 50%, #C2923F 100%);
     --btn:         #6B6150;
     --btn-hover:   #5B5244;
 
@@ -109,6 +114,20 @@
   .on-dark .btn-primary:hover { background: #fff; }
   .on-dark .btn-ghost { color: var(--inverse); border-color: rgba(242,238,233,.28); }
   .on-dark .btn-ghost:hover { border-color: rgba(242,238,233,.55); background: rgba(242,238,233,.06); }
+
+  /* Daniel is named in running copy twice before you reach his section, and both mentions
+     jump to it. Inline in a paragraph, so it stays the paragraph's own colour and marks itself
+     with an underline rather than growing into a button that would compete with the real CTA
+     a few lines below it. */
+  .inline-link {
+    color: inherit; text-decoration: none;
+    border-bottom: 1px solid rgba(180,92,67,.5); padding-bottom: 1px;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .inline-link:hover { color: var(--ink); border-color: var(--accent); }
+  .inline-link:focus-visible {
+    outline: none; border-radius: 3px; box-shadow: 0 0 0 3px rgba(124,112,92,.30);
+  }
 
   /* ============ BANDS ============ */
   .band { padding: clamp(66px, 9vw, 118px) 0; }
@@ -229,6 +248,24 @@
   .hpin { display: block; width: 14px; height: 14px; border-radius: 50%; background: var(--accent);
     border: 3px solid var(--card); box-shadow: 0 2px 5px rgba(56,53,48,.4); pointer-events: none; }
   .hpin.duo { box-shadow: 0 0 0 3px rgba(180,92,67,.26), 0 2px 5px rgba(56,53,48,.4); }
+  /* Daniel's dot on the locked hero map gets the same treatment as on the real one, minus
+     the label: the preview has no interaction to explain, so a name would be noise. The
+     ring lives on the pin's own ::after rather than a child element, because these markers
+     are bare spans with no innerHTML. */
+  .hpin.source { width: 19px; height: 19px; z-index: 2; background: var(--source-fill); }
+  .hpin.source::after {
+    /* inset is measured from the padding box, which sits inside the 3px white border, so it
+       has to reach back past that before it clears the dot, and then start a little wider
+       still or the pulse's brightest frame is hidden under the dot. */
+    content: ""; position: absolute; inset: -5px; border-radius: 50%;
+    border: 2px solid var(--source); opacity: 0;
+    animation: hpin-breath 3.2s cubic-bezier(.33, 0, .25, 1) infinite;
+  }
+  @keyframes hpin-breath {
+    0%   { transform: scale(1.15); opacity: .72; }
+    70%  { transform: scale(3.2);  opacity: 0; }
+    100% { transform: scale(3.2);  opacity: 0; }
+  }
 
   /* ============ LEARN ============ */
   .learn-head { max-width: 62ch; }
@@ -253,6 +290,56 @@
   .find-stats span { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; color: var(--faint); }
   .find-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
 
+  /* ============ TEACHER (Daniel, light) ============
+     Placed between the trainer handoff and the dark lineage band, because he is the answer
+     to the question the trainer list raises. Photo left of the copy is the one arrangement
+     of the two-column band this page had not used yet; .learn-grid runs the other way and
+     .approach-lead and .root both bleed off an edge, so this reads as its own beat without
+     a single new visual device.
+     The three steps below the copy are the only numbered sequence on the site, and they
+     carry durations rather than 01/02/03 because the training genuinely is a sequence and
+     how long each part takes is the thing worth knowing. This stays a portrait, not a
+     sales page: no dates, no price, and the link goes where every trainer's link goes. */
+  #daniel { scroll-margin-top: 72px; }
+  .teacher-grid {
+    display: grid; grid-template-columns: minmax(0, .74fr) minmax(0, 1fr);
+    gap: clamp(30px, 4.6vw, 68px); align-items: center;
+  }
+  .teacher-head .band-title { margin-top: 8px; }
+  .teacher-head .lede { margin: 20px 0 0; }
+
+  /* The path runs across the full band rather than down the right column: it is a sequence,
+     and a sequence reads left to right. Three separate top rules instead of one across the
+     whole list, so the three parts stay visibly three parts. */
+  .path {
+    list-style: none; margin: clamp(40px, 5.4vw, 68px) 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 clamp(24px, 3.6vw, 52px);
+  }
+  .path li { padding: 21px 0 0; border-top: 1px solid var(--line); }
+  .path-when {
+    display: block; margin-bottom: 9px;
+    font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 2.4vw, 27px);
+    line-height: 1.15; color: var(--ink); font-variant-numeric: tabular-nums;
+  }
+  .path-what {
+    display: block; margin-bottom: 10px;
+    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em;
+    color: var(--faint); line-height: 1.3;
+  }
+  .path-note { margin: 0; font-size: 15px; line-height: 1.64; color: var(--muted); }
+  .teacher-link { margin-top: clamp(26px, 3vw, 34px); }
+  .teacher-link a {
+    display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
+    color: var(--ink); font-size: 14px; font-weight: 600; letter-spacing: .03em;
+    border-bottom: 1px solid var(--line); padding-bottom: 4px;
+    transition: border-color .2s ease;
+  }
+  .teacher-link a:hover { border-color: var(--muted); }
+  .teacher-link a:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,112,92,.30); border-radius: 4px; }
+  .teacher-link svg { width: 16px; height: 16px; transition: transform .2s ease; }
+  .teacher-link a:hover svg { transform: translateX(3px); }
+
   /* ============ ROOT (Daniel, dark) ============ */
   .root { position: relative; overflow: hidden;
           display: flex; align-items: center; min-height: clamp(440px, 40vw, 580px); }
@@ -276,6 +363,7 @@
   .root-lead { font-family: var(--serif); font-weight: 500; font-size: clamp(24px, 3vw, 34px);
                line-height: 1.24; color: var(--inverse); margin: 0 0 20px; }
   .root p:not(.eyebrow):not(.root-lead) { color: #C9C1B1; font-size: 17px; line-height: 1.7; margin: 0 0 26px; max-width: 52ch; }
+  .root p:last-child { margin-bottom: 0; }
   .root a.textlink { display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
                      font-weight: 600; font-size: 15px; letter-spacing: .02em; color: var(--inverse);
                      border-bottom: 1px solid rgba(242,238,233,.32); padding-bottom: 3px; transition: border-color .2s ease; }
@@ -362,6 +450,13 @@
     .find-card { grid-template-columns: 1fr; }
     .find-cta { align-items: stretch; }
     .find-cta .btn { justify-content: center; }
+    /* the portrait leads the section stacked, the way the eye reads it side by side */
+    #daniel { scroll-margin-top: 72px; }
+  .teacher-grid { grid-template-columns: 1fr; gap: clamp(28px, 5vw, 40px); }
+    /* three columns become three stacked steps, each keeping its own rule */
+    .path { grid-template-columns: 1fr; }
+    .path li { padding: 19px 0 22px; }
+    .path li:last-child { padding-bottom: 0; }
     /* photo drops below the text and fades top and bottom instead of sideways */
     .root { display: block; min-height: 0; }
     .root-inner > * { max-width: 100%; }
@@ -395,6 +490,8 @@
     * { transition: none !important; }
     html { scroll-behavior: auto; }
     .fade-up { animation: none; opacity: 1; transform: none; }
+    /* The source dot keeps its second ring, it just stops breathing. */
+    .hpin.source::after { animation: none; opacity: .4; transform: scale(2); }
   }
 </style>
 </head>
@@ -423,8 +520,9 @@
         <h1 class="hero-title fade-up d1">Lerne, mit dem Atem zu arbeiten.</h1>
         <p class="hero-lede fade-up d2">
           Art of Breath zeigt dir, was im Atem steckt: als Werkzeug für dich selbst, und als
-          Handwerk, mit dem du andere sicher durch eine Atemreise führst. Dahinter stehen
-          Trainer in ganz Deutschland und der Schweiz, alle ausgebildet von Daniel Alan.
+          Handwerk, mit dem du andere sicher durch eine Atemreise führst. Dahinter steht
+          <a class="inline-link" href="#daniel">Daniel Alan</a>, und die Trainer, die er ausgebildet
+          hat, in ganz Deutschland und der Schweiz.
         </p>
         <div class="hero-cta fade-up d3">
           <a class="btn btn-primary" href="trainers-map.html">Trainer in deiner Nähe finden <span data-arrow></span></a>
@@ -457,7 +555,7 @@
       <div class="cover-text">
         <p class="eyebrow">Die Gemeinschaft</p>
         <h2 class="band-title">Was Art of Breath ist</h2>
-        <p>Jeder Trainer bei Art of Breath hat denselben Weg hinter sich: erst die eigene Erfahrung mit dem Atem, dann die Ausbildung bei Daniel Alan. Niemand hier gibt etwas weiter, das er nicht selbst durchlebt hat.</p>
+        <p>Jeder Trainer bei Art of Breath hat denselben Weg hinter sich: erst die eigene Erfahrung mit dem Atem, dann die Ausbildung bei <a class="inline-link" href="#daniel">Daniel Alan</a>. Niemand hier gibt etwas weiter, das er nicht selbst durchlebt hat.</p>
         <p>Was mit einem einzelnen Lehrer begann, findet heute in vielen Städten statt: nah an deinem Alltag, in kleinen Gruppen, und mit derselben Tiefe wie am Anfang.</p>
       </div>
     </div>
@@ -510,6 +608,71 @@
     </div>
   </section>
 
+  <!-- ============ DER LEHRER: DANIEL ALAN ============ -->
+  <section class="band" id="daniel">
+    <div class="wrap">
+      <div class="teacher-grid">
+        <figure class="figure figure-tall photo">
+          <img src="images/daniel-teacher-1200.jpg"
+               srcset="images/daniel-teacher-800.jpg 800w, images/daniel-teacher-1200.jpg 1200w"
+               sizes="(max-width: 860px) 100vw, 36vw"
+               width="1200" height="1500" loading="lazy" decoding="async"
+               alt="Daniel Alan lehnt an einem Türrahmen und schaut in die Kamera." />
+        </figure>
+        <div class="teacher-head">
+          <p class="eyebrow">Der Lehrer</p>
+          <h2 class="band-title">Daniel Alan</h2>
+          <p class="lede">Alle Trainer auf dieser Seite haben ihr Handwerk bei Daniel gelernt. Sein Buch „Atem, Die Lösung für dein Trauma“ stand auf der Spiegel-Bestsellerliste, über 300 Menschen sind seither durch seine Ausbildung gegangen.</p>
+          <p class="p-body">Seine Arbeit steht an einer Stelle, an der sonst selten jemand steht: zwischen dem, was die Neurowissenschaft über das Nervensystem weiß, und dem, was ein Körper braucht, um wirklich loszulassen. Gelernt hat er bei Harvard-Professoren und tibetischen Mönchen, bei Schamanen im Amazonasgebiet und bei Pionieren der somatischen Körperarbeit.</p>
+          <p class="p-body">Er lebt mit seiner Familie auf Bali und unterrichtet international. Die deutschsprachige Ausbildung läuft im Allgäu.</p>
+          <p class="teacher-link">
+            <a href="https://daniel-alan.com" target="_blank" rel="noopener">Mehr über Daniel <span data-arrow></span></a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Durations, not 01/02/03: the training really is a sequence, and how long each
+           part lasts is the thing a reader wants from it. -->
+      <ol class="path">
+        <li>
+          <span class="path-when">14 Tage</span>
+          <span class="path-what">Initiation vor Ort</span>
+          <p class="path-note">Der Kern der Ausbildung, in einer Gruppe an einem Ort. Atemphysiologie, Nervensystem und Trauma, und die Praxis, einen Raum zu halten, in dem Menschen loslassen können.</p>
+        </li>
+        <li>
+          <span class="path-when">3 Monate</span>
+          <span class="path-what">Begleitete Praxis</span>
+          <p class="path-note">Danach übst du weiter, mit Handbuch, Videokurs und regelmäßigen Calls, bis die Arbeit sitzt.</p>
+        </li>
+        <li>
+          <span class="path-when">Danach</span>
+          <span class="path-what">Mentoring</span>
+          <p class="path-note">Daniel begleitet jede Ausbildung persönlich. Die Verbindung endet nicht mit dem Zertifikat, aus ihr ist diese Trainerliste entstanden.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ DIE WURZEL (lineage coda) ============
+       Deliberately short, and deliberately without a link. The section above it is the
+       portrait and the section below it is the trainer handoff with the real button, so all
+       this band has to do is turn one teacher into fourteen names and hand you on. A second
+       "go and see the trainers" link here would sit directly above the first. -->
+  <section class="band band-dark root on-dark">
+    <div class="wrap root-inner">
+      <p class="eyebrow">Die Wurzel</p>
+      <p class="root-lead">Aus einem wurden vierzehn</p>
+      <p>Was als die Arbeit eines Einzelnen begann, tragen heute dreizehn ausgebildete Trainer weiter, in Deutschland und der Schweiz. Dieselben Grundlagen, dieselbe Sorgfalt, und jeder mit eigenen Schwerpunkten.</p>
+    </div>
+    <div class="root-photo">
+      <img src="images/daniel-reeds-1400.jpg"
+           srcset="images/daniel-reeds-800.jpg 800w, images/daniel-reeds-1400.jpg 1400w"
+           sizes="(max-width: 860px) 100vw, 48vw"
+           width="933" height="1400" loading="lazy" decoding="async"
+           alt="Daniel Alan im Profil, zwischen hohem Schilf sitzend." />
+    </div>
+  </section>
+
   <!-- ============ FIND (map handoff) ============ -->
   <section class="band">
     <div class="wrap">
@@ -540,23 +703,6 @@
                alt="Ein Dachraum voller Menschen auf Matten, ein Trainer kniet neben einer Teilnehmerin." />
         </picture>
       </div>
-    </div>
-  </section>
-
-  <!-- ============ DIE WURZEL: DANIEL ALAN ============ -->
-  <section class="band band-dark root on-dark">
-    <div class="wrap root-inner">
-      <p class="eyebrow">Die Wurzel</p>
-      <p class="root-lead">Am Anfang stand ein Lehrer</p>
-      <p>Jeder Trainer auf dieser Seite hat sein Handwerk bei Daniel Alan gelernt. Daniel arbeitet seit vielen Jahren mit dem Atem, dort, wo Forschung, Traumaarbeit und Praxis sich berühren.</p>
-      <a class="textlink" href="https://daniel-alan.com" target="_blank" rel="noopener">Daniel kennenlernen <span data-arrow></span></a>
-    </div>
-    <div class="root-photo">
-      <img src="images/daniel-reeds-1400.jpg"
-           srcset="images/daniel-reeds-800.jpg 800w, images/daniel-reeds-1400.jpg 1400w"
-           sizes="(max-width: 860px) 100vw, 48vw"
-           width="933" height="1400" loading="lazy" decoding="async"
-           alt="Daniel Alan im Profil, zwischen hohem Schilf sitzend." />
     </div>
   </section>
 
@@ -598,21 +744,23 @@
   /* ---- Hero showcase map: a locked (non-interactive) preview of trainer locations.
          Reuses map.html's brand recolor + coordinates so it stays faithful to the real map. ---- */
   const BRAND = { land:'#E4DDD6', land2:'#DED9CE', water:'#D2CBBE', border:'#A2998A', road:'#DAD3C7', building:'#DCD6CB', label:'#5B5244', halo:'#F3F0EC' };
-  // [lon, lat, isDuo] - the real roster, mirroring trainers-map.html: 11 spots (14 trainers),
+  // [lon, lat, kind] - the real roster, mirroring trainers-map.html: 11 spots (14 trainers),
   // with the Berlin, Leipzig and Obenhausen duos merged, plus the two Swiss pins.
+  // kind: 0 solo, 1 duo, 2 the source pin (Daniel), which is drawn larger and breathes.
   const HERO_PINS = [
     [9.732,52.375,0],   // Hannover
     [13.420,52.517,1],  // Berlin (Aris & Jana)
     [9.454,47.353,0],   // Carmen (Gais AR, her training venue)
     [7.383,47.144,0],   // Büren an der Aare, CH
     [8.505,48.905,0],   // Karlsbad
-    [9.920,47.537,0],   // Daniel (Oberreute, Allgäu, the Ausbildung venue)
+    [9.920,47.537,2],   // Daniel (Oberreute, Allgäu, the Ausbildung venue)
     [10.898,48.371,0],  // Augsburg
     [12.375,51.340,1],  // Leipzig (Emi & Rouven)
     [6.083,50.776,0],   // Aachen
     [11.594,48.023,0],  // Oberhaching
     [10.205,48.285,1]   // Obenhausen (Sandra & Christian)
   ];
+  const HPIN_KIND = { 1: ' duo', 2: ' source' };
   const heroMapEl = document.getElementById('hero-map');
   if (heroMapEl && window.maplibregl) {
     const hmap = new maplibregl.Map({
@@ -654,7 +802,7 @@
       }
       HERO_PINS.forEach(p => {
         const el = document.createElement('span');
-        el.className = 'hpin' + (p[2] ? ' duo' : '');
+        el.className = 'hpin' + (HPIN_KIND[p[2]] || '');
         new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([p[0], p[1]]).addTo(hmap);
       });
       frame();

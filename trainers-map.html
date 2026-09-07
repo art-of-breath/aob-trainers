@@ -23,6 +23,18 @@
 
     /* ---- Accent & action ---- */
     --accent:      #B45C43;
+    /* Gold, and the only thing on the map that is not the roster's Ember. It marks the source
+       pin and nothing else. Gold rather than a darker Ember because a different hue reads as a
+       different kind of thing, where a darker tint only reads as louder, and gold because the
+       parent brand's own meaning for it is "solar leadership, illumination, embodied guidance".
+       The dot is filled with the brand's Gold Seam gradient, which gives a 22px circle a faint
+       sheen a flat ochre does not have. --source is that gradient's endpoint kept as a solid,
+       for everything a gradient cannot do: the ring, the focus halo and the shadows.
+       This is the *Gold Seam* gradient, never Kintsugi Gold, which stays on kintsugi. */
+    --source:      #C2923F;
+    --source-deep: #A47C37;
+    --source-fill:      linear-gradient(135deg, #C2923F 0%, #DFBB72 50%, #C2923F 100%);
+    --source-fill-deep: linear-gradient(135deg, #A47C37 0%, #C9A058 50%, #A47C37 100%);
     --btn:         #6B6150;
     --btn-hover:   #5B5244;
 
@@ -181,6 +193,49 @@
   .pin:focus-visible { outline: none; }
   .pin:focus-visible .pin-dot { box-shadow: 0 0 0 3px rgba(180,92,67,.5); }
 
+  /* ---- The source pin ----
+     Every other dot on this map is someone who learned from Daniel, so his dot is
+     marked as the origin rather than as the winner: no badge, no second colour, just
+     more of what a pin already is. Bigger dot, a label that stays up instead of waiting
+     for a hover, and it sits above the others where they overlap (his pin and Carmen's
+     are 40 km apart and nearly touch at the default zoom).
+     The ring is the one animation on this page: a single breath, six seconds, expanding
+     and gone. It is the only place on the site where a breath rhythm is taken literally,
+     and it belongs to the one dot everything else came from. Follows .pin-label in
+     using the marker element as its containing block, so it needs no position of its own
+     on .pin (see the note above the .pin block). */
+  .pin.source { z-index: 3; }
+  .pin.source .pin-dot { width: 22px; height: 22px; border-width: 4px; background: var(--source-fill); }
+  .pin.source:hover .pin-dot, .pin.source.hot .pin-dot { background: var(--source-fill-deep); }
+  .pin.source.active .pin-dot {
+    background: var(--source-fill-deep);
+    box-shadow: 0 0 0 4px rgba(194,146,63,.26), 0 2px 6px rgba(56,53,48,.42);
+  }
+  .pin.source:focus-visible .pin-dot { box-shadow: 0 0 0 3px rgba(194,146,63,.6); }
+  .pin.source .pin-label { opacity: 1; font-size: 16px; padding: 8px 17px; transform: translate(-50%, -10px); }
+  .pin.source .pin-ring {
+    position: absolute; left: 50%; top: 50%;
+    width: 22px; height: 22px; margin: -11px 0 0 -11px;
+    /* A thin gold line, which is what the Gold Seam gradient is for, but it expands and fades
+       on a circular 2px border, where a gradient would need border-image and lose the radius.
+       Solid --source is one of that gradient's own stops, so it stays inside the family. */
+    border-radius: 50%; border: 2px solid var(--source);
+    pointer-events: none; opacity: 0;
+    /* 3.2s, not the 6s of an actual slow breath. At six seconds the ring was gone for so long
+       between pulses that most visitors never saw one; this reads as a steady beat you notice
+       within a second or two of the map settling. */
+    animation: pin-breath 3.2s cubic-bezier(.33, 0, .25, 1) infinite;
+  }
+  /* Starts at 1.25, not 1. The ring and the dot are the same 22px, so a cycle beginning at
+     scale 1 spends its brightest moment hidden underneath the dot's 4px white border and only
+     becomes visible once it has already faded. Beginning just outside that border means the
+     pulse is seen from its first frame. */
+  @keyframes pin-breath {
+    0%   { transform: scale(1.25); opacity: .72; }
+    70%  { transform: scale(3.2);  opacity: 0; }
+    100% { transform: scale(3.2);  opacity: 0; }
+  }
+
   /* Floating trainer card + scrim — centered over the map card */
   .scrim {
     position: absolute; inset: 0; z-index: 5; border-radius: var(--r-card);
@@ -216,6 +271,9 @@
     position: absolute; right: -8px; bottom: -12px; width: 140px; height: 140px;
     color: var(--ink); opacity: .05; pointer-events: none;
   }
+  /* The Daniel Alan mark is drawn with noticeably heavier strokes than the Art of Breath seal,
+     so at the seal's 5% it sits louder in the same corner. A hair less evens the two out. */
+  .tcard-body .wm.wm-da { opacity: .042; }
   .tcard-close {
     position: absolute; top: 16px; right: 16px; z-index: 2;
     width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer;
@@ -241,6 +299,13 @@
   .mono-b { background: #DED9D0; color: #5B5244; }
   .mono-c { background: #EAE5DE; color: #857E72; }
   .mono-d { background: #E2DFD3; color: #756F54; }
+  /* Only the source card carries a kicker, so the line that says what he is to the rest
+     of the roster arrives before his name rather than buried in the bio. */
+  .tcard-kicker {
+    display: block; margin: 0 0 6px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .2em;
+    color: var(--faint);
+  }
   .tcard-name { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1.15; color: var(--ink); margin: 0 0 4px; }
   .tcard-city { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); letter-spacing: .02em; }
   .tcard-city svg { width: 12px; height: 12px; color: var(--faint); }
@@ -284,6 +349,66 @@
   }
   .roster-title em { font-style: italic; color: var(--muted); }
   .roster-head .lede { margin: 18px 0 0; font-size: 17px; line-height: 1.7; color: var(--muted); }
+
+  /* ---- The lead entry ----
+     Daniel sits above the list, not at the top of it. The roster is thirteen people who
+     learned from one person, so the device that marks him has to say *source*, not *rank*:
+     he gets the position and the space, and the list below is introduced as the rest of
+     the sentence. Nothing new is invented for him: the portrait is the row photo turned
+     upright and enlarged, and the type roles are the row's one size up.
+     No accent seam on this block. The rows carry one, but there it is a hover affordance
+     and appears only under the cursor; parked permanently down the side of a portrait it
+     read as a stray rule rather than as emphasis. The size, the portrait and the kicker
+     already say what it was there to say. */
+  .lead {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 0 48px; padding: 38px 4px 42px 0;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  /* Portrait and numbers share the narrow column so it carries its own weight down the
+     block instead of leaving a tall gap under the photo. */
+  .lead-aside { grid-column: 1; }
+  .lead-photo {
+    width: 100%; aspect-ratio: 3 / 4; overflow: hidden;
+    border-radius: var(--r-card); background: var(--bg-sink); box-shadow: var(--shadow);
+  }
+  .lead-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lead-body { grid-column: 2; min-width: 0; }
+  .lead .eyebrow { margin: 0 0 13px; }
+  .lead-name {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(27px, 3vw, 35px); line-height: 1.1; letter-spacing: .005em;
+    color: var(--ink); margin: 0 0 7px;
+  }
+  .lead-bio { margin: 17px 0 0; font-size: 15.5px; line-height: 1.68; color: var(--muted); max-width: 60ch; }
+  /* Three numbers, all of them his, none of them decorative: what the training is and how
+     many people have been through it. Stacked rather than in a rail, because the column
+     is narrow and because stacked they read down the page beside the paragraphs that
+     explain them. Figure and label roles are the map caption's. */
+  .lead-facts { list-style: none; margin: 26px 0 0; padding: 0; }
+  .lead-facts li {
+    display: flex; align-items: baseline; gap: 12px;
+    padding: 13px 0; border-top: 1px solid var(--line-soft);
+  }
+  .lead-facts li:last-child { border-bottom: 1px solid var(--line-soft); }
+  .lead-facts b {
+    flex: none; min-width: 3.4em;
+    font-family: var(--serif); font-weight: 500; font-size: 26px; line-height: 1;
+    color: var(--ink); font-variant-numeric: tabular-nums;
+  }
+  .lead-facts span {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .13em;
+    line-height: 1.4; color: var(--faint);
+  }
+  .lead .row-tags { margin-top: 26px; }
+  .lead .cta { margin-top: 26px; }
+
+  /* The label that turns the list underneath into the rest of the sentence. */
+  .rows-intro {
+    margin: 44px 0 15px; font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .2em; color: var(--faint);
+  }
 
   .rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
   .row { border-bottom: 1px solid var(--line); }
@@ -342,6 +467,18 @@
     }
     .row-photo { width: 150px; height: 105px; }
     .row-go { margin-top: 18px; }
+    /* The portrait is the whole point of the lead entry, so it keeps its shape and moves
+       above the copy rather than shrinking into a thumbnail beside it. Stacked, the numbers
+       leave the aside and sit under the paragraphs they belong to. */
+    .lead {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "photo" "body" "facts";
+      gap: 26px 0; padding: 32px 4px 36px 0;
+    }
+    .lead-aside { display: contents; }
+    .lead-photo { grid-area: photo; width: min(300px, 62%); }
+    .lead-body { grid-area: body; }
+    .lead-facts { grid-area: facts; margin: 0; }
   }
   @media (max-width: 560px) {
     .roster { padding-top: 56px; }
@@ -349,6 +486,9 @@
     .row-photo { width: 108px; height: 76px; }
     .row-photo.is-mono span { font-size: 22px; }
     .row-name { font-size: 19px; }
+    .lead-photo { width: min(240px, 72%); }
+    .lead-facts b { font-size: 23px; min-width: 3.1em; }
+    .lead .cta { width: 100%; justify-content: center; }
   }
 
   /* ============ FOOTER ============ */
@@ -412,6 +552,9 @@
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
     html { scroll-behavior: auto; }
+    /* The source pin keeps its second ring, it just stops breathing: the marker still
+       reads as different from the other thirteen without anything moving. */
+    .pin.source .pin-ring { animation: none; opacity: .4; transform: scale(2); }
   }
 </style>
 </head>
@@ -478,10 +621,12 @@
         <p class="eyebrow">Alle Trainer</p>
         <h2 class="roster-title">Wer hinter den Punkten <em>steht.</em></h2>
         <p class="lede">
-          Vierzehn Trainer, alphabetisch sortiert. Lies in Ruhe, wer wie arbeitet, und geh direkt
-          auf die Website, wenn dich jemand anspricht.
+          Vierzehn Trainer, und einer davon ist ihr Lehrer. Lies in Ruhe, wer wie arbeitet, und
+          geh direkt auf die Website, wenn dich jemand anspricht.
         </p>
       </div>
+      <div id="roster-lead"></div>
+      <p class="rows-intro">Die dreizehn Trainer, die bei ihm gelernt haben</p>
       <ul class="rows" id="roster"></ul>
     </section>
   </main>
@@ -505,6 +650,15 @@
 <script>
   /* ---- Brand marks & icons ---- */
   const SEAL = '<svg viewBox="0 0 1080 1080" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M600.311 924.135C547.881 924.666 496.585 925.201 445.289 925.723C421.337 925.967 397.383 926.113 373.432 926.435C339.253 926.895 305.057 928.375 270.902 927.694C247.5 927.227 224.101 924.288 200.814 921.502C191.903 920.436 183.024 917.432 174.626 914.072C154.447 906 142.886 890.815 141.727 868.973C140.842 852.283 140.858 835.51 141.281 818.795C141.788 798.705 143.291 778.643 144.113 758.558C145.508 724.456 147.645 690.347 147.7 656.238C147.746 627.844 145.199 599.447 143.898 571.047C143.117 554.001 142.206 536.951 141.941 519.894C141.7 504.456 148.564 495.41 163.633 492.371C175.087 490.061 186.872 488.573 198.543 488.327C232.756 487.606 266.996 488.09 301.207 487.313C323.156 486.814 345.066 484.759 367.008 483.714C379.531 483.117 392.083 482.99 404.624 482.926C427.828 482.808 451.034 482.892 474.239 482.892C477.933 482.892 481.627 482.892 485.44 482.892C485.015 462.328 484.5 443.054 484.299 423.778C484.249 418.902 485.347 414.025 485.661 409.131C486.201 400.696 491.448 396.853 499.014 396.301C511.474 395.392 524.012 394.41 536.465 394.876C548.91 395.343 561.278 397.669 573.702 398.963C588.093 400.463 591.316 405.454 590.738 419.571C589.861 441.004 590.509 462.5 590.509 484.699C605.573 485.117 619.155 485.505 632.737 485.86C635.398 485.93 638.063 485.827 640.725 485.877C668.436 486.395 696.149 487.465 723.855 487.318C756.881 487.143 789.905 486.033 822.923 485.125C842.638 484.582 862.343 483.027 882.05 483.079C899.898 483.126 916.534 487.432 929.549 501.29C940.461 512.908 943.211 527.349 944.43 542.128C945.955 560.635 946.698 579.226 947.15 597.796C948.045 634.598 948.947 671.41 948.999 708.219C949.035 733.252 947.213 758.284 947.03 783.322C946.922 798.081 949.425 812.893 948.841 827.605C948.335 840.343 946.473 853.371 942.863 865.576C932.8 899.6 904.841 920.629 869.413 921.763C841.714 922.65 813.997 923.192 786.285 923.381C724.673 923.801 663.059 923.903 600.311 924.135ZM808.583 556.705C791.923 557.446 775.258 558.908 758.603 558.814C639.624 558.145 520.632 560.692 401.66 556.838C364.071 555.62 326.397 556.113 288.786 556.946C276.093 557.228 263.19 559.966 250.908 563.437C239.331 566.709 234.218 575.467 234.475 586.465C234.765 598.916 233.14 611.415 232.274 623.888C230.308 652.213 227.991 680.519 226.469 708.868C225.945 718.642 227.221 728.529 227.908 738.348C229.626 762.914 231.303 787.486 233.417 812.019C233.86 817.156 234.96 822.899 237.721 827.061C250.853 846.853 269.027 860.14 292.576 864.517C300.909 866.065 309.773 864.646 318.391 864.792C346.099 865.26 373.802 866.049 401.511 866.294C431.557 866.561 461.61 866.573 491.654 866.229C501.083 866.121 510.557 864.917 519.901 863.494C543.023 859.971 565.823 855.931 589.633 856.71C617.955 857.636 646.395 854.014 674.802 853.604C699.446 853.249 724.153 853.968 748.763 855.406C777.854 857.106 806.377 853.667 834.674 847.879C849.655 844.815 858.645 834.201 857.986 818.718C857.519 807.731 858.574 796.687 858.445 785.675C858.379 780.039 857.351 774.393 856.5 768.791C854.821 757.742 847.827 750.885 837.538 748.379C827.677 745.977 817.394 743.93 807.315 744.015C693.719 744.978 580.075 740.809 466.516 747.422C446.913 748.564 427.11 746.391 407.404 745.633C394.186 745.124 382.204 740.635 370.988 733.838C363.554 729.334 361.399 726.053 363.715 717.982C369.722 697.047 380.719 679.151 398.273 665.769C403.003 662.164 408.146 660.744 414.306 662.539C422.296 664.868 430.447 667.483 438.661 668.048C466.253 669.942 493.897 671.909 521.534 672.128C562.166 672.449 602.817 670.578 643.446 670.983C676.426 671.311 709.302 667.551 742.336 669.845C760.126 671.08 778.074 670.041 795.95 670.072C811.937 670.099 826.602 665.234 840.387 657.64C850.786 651.911 856.926 642.313 857.489 630.891C858.215 616.181 857.255 601.329 856.141 586.604C855.069 572.439 846.712 563.704 832.946 560.605C825.594 558.95 818.05 558.147 808.583 556.705Z"/><path d="M237.309 285.627C236.407 293.197 234.31 300.25 235.655 306.57C240.13 327.603 240.212 348.78 240.025 370.053C239.92 381.841 239.751 393.638 240.072 405.418C240.401 417.516 234.314 425.45 224.506 431.222C214.113 437.337 202.736 439.975 190.777 440.221C183.935 440.362 177.086 440.306 170.242 440.237C154.976 440.085 141.383 428.034 141.365 412.718C141.335 387.689 142.406 362.652 143.381 337.633C144.076 319.834 145.113 302.038 146.476 284.277C148.042 263.876 149.772 243.489 158.544 224.46C170.07 199.458 188.062 183.451 216.556 181.551C228.649 180.745 240.741 179.664 252.848 179.394C295.364 178.445 337.889 177.914 380.406 176.981C402.017 176.507 423.623 175.641 445.222 174.724C478.546 173.311 511.861 171.657 545.183 170.192C564.501 169.343 583.824 168.574 603.149 167.932C628.935 167.075 654.726 166.378 680.514 165.611C705.922 164.856 731.327 163.91 756.74 163.391C791.663 162.678 826.598 161.75 861.518 162.062C873.051 162.165 884.84 164.835 895.999 168.091C912.167 172.809 922.839 184.251 925.79 200.909C929.084 219.507 932.487 238.366 932.718 257.15C932.971 277.871 930.192 298.696 927.765 319.362C925.795 336.147 925.571 352.623 929.875 369.054C933.826 384.135 937.085 399.287 936.23 415.091C935.477 429.01 929.398 437.969 915.545 439.433C898.274 441.257 880.773 441.03 863.365 441.34C856.575 441.461 849.764 440.259 842.969 440.327C833.125 440.427 827.081 435.448 824.28 426.662C820.332 414.277 818.472 401.337 820.041 388.475C823.797 357.672 828.453 326.98 832.533 296.215C833.329 290.214 833.414 284.083 833.378 278.015C833.317 267.66 829.59 262.502 819.34 260.39C810.472 258.562 801.361 257.593 792.309 257.051C765.079 255.42 737.804 254.504 710.586 252.723C660.502 249.444 610.393 249.626 560.267 250.846C536.757 251.418 513.249 252.173 489.752 253.124C455.282 254.52 420.711 254.932 386.386 258.021C344.186 261.819 302.185 267.866 260.121 273.119C251.346 274.215 242.89 276.514 237.309 285.627Z"/></svg>';
+  /* The Daniel Alan mark, the parent brand's own logo. It replaces the Art of Breath seal in
+     the watermark of exactly one card, the source card, and appears nowhere else on the site:
+     the nav, the footer and every other trainer card stay Art of Breath. Padded out from the
+     source file's tight viewBox, which is cut hard to the mark, so it carries the same optical
+     weight as the seal does in the same 140px slot.
+     Source: `context/brand-assets/da-logo.svg`. Inlined rather than linked because no page here
+     may make a request the repo does not serve, and because the watermark takes its colour from
+     `currentColor`. */
+  const DA_MARK = '<svg viewBox="-254 -244 2093 2016" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(3.840279,0,0,3.840279,-2250.687952,-2212.857812)"><g transform="matrix(2.666667,0,0,2.666667,0,0)"><path d="M352.33,267.04C342.94,272.93 330.75,269.95 320.6,270.8C297.99,272.68 277.41,270.68 254.73,271.7C249.11,271.95 242.93,271.45 237.14,270.49C227.77,268.94 225.19,268.77 222.77,273.59C221.8,275.52 221.49,278.17 221.62,282.33C221.81,288.5 222.37,291.64 227.32,291.29C228.57,291.2 232.04,291.25 233.19,290.74C236.02,289.49 240.21,289.33 243,289.29C261.55,289 278.63,287.51 297.18,287.37C303.3,287.32 309.5,285.84 315.52,286.47C330.47,288.03 345.48,289.78 359.04,283.78C366.24,280.59 372.72,280.16 372.72,262.23C371.83,249.56 371.65,240.31 372.72,227.92C372.72,216.4 357.92,217.25 352.57,217.35C328.68,217.83 305.37,216.76 281.48,216.93C265.1,217.05 248.72,216.95 232.34,217.03C230.25,217.03 228.16,217.58 226.1,217.84C222.32,218.31 222.23,224.73 222.57,230.5C222.77,233.9 227.03,235.52 230.19,235.27C241.71,234.36 253.15,231.89 264.67,231.44C284.34,230.68 304.06,230.6 323.75,231.05C333.08,231.26 342.67,232.3 351.6,234.93C360.32,237.5 357.13,246.51 357.94,253.21C358.6,258.62 356.28,264.57 352.32,267.05L352.33,267.04Z"/></g><g transform="matrix(2.666667,0,0,2.666667,0,0)"><path d="M371.46,345.44C370.78,341.65 371.33,337.76 371.69,334.06C372.69,323.75 372.81,315.64 370.82,307.51C368.52,298.07 356.86,299.62 350.27,299.73C328.62,300.1 308.82,300.91 285.48,302.1C271.36,303.48 244.36,303.09 235.47,304.17C224.58,305.49 222.84,319.47 222.47,324.86C221.73,335.58 221.13,346.32 221.11,357.06C221.11,359.47 223.3,363.73 225.21,363.97C234.67,365.15 239.53,361.46 239.86,357.21C240.24,352.33 239.94,347.39 240.03,342.48C240.17,335.06 235.8,326.93 243.29,325.32C248.02,324.31 254.37,323.5 259.15,322.79C274.29,320.54 288.6,320.98 303.82,320.02C317.21,319.18 330.77,320.68 344.24,321.39C354.51,321.93 354.42,322.87 353.19,332.87C352.11,341.61 348.3,364.01 355.02,364.01C358.35,364.01 364.47,364.99 368.92,364.01C375.55,362.55 372.88,353.44 371.45,345.43L371.46,345.44Z"/></g><g transform="matrix(2.666667,0,0,2.666667,0,0)"><path d="M305.51,348.71C303.53,348.54 289.92,346.83 288.12,348.88C286.42,350.82 288.12,363.36 288.12,363.36C288.12,363.36 287.5,364.15 289.58,363.96C289.58,363.96 295.44,363.27 297.86,363.96C300.27,364.65 305.43,364.65 306.14,363.65C307.7,361.45 306.59,352.88 306.59,352.88C306.59,352.88 307.49,348.87 305.51,348.7L305.51,348.71Z"/></g></g></svg>';
   const MARKER = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.686-7-11a7 7 0 1114 0c0 5.314-7 11-7 11z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.8"/></svg>';
   const CLOSE = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   const ARROW = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -576,10 +730,31 @@
       people: [{ name: 'Christiane Walter', website: 'https://atemtraum.de', img: 'trainers/images/cards/christiane-walter.jpg' }],
       tags: ['training-mentoring', 'trauma-informed', 'women-motherhood'],
       bio: 'Zwanzig Jahre war Christiane Hebamme, seit fast dreißig begleitet sie Menschen durch schwere Übergänge. Eine Atemsession sieht sie wie eine Geburt: einen Prozess, den sie halten und weisen kann, gehen musst du ihn selbst. Ihre Reihe Mutterlinien bringt Bindung und Nervensystem zusammen.' },
-    { id: 'daniel-alan', city: 'Oberreute, Allgäu', lon: 9.920, lat: 47.537,
-      people: [{ name: 'Daniel Alan', website: 'https://daniel-alan.com', img: 'trainers/images/cards/daniel-alan.jpg' }],
+    /* `source: true` marks the one spot everything else on this map came from. It drives
+       three things and nothing else: the pin treatment, the kicker on the map card, and
+       being lifted out of the alphabetical list into the lead entry above it. */
+    { id: 'daniel-alan', city: 'Oberreute, Allgäu', lon: 9.920, lat: 47.537, source: true,
+      kicker: 'Der Lehrer',
+      people: [{ name: 'Daniel Alan', website: 'https://daniel-alan.com',
+                 img: 'trainers/images/cards/daniel-alan.jpg',
+                 portrait: 'trainers/images/cards/daniel-alan-portrait.jpg' }],
       tags: ['training-mentoring', 'trauma-informed', 'retreats', 'ceremony-spirituality'],
-      bio: 'Daniel ist der Lehrer, bei dem alle anderen auf dieser Karte gelernt haben. Sein Buch „Atem, Die Lösung für dein Trauma“ wurde zum Spiegel-Bestseller, über 300 Menschen sind durch seine Ausbildung gegangen. Er verbindet, was die Neurowissenschaft über das Nervensystem weiß, mit körperbasierter Praxis, gelernt bei Harvard-Professoren ebenso wie bei tibetischen Mönchen und Schamanen im Amazonasgebiet. Er lebt mit seiner Familie auf Bali, die deutsche Ausbildung läuft im Gurprasad Seminarhaus im Allgäu.' },
+      bio: 'Daniel ist der Lehrer, bei dem alle anderen auf dieser Karte gelernt haben. Sein Buch „Atem, Die Lösung für dein Trauma“ wurde zum Spiegel-Bestseller, über 300 Menschen sind durch seine Ausbildung gegangen. Er verbindet, was die Neurowissenschaft über das Nervensystem weiß, mit körperbasierter Praxis, gelernt bei Harvard-Professoren ebenso wie bei tibetischen Mönchen und Schamanen im Amazonasgebiet. Er lebt mit seiner Familie auf Bali, die deutsche Ausbildung läuft im Gurprasad Seminarhaus im Allgäu.',
+      /* Only the lead entry reads this: the longer copy the roster row has room for, and
+         three numbers that describe the training itself. Facts are figure + label pairs. */
+      lead: {
+        where: 'Lebt auf Bali · Ausbildung im Allgäu',
+        paras: [
+          'Daniel Alan ist der Lehrer, bei dem alle anderen auf dieser Seite gelernt haben. Sein Buch „Atem, Die Lösung für dein Trauma“ stand auf der Spiegel-Bestsellerliste und hat bewusstes Atmen einem breiten deutschsprachigen Publikum zugänglich gemacht. Über 300 Menschen haben seine Ausbildung abgeschlossen und arbeiten heute selbst mit dem Atem, in Coaching, Therapie und eigener Praxis.',
+          'Seine Arbeit bringt zwei Seiten zusammen, die sonst selten zusammenkommen: was die Neurowissenschaft über das Nervensystem weiß, und was ein Körper tatsächlich braucht, um loszulassen. Gelernt hat er bei Harvard-Professoren und tibetischen Mönchen, bei Schamanen im Amazonasgebiet und bei Pionieren der somatischen Körperarbeit. Der Atem ist für ihn der Zugang zum Nervensystem, kein Trick, der schnelle Ergebnisse verspricht.',
+          'Er lebt mit seiner Familie auf Bali und unterrichtet international. Sein Punkt auf der Karte sitzt deshalb dort, wo die deutschsprachige Ausbildung stattfindet: im Gurprasad Seminarhaus in Oberreute im Allgäu.',
+        ],
+        facts: [
+          ['300+', 'Absolventen'],
+          ['14', 'Tage Initiation'],
+          ['3', 'Monate Praxisphase'],
+        ],
+      } },
     { id: 'hanna-kutschke', city: 'Augsburg', lon: 10.898, lat: 48.371,
       people: [{ name: 'Hanna Kutschke', website: 'https://www.atemwege-breathwork.de', img: 'trainers/images/cards/hanna-kutschke.jpg' }],
       tags: ['training-mentoring', 'trauma-informed', 'coaching', 'clinical-background'],
@@ -642,11 +817,30 @@
   /* ---- Map ---- */
   const BRAND = { land: '#E4DDD6', land2: '#DED9CE', water: '#D2CBBE', border: '#A2998A', road: '#DAD3C7', building: '#DCD6CB', label: '#5B5244', halo: '#F3F0EC' };
 
+  /* ---- Opening view ----
+     The roster runs from Berlin down to the Swiss Mittelland and Daniel's pin sits at its
+     southern edge, so any box drawn around the fourteen leaves him pressed to the bottom.
+     Hence the south edge below: that empty stretch of Alps carries no pin and exists only
+     to lift him off the bottom of the frame, from 85% down under the old fixed view to
+     about 78%, while the map also comes in some 40% closer. The north edge clears Berlin
+     by enough room for its hover label.
+     Framing him any tighter than this costs the north of the country, and finding someone
+     near you is still what this page is for; the pin itself does the rest of the work.
+     Declared as bounds rather than a fixed center/zoom so the same intent survives every
+     card height in clamp(430px, 72vh, 780px). It is the opening view, not a leash: pan
+     and zoom stay free afterwards and nothing refits on resize. */
+  const HOME = [[6.0, 46.1], [13.6, 53.1]];
   const map = new maplibregl.Map({
     container: 'map',
     style: 'https://tiles.openfreemap.org/styles/positron',
-    center: [9.9, 50.55], zoom: 4.95, minZoom: 4.5, maxZoom: 15,
-    maxBounds: [[3.5, 46.4], [17.8, 56.2]],
+    bounds: HOME, fitBoundsOptions: { padding: 34 },
+    minZoom: 4.5, maxZoom: 15,
+    /* Wider than it looks like it needs to be, and deliberately so. maxBounds is a hard
+       clamp on the viewport, not just on panning: the old 3.5..17.8 box was narrower than
+       the opening view HOME asks for at desktop widths, so MapLibre quietly zoomed in to
+       obey it and pushed the Berlin pin half off the top edge. These limits sit outside
+       any framing this page asks for, and minZoom still stops anyone reaching open sea. */
+    maxBounds: [[-0.5, 45.2], [21.5, 56.4]],
     attributionControl: { compact: true },
     cooperativeGestures: false,
   });
@@ -690,10 +884,12 @@
   function addPins() {
     TRAINERS.forEach(t => {
       const el = document.createElement('button');
-      el.className = 'pin' + (isDuo(t) ? ' duo' : '');
+      el.className = 'pin' + (isDuo(t) ? ' duo' : '') + (t.source ? ' source' : '');
       el.type = 'button';
       el.setAttribute('aria-label', displayName(t) + ', ' + t.city);
-      el.innerHTML = '<span class="pin-label">' + esc(displayName(t)) + '</span><span class="pin-dot"></span>';
+      // The ring is decoration on top of the dot, so it goes first and stays out of the label.
+      el.innerHTML = (t.source ? '<span class="pin-ring" aria-hidden="true"></span>' : '') +
+                     '<span class="pin-label">' + esc(displayName(t)) + '</span><span class="pin-dot"></span>';
       el.addEventListener('mouseenter', () => setHot(t.id, true));
       el.addEventListener('mouseleave', () => setHot(t.id, false));
       el.addEventListener('focus', () => setHot(t.id, true));
@@ -720,7 +916,8 @@
       return '<span class="tag" style="background:' + bg + ';color:' + fg + '">' + TAGS[s] + '</span>';
     }).join('');
     const badge = duo ? ' <span class="duo-badge">Duo</span>' : '';
-    const title =
+    const kicker = t.kicker ? '<span class="tcard-kicker">' + esc(t.kicker) + '</span>' : '';
+    const title = kicker +
       '<h2 class="tcard-name">' + esc(name) + badge + '</h2>' +
       '<span class="tcard-city">' + MARKER + esc(t.city) + '</span>';
 
@@ -757,7 +954,11 @@
       '<button class="tcard-close" type="button" aria-label="Schließen">' + CLOSE + '</button>' +
       banner +
       '<div class="tcard-body">' +
-        '<span class="wm" aria-hidden="true">' + SEAL + '</span>' +
+        // The source card, and only the source card, is watermarked with the Daniel Alan mark
+        // instead of the Art of Breath seal. Every other card, and the nav and footer on every
+        // page, stay Art of Breath.
+        '<span class="wm' + (t.source ? ' wm-da' : '') + '" aria-hidden="true">' +
+          (t.source ? DA_MARK : SEAL) + '</span>' +
         head +
         '<p class="tcard-bio">' + esc(t.bio) + '</p>' +
         '<div class="tcard-tags">' + tags + '</div>' +
@@ -787,12 +988,51 @@
   scrim.addEventListener('click', closeCard);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && openId) closeCard(); });
 
+  /* ---- Lead entry: the source spot, rendered above the list instead of inside it.
+     Reads t.lead for the long copy and the numbers; everything else it needs (name,
+     website, tags, portrait) it takes from the same data the map card uses, so the two
+     never drift apart. If no spot is marked `source` the block simply stays empty and
+     the list below is the whole roster. ---- */
+  const SOURCE = TRAINERS.find(t => t.source && t.lead);
+  if (SOURCE) {
+    const p = SOURCE.people[0];
+    const tags = SOURCE.tags.map(s => {
+      const [bg, fg] = TAG_STYLE[s];
+      return '<span class="tag" style="background:' + bg + ';color:' + fg + '">' + TAGS[s] + '</span>';
+    }).join('');
+    const facts = SOURCE.lead.facts.map(([n, label]) =>
+      '<li><b>' + esc(n) + '</b><span>' + esc(label) + '</span></li>').join('');
+    const paras = SOURCE.lead.paras.map(s => '<p class="lead-bio">' + esc(s) + '</p>').join('');
+
+    document.getElementById('roster-lead').innerHTML =
+      '<article class="lead">' +
+        '<div class="lead-aside">' +
+          '<div class="lead-photo">' +
+            '<img src="' + (p.portrait || p.img) + '" alt="Portrait von ' + esc(p.name) + '" ' +
+                 'width="760" height="1013" />' +
+          '</div>' +
+          '<ul class="lead-facts">' + facts + '</ul>' +
+        '</div>' +
+        '<div class="lead-body">' +
+          '<p class="eyebrow">' + esc(SOURCE.kicker || 'Der Lehrer') + '</p>' +
+          '<h3 class="lead-name">' + esc(p.name) + '</h3>' +
+          '<p class="row-city">' + MARKER + esc(SOURCE.lead.where) + '</p>' +
+          paras +
+          '<div class="row-tags">' + tags + '</div>' +
+          '<a class="cta" href="' + p.website + '" target="_blank" rel="noopener">' +
+            'Zur Website' + ARROW + '</a>' +
+        '</div>' +
+      '</article>';
+  }
+
   /* ---- Roster: the same people the map holds, flattened to one row each.
      The map groups the three duos onto a shared pin, so a duo carries a combined
      bio and the union of both tag sets. Alphabetical order splits those pairs up,
      so a person's own `bio`/`tags` win where they exist and the spot's are the
-     fallback for everyone who sits alone on a pin anyway. ---- */
+     fallback for everyone who sits alone on a pin anyway. The source spot is skipped
+     here, it has already had its own block above. ---- */
   const ROSTER = TRAINERS
+    .filter(t => t !== SOURCE)
     .flatMap(t => t.people.map(p => ({
       name: p.name,
       website: p.website,
