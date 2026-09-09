@@ -24,11 +24,6 @@
 
     /* ---- Accent & action ---- */
     --accent:      #B45C43;
-    /* The source-pin gold. Mirrors trainers-map.html; if one moves, move both. The dot is
-       filled with the brand's Gold Seam gradient; --source is that gradient's endpoint kept as
-       a solid for the ring. Gold Seam, never Kintsugi Gold. */
-    --source:      #C2923F;
-    --source-fill: linear-gradient(135deg, #C2923F 0%, #DFBB72 50%, #C2923F 100%);
     --btn:         #6B6150;
     --btn-hover:   #5B5244;
 
@@ -248,24 +243,6 @@
   .hpin { display: block; width: 14px; height: 14px; border-radius: 50%; background: var(--accent);
     border: 3px solid var(--card); box-shadow: 0 2px 5px rgba(56,53,48,.4); pointer-events: none; }
   .hpin.duo { box-shadow: 0 0 0 3px rgba(180,92,67,.26), 0 2px 5px rgba(56,53,48,.4); }
-  /* Daniel's dot on the locked hero map gets the same treatment as on the real one, minus
-     the label: the preview has no interaction to explain, so a name would be noise. The
-     ring lives on the pin's own ::after rather than a child element, because these markers
-     are bare spans with no innerHTML. */
-  .hpin.source { width: 19px; height: 19px; z-index: 2; background: var(--source-fill); }
-  .hpin.source::after {
-    /* inset is measured from the padding box, which sits inside the 3px white border, so it
-       has to reach back past that before it clears the dot, and then start a little wider
-       still or the pulse's brightest frame is hidden under the dot. */
-    content: ""; position: absolute; inset: -5px; border-radius: 50%;
-    border: 2px solid var(--source); opacity: 0;
-    animation: hpin-breath 3.2s cubic-bezier(.33, 0, .25, 1) infinite;
-  }
-  @keyframes hpin-breath {
-    0%   { transform: scale(1.15); opacity: .72; }
-    70%  { transform: scale(3.2);  opacity: 0; }
-    100% { transform: scale(3.2);  opacity: 0; }
-  }
 
   /* ============ LEARN ============ */
   .learn-head { max-width: 62ch; }
@@ -490,8 +467,6 @@
     * { transition: none !important; }
     html { scroll-behavior: auto; }
     .fade-up { animation: none; opacity: 1; transform: none; }
-    /* The source dot keeps its second ring, it just stops breathing. */
-    .hpin.source::after { animation: none; opacity: .4; transform: scale(2); }
   }
 </style>
 </head>
@@ -746,21 +721,21 @@
   const BRAND = { land:'#E4DDD6', land2:'#DED9CE', water:'#D2CBBE', border:'#A2998A', road:'#DAD3C7', building:'#DCD6CB', label:'#5B5244', halo:'#F3F0EC' };
   // [lon, lat, kind] - the real roster, mirroring trainers-map.html: 11 spots (14 trainers),
   // with the Berlin, Leipzig and Obenhausen duos merged, plus the two Swiss pins.
-  // kind: 0 solo, 1 duo, 2 the source pin (Daniel), which is drawn larger and breathes.
+  // kind: 0 solo, 1 duo. Daniel's spot is a solo pin like the rest, same as on the real map.
   const HERO_PINS = [
     [9.732,52.375,0],   // Hannover
     [13.420,52.517,1],  // Berlin (Aris & Jana)
     [9.454,47.353,0],   // Carmen (Gais AR, her training venue)
     [7.383,47.144,0],   // Büren an der Aare, CH
     [8.505,48.905,0],   // Karlsbad
-    [9.920,47.537,2],   // Daniel (Oberreute, Allgäu, the Ausbildung venue)
+    [9.920,47.537,0],   // Daniel (Oberreute, Allgäu, the Ausbildung venue)
     [10.898,48.371,0],  // Augsburg
     [12.375,51.340,1],  // Leipzig (Emi & Rouven)
     [6.083,50.776,0],   // Aachen
     [11.594,48.023,0],  // Oberhaching
     [10.205,48.285,1]   // Obenhausen (Sandra & Christian)
   ];
-  const HPIN_KIND = { 1: ' duo', 2: ' source' };
+  const HPIN_KIND = { 1: ' duo' };
   const heroMapEl = document.getElementById('hero-map');
   if (heroMapEl && window.maplibregl) {
     const hmap = new maplibregl.Map({

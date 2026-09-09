@@ -23,18 +23,6 @@
 
     /* ---- Accent & action ---- */
     --accent:      #B45C43;
-    /* Gold, and the only thing on the map that is not the roster's Ember. It marks the source
-       pin and nothing else. Gold rather than a darker Ember because a different hue reads as a
-       different kind of thing, where a darker tint only reads as louder, and gold because the
-       parent brand's own meaning for it is "solar leadership, illumination, embodied guidance".
-       The dot is filled with the brand's Gold Seam gradient, which gives a 22px circle a faint
-       sheen a flat ochre does not have. --source is that gradient's endpoint kept as a solid,
-       for everything a gradient cannot do: the ring, the focus halo and the shadows.
-       This is the *Gold Seam* gradient, never Kintsugi Gold, which stays on kintsugi. */
-    --source:      #C2923F;
-    --source-deep: #A47C37;
-    --source-fill:      linear-gradient(135deg, #C2923F 0%, #DFBB72 50%, #C2923F 100%);
-    --source-fill-deep: linear-gradient(135deg, #A47C37 0%, #C9A058 50%, #A47C37 100%);
     --btn:         #6B6150;
     --btn-hover:   #5B5244;
 
@@ -192,49 +180,6 @@
   .pin:hover .pin-label, .pin.hot .pin-label, .pin.active .pin-label { opacity: 1; }
   .pin:focus-visible { outline: none; }
   .pin:focus-visible .pin-dot { box-shadow: 0 0 0 3px rgba(180,92,67,.5); }
-
-  /* ---- The source pin ----
-     Every other dot on this map is someone who learned from Daniel, so his dot is
-     marked as the origin rather than as the winner: no badge, no second colour, just
-     more of what a pin already is. Bigger dot, a label that stays up instead of waiting
-     for a hover, and it sits above the others where they overlap (his pin and Carmen's
-     are 40 km apart and nearly touch at the default zoom).
-     The ring is the one animation on this page: a single breath, six seconds, expanding
-     and gone. It is the only place on the site where a breath rhythm is taken literally,
-     and it belongs to the one dot everything else came from. Follows .pin-label in
-     using the marker element as its containing block, so it needs no position of its own
-     on .pin (see the note above the .pin block). */
-  .pin.source { z-index: 3; }
-  .pin.source .pin-dot { width: 22px; height: 22px; border-width: 4px; background: var(--source-fill); }
-  .pin.source:hover .pin-dot, .pin.source.hot .pin-dot { background: var(--source-fill-deep); }
-  .pin.source.active .pin-dot {
-    background: var(--source-fill-deep);
-    box-shadow: 0 0 0 4px rgba(194,146,63,.26), 0 2px 6px rgba(56,53,48,.42);
-  }
-  .pin.source:focus-visible .pin-dot { box-shadow: 0 0 0 3px rgba(194,146,63,.6); }
-  .pin.source .pin-label { opacity: 1; font-size: 16px; padding: 8px 17px; transform: translate(-50%, -10px); }
-  .pin.source .pin-ring {
-    position: absolute; left: 50%; top: 50%;
-    width: 22px; height: 22px; margin: -11px 0 0 -11px;
-    /* A thin gold line, which is what the Gold Seam gradient is for, but it expands and fades
-       on a circular 2px border, where a gradient would need border-image and lose the radius.
-       Solid --source is one of that gradient's own stops, so it stays inside the family. */
-    border-radius: 50%; border: 2px solid var(--source);
-    pointer-events: none; opacity: 0;
-    /* 3.2s, not the 6s of an actual slow breath. At six seconds the ring was gone for so long
-       between pulses that most visitors never saw one; this reads as a steady beat you notice
-       within a second or two of the map settling. */
-    animation: pin-breath 3.2s cubic-bezier(.33, 0, .25, 1) infinite;
-  }
-  /* Starts at 1.25, not 1. The ring and the dot are the same 22px, so a cycle beginning at
-     scale 1 spends its brightest moment hidden underneath the dot's 4px white border and only
-     becomes visible once it has already faded. Beginning just outside that border means the
-     pulse is seen from its first frame. */
-  @keyframes pin-breath {
-    0%   { transform: scale(1.25); opacity: .72; }
-    70%  { transform: scale(3.2);  opacity: 0; }
-    100% { transform: scale(3.2);  opacity: 0; }
-  }
 
   /* Floating trainer card + scrim — centered over the map card */
   .scrim {
@@ -552,9 +497,6 @@
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
     html { scroll-behavior: auto; }
-    /* The source pin keeps its second ring, it just stops breathing: the marker still
-       reads as different from the other thirteen without anything moving. */
-    .pin.source .pin-ring { animation: none; opacity: .4; transform: scale(2); }
   }
 </style>
 </head>
@@ -730,9 +672,10 @@
       people: [{ name: 'Christiane Walter', website: 'https://atemtraum.de', img: 'trainers/images/cards/christiane-walter.jpg' }],
       tags: ['training-mentoring', 'trauma-informed', 'women-motherhood'],
       bio: 'Zwanzig Jahre war Christiane Hebamme, seit fast dreißig begleitet sie Menschen durch schwere Übergänge. Eine Atemsession sieht sie wie eine Geburt: einen Prozess, den sie halten und weisen kann, gehen musst du ihn selbst. Ihre Reihe Mutterlinien bringt Bindung und Nervensystem zusammen.' },
-    /* `source: true` marks the one spot everything else on this map came from. It drives
-       three things and nothing else: the pin treatment, the kicker on the map card, and
-       being lifted out of the alphabetical list into the lead entry above it. */
+    /* `source: true` marks the one spot everything else on this map came from. Off the map
+       it drives two things and nothing else: the kicker on the map card, and being lifted
+       out of the alphabetical list into the lead entry above it. On the map itself his pin
+       is one of the fourteen, with no treatment of its own. */
     { id: 'daniel-alan', city: 'Oberreute, Allgäu', lon: 9.920, lat: 47.537, source: true,
       kicker: 'Der Lehrer',
       people: [{ name: 'Daniel Alan', website: 'https://daniel-alan.com',
@@ -884,12 +827,10 @@
   function addPins() {
     TRAINERS.forEach(t => {
       const el = document.createElement('button');
-      el.className = 'pin' + (isDuo(t) ? ' duo' : '') + (t.source ? ' source' : '');
+      el.className = 'pin' + (isDuo(t) ? ' duo' : '');
       el.type = 'button';
       el.setAttribute('aria-label', displayName(t) + ', ' + t.city);
-      // The ring is decoration on top of the dot, so it goes first and stays out of the label.
-      el.innerHTML = (t.source ? '<span class="pin-ring" aria-hidden="true"></span>' : '') +
-                     '<span class="pin-label">' + esc(displayName(t)) + '</span><span class="pin-dot"></span>';
+      el.innerHTML = '<span class="pin-label">' + esc(displayName(t)) + '</span><span class="pin-dot"></span>';
       el.addEventListener('mouseenter', () => setHot(t.id, true));
       el.addEventListener('mouseleave', () => setHot(t.id, false));
       el.addEventListener('focus', () => setHot(t.id, true));
