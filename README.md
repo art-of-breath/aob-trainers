@@ -1,4 +1,4 @@
-# Art of Breath — Trainer-Website (Deploy-Kopie)
+# Art of Breath — Trainer-Website
 
 Statische Website. Kein Build-Schritt, kein Framework. Der Ordner selbst ist das, was gehostet
 wird: `index.html` ist die Einstiegsseite.
@@ -53,8 +53,26 @@ installiert und wird benutzt, auf allen anderen Systemen greift Playfair Display
 Die Kartenkacheln kommen von [openfreemap.org](https://openfreemap.org). Das ist die einzige
 externe Verbindung zur Laufzeit, siehe Datenschutzerklärung § 7.
 
-## Herkunft
+## Wo dieses Repo hingehört
 
-Kopie aus `projects/2026-07-aob-trainers-website/`. Dort liegen die Quelldateien: Trainer-Profile
-als Markdown, Copy-Entwürfe, Design-Notizen, Logo-Varianten und die Bild-Originale. Änderungen
-gehören zuerst dorthin, dann in diese Kopie.
+Dieses Repo ist **nur die Website**, keine Kopie von etwas anderem. Änderungen an den Seiten
+passieren hier und nirgendwo sonst.
+
+Es liegt als Unterordner `site/` in einem größeren Arbeitsordner, der nicht auf GitHub liegt und
+auch nicht dorthin soll. Dort stehen die Trainer-Profile als Markdown, die Copy-Entwürfe, die
+Design-Notizen, die Logo-Varianten und die Bild-Originale. Der Arbeitsordner ignoriert `site/`,
+die beiden Repos kommen sich also nicht in die Quere.
+
+**Alle Pfade in den Seiten sind relativ.** Das ist der Grund, warum die Vorschau unter
+`https://art-of-breath.github.io/aob-trainers/` funktioniert, obwohl sie in einem Unterpfad
+liegt. Ein absoluter Pfad wie `/css/fonts.css` würde auf der echten Domain weiter gut aussehen
+und die Vorschau still zerlegen.
+
+## Vorschau und Live
+
+| Wo | Was |
+|---|---|
+| GitHub Pages | `https://art-of-breath.github.io/aob-trainers/`, aus `main`, Ordner `/ (root)`. Zum Herzeigen. |
+| Vercel | Die echte Seite, aus demselben Repo, ebenfalls aus dem Root. |
+
+Beide bauen nichts, sie liefern die Dateien aus, wie sie hier liegen.
