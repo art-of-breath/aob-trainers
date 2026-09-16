@@ -12,6 +12,7 @@ wird: `index.html` ist die Einstiegsseite.
 | `impressum.html` | Impressum |
 | `datenschutz.html` | Datenschutzerklärung |
 | `graduates.html` | Absolventen. **Noch nicht veröffentlicht**, siehe unten. |
+| `bewerben.html` | Bewerbungsformular für Trainer. **Nicht verlinkt**, siehe unten. |
 
 ## Absolventen-Seite
 
@@ -23,6 +24,15 @@ einsetzen:
 ```html
 <a class="nav-link" href="graduates.html">Absolventen</a>
 ```
+
+## Bewerbungsformular
+
+`bewerben.html` ist das Formular, mit dem Trainer die Aufnahme ins Verzeichnis beantragen. Es
+steht in keiner Navigation; der Link wird gezielt verschickt. Die Seite lädt nichts von außen.
+Erst beim Absenden schickt sie die Angaben als JSON an den n8n-Webhook, dessen Adresse als
+Konstante `ENDPOINT` im Script der Seite steht. Alles dahinter (Tabelle, Ablauf, Fragenkatalog)
+liegt nicht in diesem Repo, sondern im Arbeitsordner unter `bewerbung/`. Datenschutzerklärung
+§ 10 beschreibt die Verarbeitung.
 
 ## Cookie-Banner und Google Analytics
 
@@ -51,7 +61,8 @@ installiert und wird benutzt, auf allen anderen Systemen greift Playfair Display
 `vercel.json` setzt nur einen langen Cache-Header für `/fonts/`.
 
 Die Kartenkacheln kommen von [openfreemap.org](https://openfreemap.org). Das ist die einzige
-externe Verbindung zur Laufzeit, siehe Datenschutzerklärung § 7.
+externe Verbindung beim Laden einer Seite, siehe Datenschutzerklärung § 7. Die zweite gibt es
+nur auf `bewerben.html` und nur beim Absenden, siehe oben.
 
 ## Wo dieses Repo hingehört
 
