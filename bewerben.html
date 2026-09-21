@@ -626,19 +626,8 @@
         </div>
 
         <div class="f" data-f="unterstuetzung">
-          <span class="f-lbl" id="l-unterstuetzung">Wobei würdest du dir Unterstützung wünschen?</span>
-          <div class="chips" role="radiogroup" aria-labelledby="l-unterstuetzung">
-            <label class="chip"><input type="radio" name="unterstuetzung" value="business" /><span>Business und Sichtbarkeit</span></label>
-            <label class="chip"><input type="radio" name="unterstuetzung" value="session-qualitaet" /><span>Qualität meiner Sessions</span></label>
-            <label class="chip"><input type="radio" name="unterstuetzung" value="beides" /><span>Beides</span></label>
-            <label class="chip"><input type="radio" name="unterstuetzung" value="keine" /><span>Im Moment nichts</span></label>
-          </div>
-          <p class="f-err" id="e-unterstuetzung"></p>
-        </div>
-
-        <div class="f" data-f="unterstuetzung_text">
-          <label class="f-lbl" for="f-ut">Woran genau? <span class="opt">optional</span></label>
-          <div class="ctl"><textarea id="f-ut" name="unterstuetzung_text" rows="3"></textarea></div>
+          <label class="f-lbl" for="f-ut">Wobei würdest du dir Unterstützung wünschen? <span class="opt">optional</span></label>
+          <div class="ctl"><textarea id="f-ut" name="unterstuetzung" rows="3" placeholder="z. B. Business und Sichtbarkeit, die Qualität meiner Sessions …"></textarea></div>
         </div>
       </fieldset>
 
@@ -742,14 +731,14 @@
     const SECTIONS = [
       { id: 's-wer', label: 'Wer du bist',              req: ['name', 'email', 'ort', 'land', 'website', 'fotos', 'ausbildung'] },
       { id: 's-wie', label: 'Wie du arbeitest',         req: ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'angebote', 'schwerpunkte', 'schwerpunkte_andere', 'sprachen_andere'] },
-      { id: 's-wo',  label: 'Wo du stehst',             req: ['einkommensanteil', 'unterstuetzung'] },
+      { id: 's-wo',  label: 'Wo du stehst',             req: ['einkommensanteil'] },
       { id: 's-was', label: 'Was du noch sagen willst', req: [] },
       { id: 's-abm', label: 'Die Abmachung',            req: ['backlink_zusage', 'datenschutz'] },
     ];
-    const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung_text', 'freitext'];
+    const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung', 'freitext'];
     const NUM    = ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'paket_anzahl'];
     const MULTI  = ['angebote', 'schwerpunkte', 'sprachen'];
-    const SINGLE = ['einkommensanteil', 'unterstuetzung'];
+    const SINGLE = ['einkommensanteil'];
     const BOOL   = ['backlink_zusage', 'datenschutz'];
     const ALL_REQ = SECTIONS.flatMap(s => s.req);
 
@@ -801,7 +790,6 @@
       schwerpunkte_andere: 'Welcher Schwerpunkt? Ein, zwei Worte reichen.',
       sprachen_andere: 'Welche Sprachen? Trag sie hier ein.',
       einkommensanteil: 'Wähl den Bereich, der am ehesten passt.',
-      unterstuetzung: 'Wähl eine Antwort. „Im Moment nichts“ ist auch eine.',
       backlink_zusage: 'Die Links gehören zur Abmachung.',
       datenschutz: 'Ohne dein Einverständnis kann das Formular nicht abgeschickt werden.',
     };
@@ -825,7 +813,7 @@
           const chosen = d[n.replace('_andere', '')].includes('andere');
           return (!chosen || d[n]) ? '' : M[n];
         }
-        case 'einkommensanteil': case 'unterstuetzung': case 'backlink_zusage': case 'datenschutz':
+        case 'einkommensanteil': case 'backlink_zusage': case 'datenschutz':
           return d[n] ? '' : M[n];
         default:
           return '';
