@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Bewerbung · Art of Breath</title>
-<meta name="description" content="Bewerbung für das Trainerverzeichnis von Art of Breath. Für Trainer, die ihre Ausbildung bei Art of Breath gemacht haben." />
+<meta name="description" content="Bewerbung für das Verzeichnis der Absolventen von Art of Breath. Für Facilitator, die ihre Ausbildung bei Art of Breath gemacht haben." />
 <meta name="robots" content="noindex" />
 <link rel="preload" as="font" type="font/woff2" href="fonts/raleway-v37-latin-regular.woff2" crossorigin />
 <link rel="preload" as="font" type="font/woff2" href="fonts/playfair-display-v40-latin-600.woff2" crossorigin />
@@ -54,7 +54,9 @@
     margin: 0; background: var(--bg); color: var(--ink);
     font-family: var(--sans); font-weight: 400; font-size: 16px; line-height: 1.5;
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    /* clip, not hidden: hidden makes body a scroll container in WebKit and the sticky nav
+       scrolls away on iOS. hidden stays as the fallback for browsers without clip. */
+    overflow-x: hidden; overflow-x: clip;
   }
   a { color: inherit; }
   button { font-family: inherit; }
@@ -230,6 +232,13 @@
   .chip input:disabled + span { opacity: .45; cursor: default; }
   .chip input:disabled + span:hover { border-color: var(--line); }
 
+  /* "Andere": a text field that opens under the chip row once the chip is chosen. It
+     reads as part of the question above, so it sits closer than a new field would. */
+  .f-more { margin-top: -10px; }
+  .f-more .f-lbl { font-size: 13.5px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+  .f-more:not([hidden]) { animation: moreIn .24s ease; }
+  @keyframes moreIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
   /* the two agreements: one card each, the whole card is the click target */
   .check {
     display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px;
@@ -348,6 +357,7 @@
     * { transition: none !important; }
     html { scroll-behavior: auto; }
     .fade-up { animation: none; opacity: 1; transform: none; }
+    .f-more:not([hidden]) { animation: none; }
   }
 </style>
 </head>
@@ -370,11 +380,11 @@
   <!-- ============ HEADER ============ -->
   <header class="header">
     <div class="wrap">
-      <p class="eyebrow fade-up">Art&nbsp;of&nbsp;Breath · Trainerverzeichnis</p>
+      <p class="eyebrow fade-up">Art&nbsp;of&nbsp;Breath · Absolventen</p>
       <h1 class="fade-up d1">Trag dich ein, <em>wenn du gelistet sein willst.</em></h1>
       <p class="lede fade-up d2">
-        Dieses Formular ist für Trainer, die ihre Ausbildung bei Art of Breath gemacht haben und im
-        Verzeichnis stehen möchten. Was du hier angibst, liest ein Mensch und meldet sich bei dir.
+        Dieses Formular ist für Absolventen von Art of Breath, die als Facilitator im Verzeichnis
+        stehen möchten. Was du hier angibst, liest ein Mensch und meldet sich bei dir.
         Die Zahlen sind keine Hürde. Sie helfen nur einzuschätzen, wo du gerade stehst und was dir
         von hier aus am meisten bringt. Etwa zehn Minuten.
       </p>
@@ -449,7 +459,7 @@
 
         <div class="f" data-f="website">
           <label class="f-lbl" for="f-website">Deine Website</label>
-          <p class="f-hint">Das Verzeichnis verlinkt dorthin, und dort landet später auch dein Link zurück.</p>
+          <p class="f-hint">Das Verzeichnis verlinkt dorthin, und dort stehen später auch deine Links zurück.</p>
           <div class="ctl"><input id="f-website" name="website" type="url" autocomplete="url" inputmode="url" placeholder="deine-seite.de" /></div>
           <p class="f-err" id="e-website"></p>
         </div>
@@ -467,9 +477,9 @@
         </div>
 
         <div class="f" data-f="ausbildung">
-          <label class="f-lbl" for="f-ausbildung">Wann hast du die Ausbildung bei Art of Breath gemacht?</label>
-          <p class="f-hint">Das Jahr, und wenn du es weißt, der Durchgang oder der Ort.</p>
-          <div class="ctl"><input id="f-ausbildung" name="ausbildung" type="text" placeholder="z. B. 2024, Oberreute" /></div>
+          <label class="f-lbl" for="f-ausbildung">Wann und bei wem hast du die Ausbildung bei Art of Breath gemacht?</label>
+          <p class="f-hint">Das Jahr und dein Ausbilder, und wenn du es weißt, der Durchgang oder der Ort.</p>
+          <div class="ctl"><input id="f-ausbildung" name="ausbildung" type="text" placeholder="z. B. 2024, Daniel Alan, Oberreute" /></div>
           <p class="f-err" id="e-ausbildung"></p>
         </div>
       </fieldset>
@@ -487,32 +497,32 @@
         </div>
 
         <div class="pair">
-          <div class="f" data-f="sessions_gesamt">
-            <label class="f-lbl" for="f-sg">Sessions insgesamt</label>
+          <div class="f" data-f="einzel_gesamt">
+            <label class="f-lbl" for="f-eg">1:1 Sessions insgesamt</label>
             <p class="f-hint">Bis heute, ungefähr.</p>
-            <div class="ctl"><input id="f-sg" name="sessions_gesamt" type="text" inputmode="numeric" /></div>
-            <p class="f-err" id="e-sessions_gesamt"></p>
+            <div class="ctl"><input id="f-eg" name="einzel_gesamt" type="text" inputmode="numeric" /></div>
+            <p class="f-err" id="e-einzel_gesamt"></p>
           </div>
-          <div class="f" data-f="workshops_gesamt">
-            <label class="f-lbl" for="f-wg">Workshops insgesamt</label>
+          <div class="f" data-f="gruppen_gesamt">
+            <label class="f-lbl" for="f-gg">Gruppen-Sessions insgesamt</label>
             <p class="f-hint">Bis heute, ungefähr.</p>
-            <div class="ctl"><input id="f-wg" name="workshops_gesamt" type="text" inputmode="numeric" /></div>
-            <p class="f-err" id="e-workshops_gesamt"></p>
+            <div class="ctl"><input id="f-gg" name="gruppen_gesamt" type="text" inputmode="numeric" /></div>
+            <p class="f-err" id="e-gruppen_gesamt"></p>
           </div>
         </div>
 
         <div class="pair">
-          <div class="f" data-f="sessions_monat">
-            <label class="f-lbl" for="f-sm">Sessions pro Monat</label>
+          <div class="f" data-f="einzel_monat">
+            <label class="f-lbl" for="f-em">1:1 Sessions pro Monat</label>
             <p class="f-hint">Im Durchschnitt, zurzeit.</p>
-            <div class="ctl"><input id="f-sm" name="sessions_monat" type="text" inputmode="decimal" /></div>
-            <p class="f-err" id="e-sessions_monat"></p>
+            <div class="ctl"><input id="f-em" name="einzel_monat" type="text" inputmode="decimal" /></div>
+            <p class="f-err" id="e-einzel_monat"></p>
           </div>
-          <div class="f" data-f="workshops_monat">
-            <label class="f-lbl" for="f-wm">Workshops pro Monat</label>
+          <div class="f" data-f="gruppen_monat">
+            <label class="f-lbl" for="f-gm">Gruppen-Sessions pro Monat</label>
             <p class="f-hint">Im Durchschnitt, zurzeit.</p>
-            <div class="ctl"><input id="f-wm" name="workshops_monat" type="text" inputmode="decimal" /></div>
-            <p class="f-err" id="e-workshops_monat"></p>
+            <div class="ctl"><input id="f-gm" name="gruppen_monat" type="text" inputmode="decimal" /></div>
+            <p class="f-err" id="e-gruppen_monat"></p>
           </div>
         </div>
 
@@ -521,13 +531,7 @@
           <p class="f-hint">Alles, was zutrifft.</p>
           <div class="chips" role="group" aria-labelledby="l-angebote">
             <label class="chip"><input type="checkbox" name="angebote" value="einzel" /><span>1:1 Sessions</span></label>
-            <label class="chip"><input type="checkbox" name="angebote" value="gruppen" /><span>Gruppen-Sessions, Circles</span></label>
-            <label class="chip"><input type="checkbox" name="angebote" value="workshops" /><span>Workshops</span></label>
-            <label class="chip"><input type="checkbox" name="angebote" value="paket" /><span>Paketbegleitung</span></label>
-            <label class="chip"><input type="checkbox" name="angebote" value="retreats" /><span>Retreats</span></label>
-            <label class="chip"><input type="checkbox" name="angebote" value="online" /><span>Online-Sessions</span></label>
-            <label class="chip"><input type="checkbox" name="angebote" value="firmen" /><span>Firmen, Teams</span></label>
-            <label class="chip"><input type="checkbox" name="angebote" value="ausbildung" /><span>Ausbildung, Mentoring</span></label>
+            <label class="chip"><input type="checkbox" name="angebote" value="gruppen" /><span>Gruppen-Sessions</span></label>
           </div>
           <p class="f-err" id="e-angebote"></p>
         </div>
@@ -562,8 +566,15 @@
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="women-motherhood" /><span>Frauen &amp; Mutterschaft</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="sound-creative" /><span>Klang &amp; kreativer Ausdruck</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="online" /><span>Online</span></label>
+            <label class="chip"><input type="checkbox" name="schwerpunkte" value="andere" /><span>Andere</span></label>
           </div>
           <p class="f-err" id="e-schwerpunkte"></p>
+        </div>
+
+        <div class="f f-more" data-f="schwerpunkte_andere" data-more="schwerpunkte" hidden>
+          <label class="f-lbl" for="f-spa">Welcher Schwerpunkt?</label>
+          <div class="ctl"><input id="f-spa" name="schwerpunkte_andere" type="text" maxlength="120" /></div>
+          <p class="f-err" id="e-schwerpunkte_andere"></p>
         </div>
 
         <div class="f" data-f="sprachen">
@@ -571,8 +582,14 @@
           <div class="chips" role="group" aria-labelledby="l-sprachen">
             <label class="chip"><input type="checkbox" name="sprachen" value="de" /><span>Deutsch</span></label>
             <label class="chip"><input type="checkbox" name="sprachen" value="en" /><span>Englisch</span></label>
-            <label class="chip"><input type="checkbox" name="sprachen" value="andere" /><span>andere</span></label>
+            <label class="chip"><input type="checkbox" name="sprachen" value="andere" /><span>Andere</span></label>
           </div>
+        </div>
+
+        <div class="f f-more" data-f="sprachen_andere" data-more="sprachen" hidden>
+          <label class="f-lbl" for="f-spr">Welche Sprachen?</label>
+          <div class="ctl"><input id="f-spr" name="sprachen_andere" type="text" maxlength="120" placeholder="z. B. Spanisch, Italienisch" /></div>
+          <p class="f-err" id="e-sprachen_andere"></p>
         </div>
 
         <div class="f" data-f="hintergrund">
@@ -640,12 +657,12 @@
       <fieldset class="sec" id="s-abm">
         <legend class="eyebrow">Die Abmachung</legend>
         <h2 class="sec-title">Ein Link in beide <em>Richtungen.</em></h2>
-        <p class="sec-note">Das Verzeichnis verlinkt auf deine Website. Im Gegenzug verlinkt deine Website auf art-of-breath.com. So wächst die Sichtbarkeit für beide Seiten.</p>
+        <p class="sec-note">Das Verzeichnis verlinkt auf deine Website. Im Gegenzug verlinkt deine Website auf art-of-breath.com und auf die Website deines Ausbilders. So wächst die Sichtbarkeit für beide Seiten.</p>
 
         <div class="f" data-f="backlink_zusage">
           <label class="check">
             <input type="checkbox" name="backlink_zusage" value="ja" />
-            <span>Wenn ich gelistet werde, setze ich auf meiner Website einen Link zu art-of-breath.com.</span>
+            <span>Wenn ich gelistet werde, setze ich auf meiner Website einen Link zu art-of-breath.com und der Website meines Ausbilders (z.&nbsp;B. daniel-alan.com).</span>
           </label>
           <p class="f-err" id="e-backlink_zusage"></p>
         </div>
@@ -724,13 +741,13 @@
 
     const SECTIONS = [
       { id: 's-wer', label: 'Wer du bist',              req: ['name', 'email', 'ort', 'land', 'website', 'fotos', 'ausbildung'] },
-      { id: 's-wie', label: 'Wie du arbeitest',         req: ['seit_jahr', 'sessions_gesamt', 'workshops_gesamt', 'sessions_monat', 'workshops_monat', 'angebote', 'schwerpunkte'] },
+      { id: 's-wie', label: 'Wie du arbeitest',         req: ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'angebote', 'schwerpunkte', 'schwerpunkte_andere', 'sprachen_andere'] },
       { id: 's-wo',  label: 'Wo du stehst',             req: ['einkommensanteil', 'unterstuetzung'] },
       { id: 's-was', label: 'Was du noch sagen willst', req: [] },
       { id: 's-abm', label: 'Die Abmachung',            req: ['backlink_zusage', 'datenschutz'] },
     ];
-    const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'hintergrund', 'kurztext', 'unterstuetzung_text', 'freitext'];
-    const NUM    = ['seit_jahr', 'sessions_gesamt', 'workshops_gesamt', 'sessions_monat', 'workshops_monat', 'paket_anzahl'];
+    const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung_text', 'freitext'];
+    const NUM    = ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'paket_anzahl'];
     const MULTI  = ['angebote', 'schwerpunkte', 'sprachen'];
     const SINGLE = ['einkommensanteil', 'unterstuetzung'];
     const BOOL   = ['backlink_zusage', 'datenschutz'];
@@ -756,6 +773,9 @@
       MULTI.forEach(n => { d[n] = checked(n); });
       SINGLE.forEach(n => { d[n] = checked(n)[0] || ''; });
       BOOL.forEach(n => { d[n] = bool(n); });
+      // the "Andere" text only counts while its chip is chosen
+      if (!d.schwerpunkte.includes('andere')) d.schwerpunkte_andere = '';
+      if (!d.sprachen.includes('andere')) d.sprachen_andere = '';
       d._honey = one('_honey');
       if (d.website && !/^https?:\/\//i.test(d.website)) d.website = 'https://' + d.website;
       return d;
@@ -778,9 +798,11 @@
       zahl: 'Eine Zahl reicht, geschätzt ist in Ordnung.',
       angebote: 'Wähl mindestens ein Angebot.',
       schwerpunkte: 'Wähl mindestens einen Schwerpunkt.',
+      schwerpunkte_andere: 'Welcher Schwerpunkt? Ein, zwei Worte reichen.',
+      sprachen_andere: 'Welche Sprachen? Trag sie hier ein.',
       einkommensanteil: 'Wähl den Bereich, der am ehesten passt.',
       unterstuetzung: 'Wähl eine Antwort. „Im Moment nichts“ ist auch eine.',
-      backlink_zusage: 'Der Link gehört zur Abmachung.',
+      backlink_zusage: 'Die Links gehören zur Abmachung.',
       datenschutz: 'Ohne dein Einverständnis kann das Formular nicht abgeschickt werden.',
     };
     function check(n, d) {
@@ -795,10 +817,14 @@
           const y = d.seit_jahr;
           return (typeof y === 'number' && y >= 1980 && y <= new Date().getFullYear()) ? '' : M.seit_jahr;
         }
-        case 'sessions_gesamt': case 'workshops_gesamt': case 'sessions_monat': case 'workshops_monat':
+        case 'einzel_gesamt': case 'gruppen_gesamt': case 'einzel_monat': case 'gruppen_monat':
           return (typeof d[n] === 'number' && !Number.isNaN(d[n])) ? '' : M.zahl;
         case 'angebote': case 'schwerpunkte':
           return d[n].length ? '' : M[n];
+        case 'schwerpunkte_andere': case 'sprachen_andere': {
+          const chosen = d[n.replace('_andere', '')].includes('andere');
+          return (!chosen || d[n]) ? '' : M[n];
+        }
         case 'einkommensanteil': case 'unterstuetzung': case 'backlink_zusage': case 'datenschutz':
           return d[n] ? '' : M[n];
         default:
@@ -864,6 +890,21 @@
       SP_COUNT.textContent = String(n);
     }
 
+    /* ---- "Andere" opens its text field ---- */
+    const MORE = Array.from(F.querySelectorAll('[data-more]'));
+    function syncMore(focusName) {
+      MORE.forEach(box => {
+        const group = box.getAttribute('data-more');
+        const open = checked(group).includes('andere');
+        box.hidden = !open;
+        if (!open) setErr(box.getAttribute('data-f'), '');
+        if (open && group === focusName) {
+          const input = box.querySelector('input');
+          if (!input.value) input.focus();
+        }
+      });
+    }
+
     /* ---- draft in this browser only, cleared on success ---- */
     function draftData() {
       const d = {};
@@ -895,6 +936,7 @@
     function onChange(e) {
       const n = e.target && e.target.name;
       if (n === 'schwerpunkte') capSchwerpunkte();
+      if ((n === 'schwerpunkte' || n === 'sprachen') && e.type === 'change' && e.target.value === 'andere') syncMore(n);
       if (n) {
         const f = F.querySelector('.f[data-f="' + n + '"]');
         if (f && f.classList.contains('err')) setErr(n, check(n, collect()));
@@ -976,6 +1018,7 @@
     /* ---- start ---- */
     restoreDraft();
     capSchwerpunkte();
+    syncMore();
     updateRail();
     window.addEventListener('resize', updateRail);
   })();

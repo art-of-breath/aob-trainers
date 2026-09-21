@@ -44,7 +44,8 @@
     margin: 0; background: var(--bg); color: var(--ink);
     font-family: var(--sans); font-weight: 400; font-size: 16px; line-height: 1.5;
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    /* clip, not hidden: hidden breaks the sticky nav in WebKit (iOS). hidden is the fallback. */
+    overflow-x: hidden; overflow-x: clip;
   }
   a { color: inherit; }
   button { font-family: inherit; }
@@ -191,7 +192,7 @@
 
       <section>
         <h2>Das Wichtigste in Kürze</h2>
-        <p>Diese Website ist eine Informationsseite. Du kannst sie besuchen, ohne persönliche Angaben zu machen. Es gibt kein Kundenkonto und keine Newsletter-Anmeldung. Für Trainer, die bei Art of Breath ausgebildet wurden, gibt es ein Bewerbungsformular, das erst beim Absenden Daten überträgt (Abschnitt 10). Beim ersten Besuch fragt dich ein Hinweis, ob die Website Statistik mit Google Analytics nutzen darf; das passiert nur, wenn du ausdrücklich zustimmst. Deine Auswahl wird im Browser gespeichert und du kannst sie jederzeit über „Cookie-Einstellungen“ im Fußbereich ändern. Alles andere kommt ohne Cookies aus.</p>
+        <p>Diese Website ist eine Informationsseite. Du kannst sie besuchen, ohne persönliche Angaben zu machen. Es gibt kein Kundenkonto und keine Newsletter-Anmeldung. Für Absolventen der Ausbildung bei Art of Breath gibt es ein Bewerbungsformular, das erst beim Absenden Daten überträgt (Abschnitt 10). Beim ersten Besuch fragt dich ein Hinweis, ob die Website Statistik mit Google Analytics nutzen darf; das passiert nur, wenn du ausdrücklich zustimmst. Deine Auswahl wird im Browser gespeichert und du kannst sie jederzeit über „Cookie-Einstellungen“ im Fußbereich ändern. Alles andere kommt ohne Cookies aus.</p>
       </section>
 
       <section>
@@ -245,11 +246,11 @@
       </section>
 
       <section id="bewerbung">
-        <h2>Bewerbung als Trainer (Formular)</h2>
-        <p>Auf der Seite <code>bewerben.html</code> gibt es ein Formular, mit dem Trainer, die ihre Ausbildung bei Art of Breath gemacht haben, die Aufnahme in die Trainer-Übersicht beantragen können. Die Seite ist nicht in der Navigation verlinkt; den Link bekommst du direkt von Art of Breath.</p>
+        <h2>Bewerbung als Absolvent (Formular)</h2>
+        <p>Auf der Seite <code>bewerben.html</code> gibt es ein Formular, mit dem Absolventen der Ausbildung bei Art of Breath die Aufnahme in das Verzeichnis der Absolventen beantragen können. Die Seite ist nicht in der Navigation verlinkt; den Link bekommst du direkt von Art of Breath.</p>
         <p>Solange du das Formular nur ausfüllst, verlässt nichts deinen Browser. Dein Entwurf wird unter dem Eintrag <code>aob-bewerbung-draft</code> im lokalen Speicher deines Browsers zwischengespeichert, damit er bei einem Neuladen der Seite nicht verloren geht. Dieser Eintrag wird an niemanden übermittelt und beim Absenden gelöscht. Erst wenn du auf „Bewerbung abschicken“ klickst, werden deine Angaben übertragen.</p>
-        <p><strong>Welche Daten.</strong> Name, E-Mail-Adresse, auf Wunsch Telefonnummer, Ort und Land, Website, auf Wunsch weitere Profile, Links zu Bildern, der Zeitpunkt deiner Ausbildung, Angaben zu deiner Praxis (seit wann, Anzahl der Sessions und Workshops, Angebote, Paketbegleitung, Schwerpunkte, Sprachen, Hintergrund, ein Kurztext), der Anteil deines Einkommens aus Breathwork als Bereich, die gewünschte Unterstützung, dein Freitext sowie deine Zusage zum Link und deine Einwilligung. Dazu speichern wir den Zeitpunkt des Eingangs und die Adresse der Seite, von der das Formular abgeschickt wurde.</p>
-        <p><strong>Zweck.</strong> Prüfung, ob und wie du in die Trainer-Übersicht aufgenommen wirst, Einschätzung, welche Unterstützung für dich passt, und die Kontaktaufnahme dazu.</p>
+        <p><strong>Welche Daten.</strong> Name, E-Mail-Adresse, auf Wunsch Telefonnummer, Ort und Land, Website, auf Wunsch weitere Profile, Links zu Bildern, Zeitpunkt und Ausbilder deiner Ausbildung, Angaben zu deiner Praxis (seit wann, Anzahl der Einzel- und Gruppen-Sessions, Angebote, Paketbegleitung, Schwerpunkte, Sprachen, Hintergrund, ein Kurztext), der Anteil deines Einkommens aus Breathwork als Bereich, die gewünschte Unterstützung, dein Freitext sowie deine Zusage zu den Links und deine Einwilligung. Dazu speichern wir den Zeitpunkt des Eingangs und die Adresse der Seite, von der das Formular abgeschickt wurde.</p>
+        <p><strong>Zweck.</strong> Prüfung, ob und wie du in das Verzeichnis aufgenommen wirst, Einschätzung, welche Unterstützung für dich passt, und die Kontaktaufnahme dazu.</p>
         <p><strong>Rechtsgrundlage.</strong> Art. 6 Abs. 1 lit. b DSGVO (Maßnahmen auf deine Anfrage hin vor der Aufnahme in die Übersicht). Für die Speicherung in den unten genannten Werkzeugen und für die automatische Voreinschätzung ist es deine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO, die du mit dem Absenden erteilst. Du kannst sie jederzeit mit Wirkung für die Zukunft per E-Mail an info@art-of-breath.com widerrufen; deine Angaben werden dann gelöscht.</p>
         <p><strong>Empfänger.</strong> Das Formular schickt deine Angaben an einen Arbeitsablauf in einer selbst betriebenen Installation der Automatisierungssoftware n8n. Sie läuft auf einem Server in Deutschland, den Hostinger International Ltd., 61 Lordou Vironos Street, 6023 Larnaka, Zypern, bereitstellt. Der Hersteller der Software, die n8n GmbH, erhält dabei keine Daten. Der Arbeitsablauf trägt deine Angaben in eine Tabelle bei Google Ireland Limited (Google Sheets) ein; dort werden sie geprüft. Mit Hostinger und mit Google bestehen Verträge über Auftragsverarbeitung. Google kann Daten in die USA übertragen und ist nach dem EU-US Data Privacy Framework zertifiziert. Über eine neue Bewerbung wird das Team intern per Telegram benachrichtigt; diese Nachricht enthält deinen Namen, deinen Ort und die Angaben zu deiner Praxis, aber keine E-Mail-Adresse, keine Telefonnummer und keine Links. Bekommst du eine Eingangsbestätigung, wird sie über Gmail (Google) versendet.</p>
         <p><strong>Automatische Voreinschätzung.</strong> Art of Breath kann ein KI-Werkzeug einsetzen, das deine Angaben und deine öffentlich erreichbare Website liest und eine Einschätzung notiert, die dem Team als Hinweis dient. Die Entscheidung über deine Aufnahme trifft immer ein Mensch; eine ausschließlich automatisierte Entscheidung im Sinne von Art. 22 DSGVO findet nicht statt.</p>

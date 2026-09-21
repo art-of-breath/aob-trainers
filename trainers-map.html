@@ -48,7 +48,8 @@
     margin: 0; background: var(--bg); color: var(--ink);
     font-family: var(--sans); font-weight: 400; font-size: 16px; line-height: 1.5;
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    /* clip, not hidden: hidden breaks the sticky nav in WebKit (iOS). hidden is the fallback. */
+    overflow-x: hidden; overflow-x: clip;
   }
   a { color: inherit; }
   button { font-family: inherit; }
