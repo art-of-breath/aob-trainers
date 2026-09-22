@@ -244,10 +244,22 @@
                                   width .7s var(--ease-lift), height .7s var(--ease-lift); }
   .focus.animating .focus-inner { transition: transform .7s var(--ease-lift); }
   .focus.is-open .focus-inner { transform: rotateY(180deg); }
-  .focus .face { box-shadow: 0 2px 4px rgba(58,48,46,.06), 0 40px 80px -30px rgba(58,48,46,.45); }
+  /* The shadow grows and settles with the card, over the whole turn, so it arrives at the
+     tile's own shadow instead of snapping to it when the copy is swapped out. */
+  .focus .face { box-shadow: var(--shadow); transition: box-shadow .7s var(--ease-lift); }
+  .focus.is-open .face { box-shadow: 0 2px 4px rgba(58,48,46,.06), 0 40px 80px -30px rgba(58,48,46,.45); }
   .focus .face--back { transform: rotateY(180deg); padding: 0; }
-  /* Front copied from a map card: its own layout, top-aligned, never stretched. */
-  .focus .face--list { display: block; padding: 0; text-align: left; border-color: #B2A198; }
+  /* The front is laid out once at the size of what it grew out of and pinned to the top
+     left corner. The card grows and shrinks around it like a window, so nothing inside
+     reflows or drifts while the size animates. */
+  .focus .face--front { display: block; padding: 0; }
+  .focus .face--list { border-color: #B2A198; }
+  .lift-frame { position: absolute; top: 0; left: 0; }
+  .lift-frame.is-tile {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 30px 28px; box-sizing: border-box;
+  }
+  .focus .lift-frame.gcard { border: 0; background: none; box-shadow: none; text-align: left; }
   /* The back scrolls in an inner area inset from the card's edge, so a scrollbar sits inside
      the rounded corners instead of squaring them off. */
   .back-scroll {
@@ -909,9 +921,18 @@
   // and ends on exactly what was on screen: the tile for a tile, the open map card for a
   // map card. The copy is inert and loses its ids, it is only ever seen mid-turn.
   function liftFront(src, t, i, dist) {
-    if (!src.classList.contains('gcard')) return frontHTML(t, i, dist);
-    const copy = src.innerHTML.replace(/\s(id|aria-controls)="[^"]*"/g, '');
-    return `<div class="face face--front face--list gcard open" inert aria-hidden="true">${copy}</div>`;
+    const r = src.getBoundingClientRect();
+    // minus the 1px border on each side, which the lifted face draws itself
+    const size = `width:${r.width - 2}px;height:${r.height - 2}px`;
+    if (src.classList.contains('gcard')) {
+      const copy = src.innerHTML.replace(/\s(id|aria-controls)="[^"]*"/g, '');
+      return `<div class="face face--front face--list" inert aria-hidden="true">` +
+             `<div class="lift-frame gcard open" style="${size}">${copy}</div></div>`;
+    }
+    // the tile's own face markup, minus its outer .face wrapper
+    const inner = frontHTML(t, i, dist).trim().replace(/^<div class="face face--front">/, '').replace(/<\/div>$/, '');
+    return `<div class="face face--front" inert aria-hidden="true">` +
+           `<div class="lift-frame is-tile" style="${size}">${inner}</div></div>`;
   }
 
   // src is the element the card grows out of and shrinks back into (a tile, or a card in
