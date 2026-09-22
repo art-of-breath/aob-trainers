@@ -762,19 +762,20 @@
   const BRAND = { land: '#E4DDD6', land2: '#DED9CE', water: '#D2CBBE', border: '#A2998A', road: '#DAD3C7', building: '#DCD6CB', label: '#5B5244', halo: '#F3F0EC' };
 
   /* ---- Opening view ----
-     Opens zoomed out as far as the map goes (minZoom), centred on the roster, so the
-     first screen shows all of Germany and Switzerland and lets people zoom in themselves.
-     The earlier framing (a bounds box pushed south into the Alps to lift Daniel's pin) was
-     dropped on 2026-09-21, see decisions/log.md.
+     Framed to fit every pin, computed from TRAINERS, so it stays right when the roster
+     changes. The extra room at the top is for the hover label above the northernmost pin.
+     This replaced, on 2026-09-22, both the old bounds box pushed south into the Alps (which
+     cut off the north) and a brief fully zoomed-out view (which showed half of Europe).
      maxBounds is a hard clamp on the viewport, not just on panning: if the box is narrower
-     than what the map shows at minZoom, MapLibre quietly zooms in to obey it. It is sized
-     so a full-width desktop card at minZoom still fits inside it. */
-  const MIN_ZOOM = 4.5;
+     than the view, MapLibre quietly zooms in to obey it. It is kept well outside any
+     framing this page asks for; minZoom still stops anyone reaching open sea. */
+  const PINS = new maplibregl.LngLatBounds();
+  TRAINERS.forEach(t => PINS.extend([t.lon, t.lat]));
   const map = new maplibregl.Map({
     container: 'map',
     style: 'https://tiles.openfreemap.org/styles/positron',
-    center: [10.1, 50.2], zoom: MIN_ZOOM,
-    minZoom: MIN_ZOOM, maxZoom: 15,
+    bounds: PINS, fitBoundsOptions: { padding: { top: 70, bottom: 40, left: 50, right: 50 } },
+    minZoom: 4.5, maxZoom: 15,
     maxBounds: [[-9, 41.5], [29, 59]],
     attributionControl: { compact: true },
     cooperativeGestures: false,
