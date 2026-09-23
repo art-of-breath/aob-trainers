@@ -457,6 +457,16 @@
           </div>
         </div>
 
+        <div class="f" data-f="eigener_raum">
+          <span class="f-lbl" id="l-raum">Nutzt du einen eigenen, für dein Angebot ausgewählten Raum?</span>
+          <p class="f-hint">Ein fester Ort für deine Sessions, auch wenn er gemietet ist.</p>
+          <div class="chips" role="radiogroup" aria-labelledby="l-raum">
+            <label class="chip"><input type="radio" name="eigener_raum" value="ja" /><span>Ja</span></label>
+            <label class="chip"><input type="radio" name="eigener_raum" value="nein" /><span>Nein</span></label>
+          </div>
+          <p class="f-err" id="e-eigener_raum"></p>
+        </div>
+
         <div class="f" data-f="website">
           <label class="f-lbl" for="f-website">Deine Website</label>
           <p class="f-hint">Das Verzeichnis verlinkt dorthin, und dort stehen später auch deine Links zurück.</p>
@@ -729,7 +739,7 @@
     const scrollMode = reduced ? 'auto' : 'smooth';
 
     const SECTIONS = [
-      { id: 's-wer', label: 'Wer du bist',              req: ['name', 'email', 'ort', 'land', 'website', 'fotos', 'ausbildung'] },
+      { id: 's-wer', label: 'Wer du bist',              req: ['name', 'email', 'ort', 'land', 'eigener_raum', 'website', 'fotos', 'ausbildung'] },
       { id: 's-wie', label: 'Wie du arbeitest',         req: ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'angebote', 'schwerpunkte', 'schwerpunkte_andere', 'sprachen_andere'] },
       { id: 's-wo',  label: 'Wo du stehst',             req: ['einkommensanteil'] },
       { id: 's-was', label: 'Was du noch sagen willst', req: [] },
@@ -738,7 +748,7 @@
     const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung', 'freitext'];
     const NUM    = ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'paket_anzahl'];
     const MULTI  = ['angebote', 'schwerpunkte', 'sprachen'];
-    const SINGLE = ['einkommensanteil'];
+    const SINGLE = ['eigener_raum', 'einkommensanteil'];
     const BOOL   = ['backlink_zusage', 'datenschutz'];
     const ALL_REQ = SECTIONS.flatMap(s => s.req);
 
@@ -779,6 +789,7 @@
       email_form: 'Diese E-Mail-Adresse sieht nicht vollständig aus.',
       ort: 'Wo arbeitest du hauptsächlich?',
       land: 'Bitte wähl ein Land.',
+      eigener_raum: 'Wähl Ja oder Nein.',
       website: 'Ohne Website kann dein Eintrag nicht verlinkt werden.',
       website_form: 'Diese Adresse sieht nicht wie eine Website aus.',
       fotos: 'Ein Link reicht, zum Beispiel deine Website oder Instagram.',
@@ -813,7 +824,7 @@
           const chosen = d[n.replace('_andere', '')].includes('andere');
           return (!chosen || d[n]) ? '' : M[n];
         }
-        case 'einkommensanteil': case 'backlink_zusage': case 'datenschutz':
+        case 'eigener_raum': case 'einkommensanteil': case 'backlink_zusage': case 'datenschutz':
           return d[n] ? '' : M[n];
         default:
           return '';
