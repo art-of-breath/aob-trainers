@@ -3,8 +3,43 @@
     {
       "source": "/fonts/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/bald.html",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "destination": "/bald.html",
+      "permanent": false
+    },
+    {
+      "source": "/trainers-map",
+      "destination": "/bald.html",
+      "permanent": false
+    },
+    {
+      "source": "/trainers-map.html",
+      "destination": "/bald.html",
+      "permanent": false
+    },
+    {
+      "source": "/graduates",
+      "destination": "/bald.html",
+      "permanent": false
+    },
+    {
+      "source": "/graduates.html",
+      "destination": "/bald.html",
+      "permanent": false
     }
   ]
 }

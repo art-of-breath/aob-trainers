@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="favicon.ico" sizes="32x32" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
 <title>Bewerbung · Art of Breath</title>
 <meta name="description" content="Bewerbung für das Verzeichnis der Absolventen von Art of Breath. Für Facilitator, die ihre Ausbildung bei Art of Breath gemacht haben." />
 <meta name="robots" content="noindex" />
@@ -239,6 +242,13 @@
   .f-more:not([hidden]) { animation: moreIn .24s ease; }
   @keyframes moreIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 
+  /* Empfehlungsprogramm: the opt-in is a .check card like the agreements, and the fields it
+     needs open underneath it the same way "Andere" does, as one block. */
+  .sec-note a { color: var(--ink); text-underline-offset: 3px; }
+  .reveal { margin-top: 28px; }
+  .reveal > .f-hint:first-child { margin-bottom: 22px; }
+  .reveal:not([hidden]) { animation: moreIn .24s ease; }
+
   /* the two agreements: one card each, the whole card is the click target */
   .check {
     display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px;
@@ -357,7 +367,7 @@
     * { transition: none !important; }
     html { scroll-behavior: auto; }
     .fade-up { animation: none; opacity: 1; transform: none; }
-    .f-more:not([hidden]) { animation: none; }
+    .f-more:not([hidden]), .reveal:not([hidden]) { animation: none; }
   }
 </style>
 </head>
@@ -401,10 +411,11 @@
         <li><button type="button" data-go="s-wie">Wie du arbeitest</button></li>
         <li><button type="button" data-go="s-wo">Wo du stehst</button></li>
         <li><button type="button" data-go="s-was">Was du noch sagen willst</button></li>
+        <li><button type="button" data-go="s-emp">Empfehlungsprogramm</button></li>
         <li><button type="button" data-go="s-abm">Die Abmachung</button></li>
       </ol>
       <p class="rail-note">Dein Entwurf bleibt in diesem Browser gespeichert, bis du abschickst.</p>
-      <p class="rail-mobile" aria-live="polite"><b id="rail-now">Wer du bist</b><span id="rail-count">0 von 5</span></p>
+      <p class="rail-mobile" aria-live="polite"><b id="rail-now">Wer du bist</b><span id="rail-count">0 von 6</span></p>
     </aside>
 
     <!-- ============ FORM ============ -->
@@ -653,6 +664,70 @@
       </fieldset>
 
       <!-- ---- 5 ---- -->
+      <fieldset class="sec" id="s-emp">
+        <legend class="eyebrow">Empfehlungsprogramm</legend>
+        <h2 class="sec-title">Die Ausbildung <em>weiterempfehlen.</em></h2>
+        <p class="sec-note">Freiwillig und unabhängig von deinem Eintrag. Wer beim Empfehlungsprogramm mitmacht, bekommt einen persönlichen Code. Nennt jemand deinen Code bei der Anmeldung zur Ausbildung, bekommt er einen Rabatt, und du bekommst einen Bonus, sobald er die Ausbildung beginnt. Die aktuellen Beträge stehen auf <a href="https://www.daniel-alan.com/empfehlungsprogramm-anmeldung" target="_blank" rel="noopener">daniel-alan.com</a>.</p>
+
+        <div class="f" data-f="empfehlung">
+          <label class="check">
+            <input type="checkbox" name="empfehlung" value="ja" aria-controls="emp-fields" />
+            <span>Ich möchte beim Empfehlungsprogramm mitmachen und meinen persönlichen Code bekommen.</span>
+          </label>
+        </div>
+
+        <div class="reveal" id="emp-fields" hidden>
+          <p class="f-hint">Dein Code kommt per E-Mail an die Adresse von oben. Für die Auszahlung und die Flyer braucht es noch diese Angaben.</p>
+
+          <div class="f" data-f="strasse">
+            <label class="f-lbl" for="f-strasse">Straße und Hausnummer</label>
+            <div class="ctl"><input id="f-strasse" name="strasse" type="text" autocomplete="address-line1" maxlength="200" /></div>
+            <p class="f-err" id="e-strasse"></p>
+          </div>
+
+          <div class="pair">
+            <div class="f" data-f="plz">
+              <label class="f-lbl" for="f-plz">Postleitzahl</label>
+              <div class="ctl"><input id="f-plz" name="plz" type="text" autocomplete="postal-code" maxlength="10" /></div>
+              <p class="f-err" id="e-plz"></p>
+            </div>
+            <div class="f" data-f="wohnort">
+              <label class="f-lbl" for="f-wohnort">Wohnort</label>
+              <div class="ctl"><input id="f-wohnort" name="wohnort" type="text" autocomplete="address-level2" maxlength="120" /></div>
+              <p class="f-err" id="e-wohnort"></p>
+            </div>
+          </div>
+
+          <div class="f" data-f="kontoinhaber">
+            <label class="f-lbl" for="f-kontoinhaber">Kontoinhaber</label>
+            <div class="ctl"><input id="f-kontoinhaber" name="kontoinhaber" type="text" maxlength="120" /></div>
+            <p class="f-err" id="e-kontoinhaber"></p>
+          </div>
+
+          <div class="f" data-f="iban">
+            <label class="f-lbl" for="f-iban">IBAN</label>
+            <p class="f-hint">Nur für die Auszahlung deines Bonus.</p>
+            <div class="ctl"><input id="f-iban" name="iban" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="42" placeholder="DE89 3704 0044 0532 0130 00" /></div>
+            <p class="f-err" id="e-iban"></p>
+          </div>
+
+          <div class="f" data-f="flyer">
+            <span class="f-lbl" id="l-flyer">Möchtest du kostenlose Flyer mit deinem Code?</span>
+            <p class="f-hint">Fertig gestaltet, zum Auslegen im Yogastudio, in der Praxis, im Café. Sie kommen an die Adresse oben.</p>
+            <div class="chips" role="radiogroup" aria-labelledby="l-flyer">
+              <label class="chip"><input type="radio" name="flyer" value="0" /><span>Keine Flyer</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="100" /><span>100 Stück</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="250" /><span>250 Stück</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="500" /><span>500 Stück</span></label>
+            </div>
+            <p class="f-err" id="e-flyer"></p>
+          </div>
+
+          <p class="f-hint">Adresse und Bankverbindung werden nur für das Empfehlungsprogramm verwendet.</p>
+        </div>
+      </fieldset>
+
+      <!-- ---- 6 ---- -->
       <fieldset class="sec" id="s-abm">
         <legend class="eyebrow">Die Abmachung</legend>
         <h2 class="sec-title">Ein Link in beide <em>Richtungen.</em></h2>
@@ -669,7 +744,7 @@
         <div class="f" data-f="datenschutz">
           <label class="check">
             <input type="checkbox" name="datenschutz" value="ja" />
-            <span>Ich habe die <a href="datenschutz.html#bewerbung" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin einverstanden, dass Art of Breath meine Angaben zur Prüfung speichert.</span>
+            <span>Ich habe die <a href="datenschutz.html#bewerbung" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin einverstanden, dass Art of Breath meine Angaben zur Prüfung speichert und, wenn ich beim Empfehlungsprogramm mitmache, auch dafür.</span>
           </label>
           <p class="f-err" id="e-datenschutz"></p>
         </div>
@@ -726,8 +801,10 @@
     const DRAFT_KEY = 'aob-bewerbung-draft';
     const FALLBACK = 'Da ist leider etwas schiefgelaufen. Schick deine Angaben gern direkt an info@art-of-breath.com, dann kommen sie sicher an.';
     const MAX_SCHWERPUNKTE = 4;
+    // required only once someone opts into the Empfehlungsprogramm
+    const EMP = ['strasse', 'plz', 'wohnort', 'kontoinhaber', 'iban', 'flyer'];
 
-    const F = document.getElementById('bewerbung');
+    const F =document.getElementById('bewerbung');
     const MSG = document.getElementById('form-msg');
     const BTN = document.getElementById('submit');
     const DONE = document.getElementById('done');
@@ -743,14 +820,16 @@
       { id: 's-wie', label: 'Wie du arbeitest',         req: ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'angebote', 'schwerpunkte', 'schwerpunkte_andere', 'sprachen_andere'] },
       { id: 's-wo',  label: 'Wo du stehst',             req: ['einkommensanteil'] },
       { id: 's-was', label: 'Was du noch sagen willst', req: [] },
+      { id: 's-emp', label: 'Empfehlungsprogramm',      req: EMP },
       { id: 's-abm', label: 'Die Abmachung',            req: ['backlink_zusage', 'datenschutz'] },
     ];
-    const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung', 'freitext'];
+    const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung', 'freitext', 'strasse', 'plz', 'wohnort', 'kontoinhaber', 'iban'];
     const NUM    = ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'paket_anzahl'];
     const MULTI  = ['angebote', 'schwerpunkte', 'sprachen'];
-    const SINGLE = ['eigener_raum', 'einkommensanteil'];
+    const SINGLE = ['eigener_raum', 'einkommensanteil', 'empfehlung', 'flyer'];
     const BOOL   = ['backlink_zusage', 'datenschutz'];
     const ALL_REQ = SECTIONS.flatMap(s => s.req);
+    const NO_DRAFT = ['iban'];  // a bank account never sits in localStorage
 
     /* ---- reading the form ---- */
     const field = n => F.querySelector('[name="' + n + '"]');
@@ -775,6 +854,9 @@
       // the "Andere" text only counts while its chip is chosen
       if (!d.schwerpunkte.includes('andere')) d.schwerpunkte_andere = '';
       if (!d.sprachen.includes('andere')) d.sprachen_andere = '';
+      // address and bank details only leave the browser for someone who opted in
+      if (d.empfehlung !== 'ja') EMP.forEach(n => { d[n] = ''; });
+      d.iban = d.iban.replace(/\s+/g, '').toUpperCase();
       d._honey = one('_honey');
       if (d.website && !/^https?:\/\//i.test(d.website)) d.website = 'https://' + d.website;
       return d;
@@ -783,6 +865,14 @@
     /* ---- validation ---- */
     const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     const HOST  = /^[^\s\/]+\.[^\s]{2,}$/;
+    // ISO 13616: country, check digits, then the mod-97 test catches almost every typo
+    function ibanOk(s) {
+      if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(s)) return false;
+      const digits = (s.slice(4) + s.slice(0, 4)).replace(/[A-Z]/g, c => String(c.charCodeAt(0) - 55));
+      let r = 0;
+      for (const ch of digits) r = (r * 10 + Number(ch)) % 97;
+      return r === 1;
+    }
     const M = {
       name: 'Bitte trag deinen Namen ein.',
       email: 'Bitte trag eine E-Mail-Adresse ein, unter der du erreichbar bist.',
@@ -801,6 +891,13 @@
       schwerpunkte_andere: 'Welcher Schwerpunkt? Ein, zwei Worte reichen.',
       sprachen_andere: 'Welche Sprachen? Trag sie hier ein.',
       einkommensanteil: 'Wähl den Bereich, der am ehesten passt.',
+      strasse: 'Bitte trag Straße und Hausnummer ein.',
+      plz: 'Bitte trag deine Postleitzahl ein.',
+      wohnort: 'Bitte trag deinen Wohnort ein.',
+      kontoinhaber: 'Auf wen läuft das Konto?',
+      iban: 'Bitte trag deine IBAN ein.',
+      iban_form: 'Diese IBAN stimmt nicht. Prüf sie am besten Zeichen für Zeichen.',
+      flyer: 'Wähl eine Menge oder „Keine Flyer“.',
       backlink_zusage: 'Die Links gehören zur Abmachung.',
       datenschutz: 'Ohne dein Einverständnis kann das Formular nicht abgeschickt werden.',
     };
@@ -826,6 +923,11 @@
         }
         case 'eigener_raum': case 'einkommensanteil': case 'backlink_zusage': case 'datenschutz':
           return d[n] ? '' : M[n];
+        case 'strasse': case 'plz': case 'wohnort': case 'kontoinhaber': case 'flyer':
+          return (d.empfehlung !== 'ja' || d[n]) ? '' : M[n];
+        case 'iban':
+          if (d.empfehlung !== 'ja') return '';
+          return !d.iban ? M.iban : (ibanOk(d.iban) ? '' : M.iban_form);
         default:
           return '';
       }
@@ -904,10 +1006,19 @@
       });
     }
 
+    /* ---- the Empfehlungsprogramm box opens its fields ---- */
+    const EMP_BOX = document.getElementById('emp-fields');
+    function syncEmp(focus) {
+      const open = bool('empfehlung');
+      EMP_BOX.hidden = !open;
+      if (!open) EMP.forEach(n => setErr(n, ''));
+      if (open && focus && !one('strasse')) field('strasse').focus();
+    }
+
     /* ---- draft in this browser only, cleared on success ---- */
     function draftData() {
       const d = {};
-      TEXT.concat(NUM).forEach(n => { d[n] = one(n); });
+      TEXT.concat(NUM).filter(n => !NO_DRAFT.includes(n)).forEach(n => { d[n] = one(n); });
       MULTI.forEach(n => { d[n] = checked(n); });
       SINGLE.forEach(n => { d[n] = checked(n)[0] || ''; });
       return d;  // the two agreements are deliberately not remembered
@@ -921,7 +1032,7 @@
       let d = null;
       try { d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { d = null; }
       if (!d || typeof d !== 'object') return;
-      TEXT.concat(NUM).forEach(n => { const el = field(n); if (el && typeof d[n] === 'string') el.value = d[n]; });
+      TEXT.concat(NUM).filter(n => !NO_DRAFT.includes(n)).forEach(n => { const el = field(n); if (el && typeof d[n] === 'string') el.value = d[n]; });
       MULTI.concat(SINGLE).forEach(n => {
         const vals = Array.isArray(d[n]) ? d[n] : (d[n] ? [d[n]] : []);
         F.querySelectorAll('input[name="' + n + '"]').forEach(i => { i.checked = vals.includes(i.value); });
@@ -936,6 +1047,7 @@
       const n = e.target && e.target.name;
       if (n === 'schwerpunkte') capSchwerpunkte();
       if ((n === 'schwerpunkte' || n === 'sprachen') && e.type === 'change' && e.target.value === 'andere') syncMore(n);
+      if (n === 'empfehlung' && e.type === 'change') syncEmp(true);
       if (n) {
         const f = F.querySelector('.f[data-f="' + n + '"]');
         if (f && f.classList.contains('err')) setErr(n, check(n, collect()));
@@ -1018,6 +1130,7 @@
     restoreDraft();
     capSchwerpunkte();
     syncMore();
+    syncEmp(false);
     updateRail();
     window.addEventListener('resize', updateRail);
   })();
