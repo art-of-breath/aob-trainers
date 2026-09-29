@@ -152,14 +152,13 @@
      A photo either sits as a plain plate with clean edges, or it dissolves into the band
      the way .root-photo does. Never a half-measure: a soft fade on a plate that is
      otherwise a rectangle just looks like a mistake.
-     Tone is shared by all of them: the shoots run from a warm clay room to a cool white
-     attic, and the filter pulls both toward the brand neutrals so they sit on one page.
+     Photos show in their own colour, no filter: a desaturating grade made them look
+     washed out, Daniel's portrait most of all (removed 2026-09-29, Kenny).
      Every frame is sized with aspect-ratio, never a fixed height against a fluid width, or
      the frame keeps widening while the height caps and the photo gets sliced thinner the
      bigger the screen. Files are saved already cut to the ratio of the slot they fill, so
      object-fit is a safety net here, not the crop. */
-  .photo img { display: block; width: 100%; height: 100%; object-fit: cover;
-               filter: saturate(.6) sepia(.13) contrast(1.02) brightness(.99); }
+  .photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
   /* plate: clean-edged, held to the text measure so it cannot outgrow a large display */
   .band-photo { position: relative; overflow: hidden; aspect-ratio: 16 / 9;
@@ -333,8 +332,6 @@
                         mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.3) 9%, #000 28%, #000 54%, rgba(0,0,0,.6) 74%, rgba(0,0,0,.14) 90%, rgba(0,0,0,0) 99%); }
   .root-photo img { width: 100%; height: 100%; display: block;
                     object-fit: cover; object-position: 46% 22%;
-                    /* pulled toward the warm brand neutrals, away from the raw green */
-                    filter: saturate(.55) sepia(.16) contrast(1.02) brightness(.94);
                     /* ramp reaches full opacity before the face (~20% in) so it stays readable */
                     -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.34) 8%, rgba(0,0,0,.76) 19%, rgba(0,0,0,.96) 30%, #000 40%);
                             mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.34) 8%, rgba(0,0,0,.76) 19%, rgba(0,0,0,.96) 30%, #000 40%); }
