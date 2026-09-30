@@ -258,14 +258,17 @@
   .check:hover { border-color: #D2C8BC; }
   .check input { flex: none; width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
   .check input:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,112,92,.30); border-radius: 3px; }
+  .check input[type=radio]:focus-visible { border-radius: 50%; }
   .check span { font-size: 15px; line-height: 1.55; color: var(--ink); }
   .check a { color: var(--muted); text-underline-offset: 3px; }
   /* several .check cards answering one question, stacked */
   .checks { display: grid; gap: 10px; }
+  #flyer-addr-fields { margin-top: 24px; }
+  #flyer-addr-fields:not([hidden]), #flyer-addr:not([hidden]) { animation: moreIn .24s ease; }
   .check a:hover { color: var(--ink); }
 
   /* errors: the postcode field's .err state, plus one line of text under the field */
-  .f.err .ctl, .f.err .select-shell select, .f.err .check { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(180,92,67,.16); }
+  .f.err .ctl, .f.err .select-shell select, .f.err .check:not(:has(input:checked)) { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(180,92,67,.16); }
   .f.err .chip input:not(:checked) + span { border-color: rgba(180,92,67,.5); }
   .f-err { display: none; margin: 8px 0 0; font-size: 13px; line-height: 1.5; color: var(--accent); }
   .f.err .f-err { display: block; }
@@ -369,7 +372,7 @@
     * { transition: none !important; }
     html { scroll-behavior: auto; }
     .fade-up { animation: none; opacity: 1; transform: none; }
-    .f-more:not([hidden]), .reveal:not([hidden]) { animation: none; }
+    .f-more:not([hidden]), .reveal:not([hidden]), #flyer-addr-fields:not([hidden]), #flyer-addr:not([hidden]) { animation: none; }
   }
 </style>
 </head>
@@ -427,7 +430,7 @@
       <fieldset class="sec" id="s-wer">
         <legend class="eyebrow">Wer du bist</legend>
         <h2 class="sec-title">Damit dich jemand <em>findet.</em></h2>
-        <p class="sec-note">Das Verzeichnis zeigt deinen Namen, deinen Ort und deine Website. Der Rest hier bleibt intern.</p>
+        <p class="sec-note">Im Verzeichnis erscheinen dein Name, dein Ort, deine Website und deine Ausbildung. E-Mail, Telefon und die genaue Adresse bleiben intern.</p>
 
         <div class="f" data-f="name">
           <label class="f-lbl" for="f-name">Dein Name</label>
@@ -446,38 +449,51 @@
           <div class="ctl"><input id="f-telefon" name="telefon" type="tel" autocomplete="tel" inputmode="tel" /></div>
         </div>
 
+        <div class="f" data-f="strasse">
+          <label class="f-lbl" for="f-strasse">Wo du hauptsächlich arbeitest</label>
+          <p class="f-hint">Die Adresse, an der du die meisten deiner Sessions gibst. Öffentlich erscheint nur dein Ort. Straße und Hausnummer bleiben intern, die Postleitzahl ordnet dich im Verzeichnis nach Entfernung ein.</p>
+          <div class="ctl"><input id="f-strasse" name="strasse" type="text" autocomplete="address-line1" maxlength="200" placeholder="Straße und Hausnummer" aria-label="Straße und Hausnummer" /></div>
+          <p class="f-err" id="e-strasse"></p>
+        </div>
+
         <div class="pair">
-          <div class="f" data-f="ort">
-            <label class="f-lbl" for="f-ort">Stadt oder Region</label>
-            <p class="f-hint">Wo du hauptsächlich arbeitest.</p>
-            <div class="ctl"><input id="f-ort" name="ort" type="text" autocomplete="address-level2" placeholder="z. B. Leipzig" /></div>
-            <p class="f-err" id="e-ort"></p>
+          <div class="f" data-f="plz">
+            <label class="f-lbl" for="f-plz">Postleitzahl</label>
+            <div class="ctl"><input id="f-plz" name="plz" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="10" /></div>
+            <p class="f-err" id="e-plz"></p>
           </div>
-          <div class="f" data-f="land">
-            <label class="f-lbl" for="f-land">Land</label>
-            <p class="f-hint">&nbsp;</p>
-            <div class="select-shell">
-              <select id="f-land" name="land" autocomplete="country-name">
-                <option value="">Bitte wählen</option>
-                <option value="Deutschland">Deutschland</option>
-                <option value="Schweiz">Schweiz</option>
-                <option value="Österreich">Österreich</option>
-                <option value="anderes">anderes Land</option>
-              </select>
-              <span class="chev" data-chevron aria-hidden="true"></span>
-            </div>
-            <p class="f-err" id="e-land"></p>
+          <div class="f" data-f="ort">
+            <label class="f-lbl" for="f-ort">Ort</label>
+            <div class="ctl"><input id="f-ort" name="ort" type="text" autocomplete="address-level2" maxlength="120" placeholder="z. B. Leipzig" /></div>
+            <p class="f-err" id="e-ort"></p>
           </div>
         </div>
 
-        <div class="f" data-f="eigener_raum">
-          <span class="f-lbl" id="l-raum">Nutzt du einen eigenen, für dein Angebot ausgewählten Raum?</span>
-          <p class="f-hint">Ein fester Ort für deine Sessions, auch wenn er gemietet ist.</p>
-          <div class="chips" role="radiogroup" aria-labelledby="l-raum">
-            <label class="chip"><input type="radio" name="eigener_raum" value="ja" /><span>Ja</span></label>
-            <label class="chip"><input type="radio" name="eigener_raum" value="nein" /><span>Nein</span></label>
+        <div class="f" data-f="land">
+          <label class="f-lbl" for="f-land">Land</label>
+          <div class="select-shell">
+            <select id="f-land" name="land" autocomplete="country-name">
+              <option value="">Bitte wählen</option>
+              <option value="Deutschland">Deutschland</option>
+              <option value="Schweiz">Schweiz</option>
+              <option value="Österreich">Österreich</option>
+              <option value="anderes">anderes Land</option>
+            </select>
+            <span class="chev" data-chevron aria-hidden="true"></span>
           </div>
-          <p class="f-err" id="e-eigener_raum"></p>
+          <p class="f-err" id="e-land"></p>
+        </div>
+
+        <div class="f" data-f="adresse_art">
+          <span class="f-lbl" id="l-art">Was ist das für eine Adresse?</span>
+          <div class="checks" role="radiogroup" aria-labelledby="l-art">
+            <label class="check"><input type="radio" name="adresse_art" value="privat-wohnraum" /><span>Meine private Adresse. Ich gebe Sessions in meinem Wohnraum, zum Beispiel im Wohnzimmer.</span></label>
+            <label class="check"><input type="radio" name="adresse_art" value="privat-eigener-raum" /><span>Meine private Adresse, mit einem eigenen Raum nur für meine Sessions.</span></label>
+            <label class="check"><input type="radio" name="adresse_art" value="praxis" /><span>Eine Praxis oder ein Studio: eigene oder fest gemietete Räume.</span></label>
+            <label class="check"><input type="radio" name="adresse_art" value="raum-stundenweise" /><span>Ein Raum, den ich stundenweise miete oder mitnutze, zum Beispiel in einem Yogastudio.</span></label>
+            <label class="check"><input type="radio" name="adresse_art" value="kein-fester-ort" /><span>Kein fester Ort. Ich arbeite online oder komme zu meinen Klienten, die Adresse ist mein Wohnort.</span></label>
+          </div>
+          <p class="f-err" id="e-adresse_art"></p>
         </div>
 
         <div class="f" data-f="website">
@@ -511,7 +527,7 @@
       <fieldset class="sec" id="s-wie">
         <legend class="eyebrow">Wie du arbeitest</legend>
         <h2 class="sec-title">Wie deine Praxis gerade <em>aussieht.</em></h2>
-        <p class="sec-note">Geschätzte Zahlen sind völlig in Ordnung. Es geht nicht um viel oder wenig, sondern darum, dich richtig einzuordnen.</p>
+        <p class="sec-note">Geschätzte Zahlen sind völlig in Ordnung. Es geht nicht um viel oder wenig, sondern darum, dich richtig einzuordnen. Aus diesem Abschnitt entsteht dein Eintrag im Verzeichnis. Intern bleiben nur die Zahlen pro Monat und wie viele Menschen du im Paket begleitet hast.</p>
 
         <div class="f" data-f="seit_jahr">
           <label class="f-lbl" for="f-seit">Seit wann gibst du Breathwork?</label>
@@ -551,10 +567,12 @@
 
         <div class="f" data-f="angebote">
           <span class="f-lbl" id="l-angebote">Was bietest du aktuell an?</span>
-          <p class="f-hint">Alles, was zutrifft.</p>
+          <p class="f-hint">Alles, was zutrifft. Das steht in deinem Eintrag ganz vorn.</p>
           <div class="chips" role="group" aria-labelledby="l-angebote">
             <label class="chip"><input type="checkbox" name="angebote" value="einzel" /><span>1:1 Sessions</span></label>
             <label class="chip"><input type="checkbox" name="angebote" value="gruppen" /><span>Gruppen-Sessions</span></label>
+            <label class="chip"><input type="checkbox" name="angebote" value="online" /><span>Online-Sessions</span></label>
+            <label class="chip"><input type="checkbox" name="angebote" value="retreats" /><span>Retreats</span></label>
           </div>
           <p class="f-err" id="e-angebote"></p>
         </div>
@@ -572,15 +590,12 @@
 
         <div class="f" data-f="schwerpunkte">
           <span class="f-lbl" id="l-schwerpunkte">Deine Schwerpunkte</span>
-          <p class="f-hint">Höchstens vier, damit dein Eintrag lesbar bleibt. <b id="sp-count">0</b> von 4 gewählt.</p>
+          <p class="f-hint">Womit du inhaltlich arbeitest. Höchstens vier, damit dein Eintrag lesbar bleibt. <b id="sp-count">0</b> von 4 gewählt.</p>
           <div class="chips" role="group" aria-labelledby="l-schwerpunkte">
-            <label class="chip"><input type="checkbox" name="schwerpunkte" value="one-to-one" /><span>1:1 Sessions</span></label>
-            <label class="chip"><input type="checkbox" name="schwerpunkte" value="groups-circles" /><span>Gruppen &amp; Kreise</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="training-mentoring" /><span>Ausbildung &amp; Mentoring</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="trauma-informed" /><span>Traumasensibel</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="nervous-system-somatics" /><span>Nervensystem &amp; Körper</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="coaching" /><span>Coaching &amp; Entwicklung</span></label>
-            <label class="chip"><input type="checkbox" name="schwerpunkte" value="retreats" /><span>Retreats</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="yoga-meditation" /><span>Yoga &amp; Meditation</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="business-leadership" /><span>Business &amp; Leadership</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="ceremony-spirituality" /><span>Zeremonie &amp; Spiritualität</span></label>
@@ -588,7 +603,6 @@
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="clinical-background" /><span>Klinischer Hintergrund</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="women-motherhood" /><span>Frauen &amp; Mutterschaft</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="sound-creative" /><span>Klang &amp; kreativer Ausdruck</span></label>
-            <label class="chip"><input type="checkbox" name="schwerpunkte" value="online" /><span>Online</span></label>
             <label class="chip"><input type="checkbox" name="schwerpunkte" value="andere" /><span>Andere</span></label>
           </div>
           <p class="f-err" id="e-schwerpunkte"></p>
@@ -632,7 +646,7 @@
       <fieldset class="sec" id="s-wo">
         <legend class="eyebrow">Wo du stehst</legend>
         <h2 class="sec-title">Damit die Unterstützung <em>passt.</em></h2>
-        <p class="sec-note">Das Verzeichnis ist der Anfang. Was danach kommt, hängt davon ab, was dir gerade fehlt.</p>
+        <p class="sec-note">Das Verzeichnis ist der Anfang. Was danach kommt, hängt davon ab, was dir gerade fehlt. Alles in diesem Abschnitt bleibt intern.</p>
 
         <div class="f" data-f="einkommensanteil">
           <span class="f-lbl" id="l-einkommen">Welchen Anteil deines Gesamteinkommens verdienst du mit Breathwork?</span>
@@ -698,24 +712,48 @@
         </div>
 
         <div class="reveal" id="emp-fields" hidden>
-          <p class="f-hint">Dein Code kommt per E-Mail an die Adresse von oben. Für die Auszahlung und die Flyer braucht es noch diese Angaben.</p>
+          <p class="f-hint">Dein Code kommt per E-Mail an die Adresse von oben.</p>
 
-          <div class="f" data-f="strasse">
-            <label class="f-lbl" for="f-strasse">Straße und Hausnummer</label>
-            <div class="ctl"><input id="f-strasse" name="strasse" type="text" autocomplete="address-line1" maxlength="200" /></div>
-            <p class="f-err" id="e-strasse"></p>
+          <div class="f" data-f="flyer">
+            <span class="f-lbl" id="l-flyer">Möchtest du kostenlose Flyer mit deinem Code?</span>
+            <p class="f-hint">Fertig gestaltet, zum Auslegen im Yogastudio, in der Praxis, im Café.</p>
+            <div class="chips" role="radiogroup" aria-labelledby="l-flyer">
+              <label class="chip"><input type="radio" name="flyer" value="0" /><span>Keine Flyer</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="100" checked /><span>100 Stück</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="250" /><span>250 Stück</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="500" /><span>500 Stück</span></label>
+            </div>
+            <p class="f-err" id="e-flyer"></p>
           </div>
 
-          <div class="pair">
-            <div class="f" data-f="plz">
-              <label class="f-lbl" for="f-plz">Postleitzahl</label>
-              <div class="ctl"><input id="f-plz" name="plz" type="text" autocomplete="postal-code" maxlength="10" /></div>
-              <p class="f-err" id="e-plz"></p>
+          <div id="flyer-addr">
+            <div class="f" data-f="flyer_adresse_gleich">
+              <span class="f-lbl" id="l-fa">Wohin sollen wir deine Flyer schicken?</span>
+              <label class="check">
+                <input type="checkbox" name="flyer_adresse_gleich" value="ja" checked aria-controls="flyer-addr-fields" aria-describedby="l-fa" />
+                <span>Gleiche Adresse wie oben</span>
+              </label>
             </div>
-            <div class="f" data-f="wohnort">
-              <label class="f-lbl" for="f-wohnort">Wohnort</label>
-              <div class="ctl"><input id="f-wohnort" name="wohnort" type="text" autocomplete="address-level2" maxlength="120" /></div>
-              <p class="f-err" id="e-wohnort"></p>
+
+            <div id="flyer-addr-fields" hidden>
+              <div class="f" data-f="flyer_strasse">
+                <label class="f-lbl" for="f-fstrasse">Straße und Hausnummer</label>
+                <div class="ctl"><input id="f-fstrasse" name="flyer_strasse" type="text" autocomplete="shipping address-line1" maxlength="200" /></div>
+                <p class="f-err" id="e-flyer_strasse"></p>
+              </div>
+
+              <div class="pair">
+                <div class="f" data-f="flyer_plz">
+                  <label class="f-lbl" for="f-fplz">Postleitzahl</label>
+                  <div class="ctl"><input id="f-fplz" name="flyer_plz" type="text" autocomplete="shipping postal-code" inputmode="numeric" maxlength="10" /></div>
+                  <p class="f-err" id="e-flyer_plz"></p>
+                </div>
+                <div class="f" data-f="flyer_ort">
+                  <label class="f-lbl" for="f-fort">Ort</label>
+                  <div class="ctl"><input id="f-fort" name="flyer_ort" type="text" autocomplete="shipping address-level2" maxlength="120" /></div>
+                  <p class="f-err" id="e-flyer_ort"></p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -732,19 +770,7 @@
             <p class="f-err" id="e-iban"></p>
           </div>
 
-          <div class="f" data-f="flyer">
-            <span class="f-lbl" id="l-flyer">Möchtest du kostenlose Flyer mit deinem Code?</span>
-            <p class="f-hint">Fertig gestaltet, zum Auslegen im Yogastudio, in der Praxis, im Café. Sie kommen an die Adresse oben.</p>
-            <div class="chips" role="radiogroup" aria-labelledby="l-flyer">
-              <label class="chip"><input type="radio" name="flyer" value="0" /><span>Keine Flyer</span></label>
-              <label class="chip"><input type="radio" name="flyer" value="100" /><span>100 Stück</span></label>
-              <label class="chip"><input type="radio" name="flyer" value="250" /><span>250 Stück</span></label>
-              <label class="chip"><input type="radio" name="flyer" value="500" /><span>500 Stück</span></label>
-            </div>
-            <p class="f-err" id="e-flyer"></p>
-          </div>
-
-          <p class="f-hint">Adresse und Bankverbindung werden nur für das Empfehlungsprogramm verwendet.</p>
+          <p class="f-hint">Die Bankverbindung wird nur für das Empfehlungsprogramm verwendet.</p>
         </div>
       </fieldset>
 
@@ -765,7 +791,7 @@
         <div class="f" data-f="datenschutz">
           <label class="check">
             <input type="checkbox" name="datenschutz" value="ja" />
-            <span>Ich habe die <a href="datenschutz.html#bewerbung" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin einverstanden, dass Art of Breath meine Angaben zur Prüfung speichert und, wenn ich beim Empfehlungsprogramm mitmache, auch dafür.</span>
+            <span>Ich habe die <a href="datenschutz.html#bewerbung" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin einverstanden, dass Art of Breath meine Angaben zur Prüfung speichert, bei einer Aufnahme die oben als öffentlich genannten Angaben mit einem Foto von mir im Verzeichnis veröffentlicht und, wenn ich beim Empfehlungsprogramm mitmache, meine Angaben auch dafür verwendet.</span>
           </label>
           <p class="f-err" id="e-datenschutz"></p>
         </div>
@@ -822,8 +848,10 @@
     const DRAFT_KEY = 'aob-bewerbung-draft';
     const FALLBACK = 'Da ist leider etwas schiefgelaufen. Schick deine Angaben gern direkt an info@art-of-breath.com, dann kommen sie sicher an.';
     const MAX_SCHWERPUNKTE = 4;
-    // required only once someone opts into the Empfehlungsprogramm
-    const EMP = ['strasse', 'plz', 'wohnort', 'kontoinhaber', 'iban', 'flyer'];
+    // required only once someone opts into the Empfehlungsprogramm; the flyer address only
+    // when flyers are wanted and they go somewhere other than the address in section one
+    const EMP = ['flyer', 'flyer_strasse', 'flyer_plz', 'flyer_ort', 'kontoinhaber', 'iban'];
+    const FLYER_ADDR = ['flyer_strasse', 'flyer_plz', 'flyer_ort'];
 
     const F =document.getElementById('bewerbung');
     const MSG = document.getElementById('form-msg');
@@ -837,17 +865,17 @@
     const scrollMode = reduced ? 'auto' : 'smooth';
 
     const SECTIONS = [
-      { id: 's-wer', label: 'Wer du bist',              req: ['name', 'email', 'ort', 'land', 'eigener_raum', 'website', 'fotos', 'ausbildung'] },
+      { id: 's-wer', label: 'Wer du bist',              req: ['name', 'email', 'strasse', 'plz', 'ort', 'land', 'adresse_art', 'website', 'fotos', 'ausbildung'] },
       { id: 's-wie', label: 'Wie du arbeitest',         req: ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'angebote', 'schwerpunkte', 'schwerpunkte_andere', 'sprachen_andere'] },
       { id: 's-wo',  label: 'Wo du stehst',             req: ['einkommensanteil'] },
       { id: 's-was', label: 'Was du noch sagen willst', req: [] },
       { id: 's-emp', label: 'Empfehlungsprogramm',      req: EMP },
       { id: 's-abm', label: 'Die Abmachung',            req: ['backlink_zusage', 'datenschutz'] },
     ];
-    const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung_sonstiges', 'freitext', 'strasse', 'plz', 'wohnort', 'kontoinhaber', 'iban'];
+    const TEXT   = ['name', 'email', 'telefon', 'strasse', 'plz', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung_sonstiges', 'freitext', 'flyer_strasse', 'flyer_plz', 'flyer_ort', 'kontoinhaber', 'iban'];
     const NUM    = ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'paket_anzahl'];
     const MULTI  = ['angebote', 'schwerpunkte', 'sprachen', 'unterstuetzung'];
-    const SINGLE = ['eigener_raum', 'einkommensanteil', 'empfehlung', 'flyer'];
+    const SINGLE = ['adresse_art', 'einkommensanteil', 'empfehlung', 'flyer', 'flyer_adresse_gleich'];
     const BOOL   = ['backlink_zusage', 'datenschutz'];
     const ALL_REQ = SECTIONS.flatMap(s => s.req);
     const NO_DRAFT = ['iban'];  // a bank account never sits in localStorage
@@ -875,8 +903,11 @@
       // the "Andere" text only counts while its chip is chosen
       if (!d.schwerpunkte.includes('andere')) d.schwerpunkte_andere = '';
       if (!d.sprachen.includes('andere')) d.sprachen_andere = '';
-      // address and bank details only leave the browser for someone who opted in
-      if (d.empfehlung !== 'ja') EMP.forEach(n => { d[n] = ''; });
+      // bank details only leave the browser for someone who opted in, and a second address
+      // only when the flyers go somewhere other than the address in section one
+      if (d.empfehlung !== 'ja') { EMP.forEach(n => { d[n] = ''; }); d.flyer_adresse_gleich = ''; }
+      if (d.flyer === '0') d.flyer_adresse_gleich = '';
+      if (d.flyer === '0' || d.flyer_adresse_gleich === 'ja') FLYER_ADDR.forEach(n => { d[n] = ''; });
       d.iban = d.iban.replace(/\s+/g, '').toUpperCase();
       d._honey = one('_honey');
       if (d.website && !/^https?:\/\//i.test(d.website)) d.website = 'https://' + d.website;
@@ -898,9 +929,12 @@
       name: 'Bitte trag deinen Namen ein.',
       email: 'Bitte trag eine E-Mail-Adresse ein, unter der du erreichbar bist.',
       email_form: 'Diese E-Mail-Adresse sieht nicht vollständig aus.',
-      ort: 'Wo arbeitest du hauptsächlich?',
+      strasse: 'Bitte trag Straße und Hausnummer ein.',
+      plz: 'Bitte trag die Postleitzahl ein.',
+      plz_form: 'Diese Postleitzahl sieht nicht vollständig aus.',
+      ort: 'In welchem Ort arbeitest du hauptsächlich?',
       land: 'Bitte wähl ein Land.',
-      eigener_raum: 'Wähl Ja oder Nein.',
+      adresse_art: 'Wähl, was am ehesten passt.',
       website: 'Ohne Website kann dein Eintrag nicht verlinkt werden.',
       website_form: 'Diese Adresse sieht nicht wie eine Website aus.',
       fotos: 'Ein Link reicht, zum Beispiel deine Website oder Instagram.',
@@ -912,9 +946,9 @@
       schwerpunkte_andere: 'Welcher Schwerpunkt? Ein, zwei Worte reichen.',
       sprachen_andere: 'Welche Sprachen? Trag sie hier ein.',
       einkommensanteil: 'Wähl den Bereich, der am ehesten passt.',
-      strasse: 'Bitte trag Straße und Hausnummer ein.',
-      plz: 'Bitte trag deine Postleitzahl ein.',
-      wohnort: 'Bitte trag deinen Wohnort ein.',
+      flyer_strasse: 'Wohin sollen die Flyer? Straße und Hausnummer fehlen noch.',
+      flyer_plz: 'Bitte trag die Postleitzahl für die Flyer ein.',
+      flyer_ort: 'Bitte trag den Ort für die Flyer ein.',
       kontoinhaber: 'Auf wen läuft das Konto?',
       iban: 'Bitte trag deine IBAN ein.',
       iban_form: 'Diese IBAN stimmt nicht. Prüf sie am besten Zeichen für Zeichen.',
@@ -924,8 +958,13 @@
     };
     function check(n, d) {
       switch (n) {
-        case 'name': case 'ort': case 'fotos': case 'ausbildung': case 'land':
+        case 'name': case 'strasse': case 'ort': case 'fotos': case 'ausbildung': case 'land':
           return d[n] ? '' : M[n];
+        case 'plz': {
+          if (!d.plz) return M.plz;
+          const len = d.land === 'Deutschland' ? 5 : (d.land === 'Schweiz' || d.land === 'Österreich') ? 4 : 0;
+          return (!len || new RegExp('^\\d{' + len + '}$').test(d.plz)) ? '' : M.plz_form;
+        }
         case 'email':
           return !d.email ? M.email : (EMAIL.test(d.email) ? '' : M.email_form);
         case 'website':
@@ -942,10 +981,12 @@
           const chosen = d[n.replace('_andere', '')].includes('andere');
           return (!chosen || d[n]) ? '' : M[n];
         }
-        case 'eigener_raum': case 'einkommensanteil': case 'backlink_zusage': case 'datenschutz':
+        case 'adresse_art': case 'einkommensanteil': case 'backlink_zusage': case 'datenschutz':
           return d[n] ? '' : M[n];
-        case 'strasse': case 'plz': case 'wohnort': case 'kontoinhaber': case 'flyer':
+        case 'kontoinhaber': case 'flyer':
           return (d.empfehlung !== 'ja' || d[n]) ? '' : M[n];
+        case 'flyer_strasse': case 'flyer_plz': case 'flyer_ort':
+          return (d.empfehlung !== 'ja' || d.flyer === '0' || d.flyer === '' || d.flyer_adresse_gleich === 'ja' || d[n]) ? '' : M[n];
         case 'iban':
           if (d.empfehlung !== 'ja') return '';
           return !d.iban ? M.iban : (ibanOk(d.iban) ? '' : M.iban_form);
@@ -1029,11 +1070,19 @@
 
     /* ---- the Empfehlungsprogramm box opens its fields ---- */
     const EMP_BOX = document.getElementById('emp-fields');
+    const FLYER_BOX = document.getElementById('flyer-addr');
+    const FLYER_FIELDS = document.getElementById('flyer-addr-fields');
     function syncEmp(focus) {
       const open = bool('empfehlung');
       EMP_BOX.hidden = !open;
       if (!open) EMP.forEach(n => setErr(n, ''));
-      if (open && focus && !one('strasse')) field('strasse').focus();
+      // no flyers, no shipping address; the same address as above, no second set of fields
+      const flyers = (checked('flyer')[0] || '') !== '0';
+      const same = bool('flyer_adresse_gleich');
+      FLYER_BOX.hidden = !flyers;
+      FLYER_FIELDS.hidden = same;
+      if (!flyers || same) FLYER_ADDR.forEach(n => setErr(n, ''));
+      if (open && focus === 'flyer_adresse_gleich' && flyers && !same && !one('flyer_strasse')) field('flyer_strasse').focus();
     }
 
     /* ---- draft in this browser only, cleared on success ---- */
@@ -1055,6 +1104,7 @@
       if (!d || typeof d !== 'object') return;
       TEXT.concat(NUM).filter(n => !NO_DRAFT.includes(n)).forEach(n => { const el = field(n); if (el && typeof d[n] === 'string') el.value = d[n]; });
       MULTI.concat(SINGLE).forEach(n => {
+        if (!(n in d)) return;  // a draft from before this field existed keeps the default
         const vals = Array.isArray(d[n]) ? d[n] : (d[n] ? [d[n]] : []);
         F.querySelectorAll('input[name="' + n + '"]').forEach(i => { i.checked = vals.includes(i.value); });
       });
@@ -1068,7 +1118,7 @@
       const n = e.target && e.target.name;
       if (n === 'schwerpunkte') capSchwerpunkte();
       if ((n === 'schwerpunkte' || n === 'sprachen') && e.type === 'change' && e.target.value === 'andere') syncMore(n);
-      if (n === 'empfehlung' && e.type === 'change') syncEmp(true);
+      if ((n === 'empfehlung' || n === 'flyer' || n === 'flyer_adresse_gleich') && e.type === 'change') syncEmp(n);
       if (n) {
         const f = F.querySelector('.f[data-f="' + n + '"]');
         if (f && f.classList.contains('err')) setErr(n, check(n, collect()));
@@ -1149,6 +1199,8 @@
 
     /* ---- start ---- */
     restoreDraft();
+    // 100 flyers is the default; a draft that never chose keeps it
+    if (!checked('flyer').length) F.querySelector('input[name="flyer"][value="100"]').checked = true;
     capSchwerpunkte();
     syncMore();
     syncEmp(false);

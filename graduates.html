@@ -401,9 +401,8 @@
   }
 
   /* ---- Tags ----
-     One tone for every topic. They used to carry a colour each, and the Ember and Ochre ones
-     read as more important than the rest; no topic is. The tag--<key> classes stay on the
-     markup as hooks but carry no colour. */
+     One tone for every tag, Angebot or Schwerpunkt. They used to carry a colour each, and
+     the Ember and Ochre ones read as more important than the rest; none is. */
   .tag { background: #EAE5DE; color: #5B5244; } /* Weathered Bone 10 / Ash Fog 70 */
 
   /* ---- Avatar tones ---- */
@@ -708,16 +707,30 @@
   const FLIP = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 3v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const ARROW = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-  // ---- Specializations (label + tag color role) ----
-  const SPECS = {
-    corporate:     'Corporate & High Performer',
-    sleep:         'Schlaf & Unruhe',
-    grief:         'Trauer & Verlust',
-    trauma:        'Trauma & Heilung',
-    relationships: 'Beziehung & Nähe',
-    foundations:   'Atem-Grundlagen',
-    anxiety:       'Angst & Panik',
+  // ---- Angebote and Schwerpunkte: two separate things, same keys as the application form ----
+  // Angebote say what someone can book and lead every card; Schwerpunkte say what the work
+  // is about and only appear on the lifted card.
+  const OFFERS = {
+    einzel:   '1:1 Sessions',
+    gruppen:  'Gruppen-Sessions',
+    online:   'Online-Sessions',
+    retreats: 'Retreats',
   };
+  const SPECS = {
+    'training-mentoring':      'Ausbildung & Mentoring',
+    'trauma-informed':         'Traumasensibel',
+    'nervous-system-somatics': 'Nervensystem & Körper',
+    'coaching':                'Coaching & Entwicklung',
+    'yoga-meditation':         'Yoga & Meditation',
+    'business-leadership':     'Business & Leadership',
+    'ceremony-spirituality':   'Zeremonie & Spiritualität',
+    'psychedelic-integration': 'Psychedelische Integration',
+    'clinical-background':     'Klinischer Hintergrund',
+    'women-motherhood':        'Frauen & Mutterschaft',
+    'sound-creative':          'Klang & kreativer Ausdruck',
+  };
+  const offerTags = (t) => t.offers.map(o => `<span class="tag">${OFFERS[o]}</span>`).join('');
+  const specTags = (t) => t.specs.map(k => `<span class="tag">${SPECS[k] || k}</span>`).join('');
 
   // ---- Placeholder graduates ----
   // lon/lat place each person on the map and drive the distance sort. With real data they
@@ -728,25 +741,26 @@
   //   bio       the short text, shown on the folding map card
   //   about     the long text, paragraphs, shown on the lifted card
   //   since     year of the first own sessions; ones / groups: sessions so far
-  //   offers    'einzel' and/or 'gruppen'; langs: plain labels
+  //   offers    keys of OFFERS; specs: keys of SPECS, or the free text behind „Andere“
+  //   langs     plain labels
   //   trained   when and with whom; background, pkg: optional
   const GRADUATES = [
-    { name: 'Lena Hofmann', city: 'Berlin', lon: 13.42, lat: 52.54, specs: ['corporate','sleep'],
+    { name: 'Lena Hofmann', city: 'Berlin', lon: 13.42, lat: 52.54, specs: ['business-leadership','nervous-system-somatics'],
       bio: 'Begleitet Führungskräfte und Teams dabei, unter Druck ruhig zu bleiben. Ihre Arbeit verbindet Leistungsfähigkeit mit echter Erholung.',
       about: ['Lena kommt aus der Unternehmensberatung und kennt die Wochen, in denen der Kalender keinen Atemzug Platz lässt. Genau dort setzt sie an: mit kurzen, klaren Übungen, die zwischen zwei Terminen funktionieren, und mit längeren Sessions, in denen das Nervensystem wirklich herunterfahren darf.',
               'In ihren Gruppen arbeitet sie oft mit ganzen Teams. Es geht weniger um Entspannung als um einen verlässlichen Umgang mit Druck, der auch nach dem Workshop noch trägt.',
               'Einzelne Menschen begleitet sie meist über mehrere Wochen, besonders wenn Schlaf und Erholung aus dem Takt geraten sind.'],
-      since: 2021, ones: 420, groups: 96, offers: ['einzel','gruppen'], langs: ['Deutsch','Englisch'],
+      since: 2021, ones: 420, groups: 96, offers: ['einzel','gruppen','online'], langs: ['Deutsch','Englisch'],
       trained: '2021, bei Daniel Alan', background: 'Systemischer Coach, zehn Jahre Unternehmensberatung',
       pkg: 'Acht Wochen, sechs Sessions, dazwischen kurze Übungen für den Alltag und ein Gespräch zur Halbzeit.' },
-    { name: 'Jonas Berger', city: 'München', lon: 11.576, lat: 48.137, specs: ['foundations','anxiety'],
+    { name: 'Jonas Berger', city: 'München', lon: 11.576, lat: 48.137, specs: ['nervous-system-somatics','coaching'],
       bio: 'Führt Einsteiger sanft an die Grundlagen des bewussten Atmens heran und arbeitet mit Menschen, die zur Ruhe finden möchten.',
       about: ['Jonas arbeitet am liebsten mit Menschen, die noch nie bewusst geatmet haben. Seine ersten Sessions sind langsam und erklärend, damit niemand das Gefühl hat, etwas falsch zu machen.',
               'Wer mit Angst oder Panik zu ihm kommt, lernt zuerst, den eigenen Atem wieder als Verbündeten zu erleben. Erst danach wird es tiefer.'],
       since: 2023, ones: 180, groups: 40, offers: ['einzel','gruppen'], langs: ['Deutsch'],
       trained: '2023, bei Daniel Alan', background: 'Physiotherapeut',
       pkg: null },
-    { name: 'Amira El-Sayed', city: 'Hamburg', lon: 9.993, lat: 53.551, specs: ['trauma','grief'],
+    { name: 'Amira El-Sayed', city: 'Hamburg', lon: 9.993, lat: 53.551, specs: ['trauma-informed','nervous-system-somatics'],
       bio: 'Arbeitet trauma-informiert und hält einen sicheren, geerdeten Raum. Sie begleitet durch schwere Zeiten in eigenem Tempo.',
       about: ['Amira hat viele Jahre in der Sozialarbeit verbracht, bevor sie zum Atem kam. Diese Erfahrung prägt ihre Arbeit: Sicherheit kommt vor Tiefe, und das Tempo bestimmt immer der Mensch, der vor ihr liegt.',
               'Ihre Sessions beginnen mit viel Zeit zum Ankommen. Sie arbeitet sanft, mit kurzen Atemphasen und langen Pausen, und bleibt nach jeder Session erreichbar.',
@@ -754,48 +768,48 @@
       since: 2020, ones: 610, groups: 120, offers: ['einzel','gruppen'], langs: ['Deutsch','Englisch','Arabisch'],
       trained: '2020, bei Daniel Alan', background: 'Sozialpädagogin, Weiterbildung in traumasensibler Begleitung',
       pkg: 'Drei Monate, zehn Sessions, mit einem Vorgespräch und einem Abschlussgespräch.' },
-    { name: 'Thomas Reinhardt', city: 'Köln', lon: 6.96, lat: 50.938, specs: ['corporate','foundations'],
+    { name: 'Thomas Reinhardt', city: 'Köln', lon: 6.96, lat: 50.938, specs: ['business-leadership'],
       bio: 'Bringt jahrelange Erfahrung aus der Unternehmenswelt mit und übersetzt Atemarbeit in einen klaren, alltagstauglichen Rahmen.',
       about: ['Thomas war zwanzig Jahre Vertriebsleiter, bevor er die Ausbildung gemacht hat. Er spricht die Sprache der Menschen, die zu ihm kommen, und erklärt, was im Körper passiert, bevor er etwas verlangt.',
               'Sein Schwerpunkt sind Gruppen in Unternehmen: regelmäßige Termine statt einmaliger Events, damit aus einer Übung eine Gewohnheit wird.'],
       since: 2022, ones: 150, groups: 210, offers: ['gruppen'], langs: ['Deutsch','Englisch'],
       trained: '2022, bei Daniel Alan', background: null,
       pkg: null },
-    { name: 'Sophie Wagner', city: 'Frankfurt', lon: 8.682, lat: 50.11, specs: ['sleep','anxiety'],
+    { name: 'Sophie Wagner', city: 'Frankfurt', lon: 8.682, lat: 50.11, specs: ['nervous-system-somatics','clinical-background'],
       bio: 'Spezialisiert auf innere Unruhe und Schlaf. Ihre Sitzungen helfen dem Nervensystem, wieder in einen ruhigen Grundton zu finden.',
       about: ['Sophie hat selbst jahrelang schlecht geschlafen. Heute begleitet sie Menschen, die abends nicht abschalten können, und gibt ihnen eine Abendroutine an die Hand, die nicht mehr als zehn Minuten braucht.',
               'Ihre Einzelsessions finden oft am frühen Abend statt, damit das Erlebte direkt in die Nacht mitgenommen werden kann. Online wie vor Ort in Frankfurt.',
               'Einmal im Monat leitet sie einen offenen Abend für alle, die ausprobieren wollen, ob Atemarbeit etwas für sie ist.'],
-      since: 2022, ones: 290, groups: 34, offers: ['einzel','gruppen'], langs: ['Deutsch','Französisch'],
+      since: 2022, ones: 290, groups: 34, offers: ['einzel','gruppen','online'], langs: ['Deutsch','Französisch'],
       trained: '2022, bei Daniel Alan', background: 'Heilpraktikerin für Psychotherapie',
       pkg: 'Sechs Wochen, eine Session pro Woche, dazu ein kurzes Schlafprotokoll.' },
-    { name: 'Mateo Vogel', city: 'Stuttgart', lon: 9.18, lat: 48.776, specs: ['relationships','trauma'],
+    { name: 'Mateo Vogel', city: 'Stuttgart', lon: 9.18, lat: 48.776, specs: ['coaching','trauma-informed'],
       bio: 'Arbeitet mit Paaren und Einzelpersonen an Nähe, Vertrauen und Verbundenheit, durch den gemeinsamen Rhythmus des Atems.',
       about: ['Mateo arbeitet mit Paaren, die wieder zueinander finden wollen, und mit Einzelnen, denen Nähe schwerfällt. Gemeinsames Atmen ist bei ihm oft der erste Moment seit langem, in dem zwei Menschen wirklich im selben Tempo sind.',
               'Er arbeitet ruhig und mit viel Humor und lässt Raum für das, was zwischen den Übungen gesagt werden will.'],
       since: 2021, ones: 380, groups: 60, offers: ['einzel','gruppen'], langs: ['Deutsch','Spanisch','Englisch'],
       trained: '2021, bei Daniel Alan', background: 'Paartherapeut in Ausbildung',
       pkg: 'Für Paare: fünf gemeinsame Sessions und je eine einzeln, über zwei Monate verteilt.' },
-    { name: 'Clara Neumann', city: 'Leipzig', lon: 12.374, lat: 51.34, specs: ['grief','foundations'],
+    { name: 'Clara Neumann', city: 'Leipzig', lon: 12.374, lat: 51.34, specs: ['trauma-informed','ceremony-spirituality'],
       bio: 'Begleitet Menschen behutsam durch Abschied und Verlust und schafft dabei Raum für das, was gefühlt werden möchte.',
       about: ['Clara hat als Hospizbegleiterin angefangen und bringt diese Ruhe in jede Session mit. Trauer muss bei ihr nicht gelöst werden, sie darf da sein und sich bewegen.',
               'Neben der Trauerbegleitung gibt sie Grundlagenkurse für Menschen, die den Atem einfach kennenlernen wollen, jeweils vier Abende in kleiner Runde.'],
       since: 2023, ones: 140, groups: 48, offers: ['einzel','gruppen'], langs: ['Deutsch'],
       trained: '2023, bei Daniel Alan', background: 'Hospizbegleiterin',
       pkg: null },
-    { name: 'David Schuster', city: 'Düsseldorf', lon: 6.773, lat: 51.227, specs: ['corporate','relationships'],
+    { name: 'David Schuster', city: 'Düsseldorf', lon: 6.773, lat: 51.227, specs: ['business-leadership','coaching'],
       bio: 'Verbindet Hochleistung und Menschlichkeit. Er arbeitet mit Teams, die nicht nur besser performen, sondern besser zusammenarbeiten wollen.',
       about: ['David kommt aus dem Leistungssport und weiß, wie schmal der Grat zwischen Fokus und Überlastung ist. Mit Teams arbeitet er daran, dass Leistung nicht auf Kosten der Menschen geht, die sie bringen.',
               'In Einzelsessions begleitet er vor allem Führungskräfte in Umbruchphasen: neue Rolle, neues Team, oder der Moment, in dem die alte Art zu arbeiten nicht mehr trägt.',
               'Seine Gruppen verbinden Atemarbeit mit kurzen Gesprächsrunden, damit das Erlebte im Team ankommt.'],
-      since: 2020, ones: 350, groups: 175, offers: ['einzel','gruppen'], langs: ['Deutsch','Englisch'],
+      since: 2020, ones: 350, groups: 175, offers: ['einzel','gruppen','retreats'], langs: ['Deutsch','Englisch'],
       trained: '2020, bei Daniel Alan', background: 'Ehemaliger Leistungssportler, Sportpsychologie (M.Sc.)',
       pkg: 'Für Teams: ein Quartal, alle zwei Wochen eine Gruppe, dazu zwei Einzelsessions für die Teamleitung.' },
-    { name: 'Yuki Brandt', city: 'Berlin', lon: 13.39, lat: 52.49, specs: ['trauma','sleep'],
+    { name: 'Yuki Brandt', city: 'Berlin', lon: 13.39, lat: 52.49, specs: ['yoga-meditation','trauma-informed'],
       bio: 'Schafft einen ruhigen, geschützten Raum für Regeneration. Ihr Fokus liegt auf Erholung nach anhaltender Anspannung.',
       about: ['Yuki begleitet Menschen, die lange funktioniert haben und jetzt merken, dass der Körper nicht mehr mitmacht. Ihre Arbeit ist leise und langsam, mit viel Zeit am Boden.',
               'Sie verbindet Atemarbeit mit Elementen aus dem Yoga Nidra und arbeitet gern in den Abendstunden, wenn der Tag schon hinter einem liegt.'],
-      since: 2024, ones: 90, groups: 22, offers: ['einzel'], langs: ['Deutsch','Englisch','Japanisch'],
+      since: 2024, ones: 90, groups: 22, offers: ['einzel','online'], langs: ['Deutsch','Englisch','Japanisch'],
       trained: '2024, bei Daniel Alan', background: 'Yogalehrerin (500h)',
       pkg: null },
   ];
@@ -821,7 +835,7 @@
   const CLOSE = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>';
 
   function frontHTML(t, i, dist) {
-    const tags = t.specs.map(s => `<span class="tag tag--${s}">${SPECS[s]}</span>`).join('');
+    const tags = offerTags(t);
     const distHTML = dist != null ? `<span class="dist">· ${distLabel(dist)}</span>` : '';
     return `
       <div class="face face--front">
@@ -832,17 +846,14 @@
         <div class="flip-hint">${FLIP}<span>Mehr erfahren</span></div>
       </div>`;
   }
-  const OFFERS = { einzel: '1:1 Sessions', gruppen: 'Gruppen-Sessions' };
   const num = (n) => n.toLocaleString('de-DE');
 
   function backHTML(t, i, dist) {
-    const tags = t.specs.map(s => `<span class="tag tag--${s}">${SPECS[s]}</span>`).join('');
     const distHTML = dist != null ? `<span class="dist">· ${distLabel(dist)}</span>` : '';
     const about = (t.about || [t.bio]).map(p => `<p class="back-bio">${p}</p>`).join('');
     const facts = [[t.since, 'eigene Sessions seit'], [num(t.ones), '1:1 Sessions'], [num(t.groups), 'Gruppen-Sessions']]
       .map(([n, l]) => `<li><b>${n}</b><span>${l}</span></li>`).join('');
     const rows = [
-      ['Angebot', t.offers.map(o => OFFERS[o]).join(', ')],
       ['Sprachen', t.langs.join(', ')],
       ['Ausbildung', t.trained],
       ['Hintergrund', t.background],
@@ -868,8 +879,12 @@
           <ul class="back-facts">${facts}</ul>
           <div class="back-about">${about}</div>
           <div class="back-section">
+            <span class="lbl">Angebot</span>
+            <div class="tags">${offerTags(t)}</div>
+          </div>
+          <div class="back-section">
             <span class="lbl">Schwerpunkte</span>
-            <div class="tags">${tags}</div>
+            <div class="tags">${specTags(t)}</div>
           </div>
           ${pkg}
           <dl class="back-meta">${rows}</dl>
@@ -1013,7 +1028,7 @@
   function buildSimple(t, i, dist) {
     const li = document.createElement('li');
     const id = 'g-more-' + i;
-    const tags = t.specs.map(s => `<span class="tag tag--${s}">${SPECS[s]}</span>`).join('');
+    const tags = offerTags(t);
     const distHTML = dist != null ? ` · ${distLabel(dist)}` : '';
     li.className = 'gcard';
     li.innerHTML = `
