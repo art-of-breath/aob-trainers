@@ -260,6 +260,8 @@
   .check input:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,112,92,.30); border-radius: 3px; }
   .check span { font-size: 15px; line-height: 1.55; color: var(--ink); }
   .check a { color: var(--muted); text-underline-offset: 3px; }
+  /* several .check cards answering one question, stacked */
+  .checks { display: grid; gap: 10px; }
   .check a:hover { color: var(--ink); }
 
   /* errors: the postcode field's .err state, plus one line of text under the field */
@@ -647,8 +649,27 @@
         </div>
 
         <div class="f" data-f="unterstuetzung">
-          <label class="f-lbl" for="f-ut">Wobei würdest du dir Unterstützung wünschen? <span class="opt">optional</span></label>
-          <div class="ctl"><textarea id="f-ut" name="unterstuetzung" rows="3" placeholder="z. B. Business und Sichtbarkeit, die Qualität meiner Sessions …"></textarea></div>
+          <span class="f-lbl" id="l-ut">Wobei würdest du dir Unterstützung wünschen? <span class="opt">optional</span></span>
+          <p class="f-hint">Alles, was zutrifft. Wenn es dazu ein passendes Angebot gibt, meldet sich jemand bei dir.</p>
+          <div class="checks" role="group" aria-labelledby="l-ut">
+            <label class="check">
+              <input type="checkbox" name="unterstuetzung" value="facilitator" />
+              <span>Ich möchte als Facilitator wachsen und Menschen in meinen Sessions noch sicherer und tiefer begleiten.</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" name="unterstuetzung" value="business" />
+              <span>Ich möchte Breathwork als Business aufbauen: sichtbar werden, meine Preise finden, Klienten gewinnen.</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" name="unterstuetzung" value="sadhana" />
+              <span>Ich wünsche mir einen Praxiscontainer mit Daniel, der mich dabei unterstützt, eine eigene Lebenspraxis (Sadhana) zu etablieren und zu entwickeln.</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="f" data-f="unterstuetzung_sonstiges">
+          <label class="f-lbl" for="f-ut">Sonstiges <span class="opt">optional</span></label>
+          <div class="ctl"><textarea id="f-ut" name="unterstuetzung_sonstiges" rows="3" placeholder="Was dir sonst gerade fehlt oder helfen würde …"></textarea></div>
         </div>
       </fieldset>
 
@@ -823,9 +844,9 @@
       { id: 's-emp', label: 'Empfehlungsprogramm',      req: EMP },
       { id: 's-abm', label: 'Die Abmachung',            req: ['backlink_zusage', 'datenschutz'] },
     ];
-    const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung', 'freitext', 'strasse', 'plz', 'wohnort', 'kontoinhaber', 'iban'];
+    const TEXT   = ['name', 'email', 'telefon', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung_sonstiges', 'freitext', 'strasse', 'plz', 'wohnort', 'kontoinhaber', 'iban'];
     const NUM    = ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'paket_anzahl'];
-    const MULTI  = ['angebote', 'schwerpunkte', 'sprachen'];
+    const MULTI  = ['angebote', 'schwerpunkte', 'sprachen', 'unterstuetzung'];
     const SINGLE = ['eigener_raum', 'einkommensanteil', 'empfehlung', 'flyer'];
     const BOOL   = ['backlink_zusage', 'datenschutz'];
     const ALL_REQ = SECTIONS.flatMap(s => s.req);

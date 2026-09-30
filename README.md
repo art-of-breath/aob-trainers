@@ -58,7 +58,7 @@ Alles, was zur Laufzeit geladen wird, liegt im Repo. Keine CDN- oder Google-Font
 Athelas wird im Font-Stack zuerst genannt, aber nirgends ausgeliefert. Auf macOS und iOS ist sie
 installiert und wird benutzt, auf allen anderen Systemen greift Playfair Display.
 
-`vercel.json` setzt nur einen langen Cache-Header für `/fonts/`.
+`vercel.json` setzt `cleanUrls` (Adressen ohne `.html`, z. B. `/bewerben`; alte `.html`-Links leiten dorthin weiter), einen langen Cache-Header für `/fonts/` und die Weiterleitungen der unveröffentlichten Seiten auf `bald.html`.
 
 Die Kartenkacheln kommen von [openfreemap.org](https://openfreemap.org). Das ist die einzige
 externe Verbindung beim Laden einer Seite, siehe Datenschutzerklärung § 7. Die zweite gibt es
