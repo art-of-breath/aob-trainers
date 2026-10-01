@@ -740,7 +740,7 @@
   // public: never income, contact details or the free text.
   //   bio       the short text, shown on the folding map card
   //   about     the long text, paragraphs, shown on the lifted card
-  //   since     year of the first own sessions; ones / groups: sessions so far
+  //   since     year of the first own sessions; ones / groups: sessions so far (internal, never rendered)
   //   offers    keys of OFFERS; specs: keys of SPECS, or the free text behind „Andere“
   //   langs     plain labels
   //   trained   when and with whom; background, pkg: optional
@@ -851,8 +851,6 @@
   function backHTML(t, i, dist) {
     const distHTML = dist != null ? `<span class="dist">· ${distLabel(dist)}</span>` : '';
     const about = (t.about || [t.bio]).map(p => `<p class="back-bio">${p}</p>`).join('');
-    const facts = [[t.since, 'eigene Sessions seit'], [num(t.ones), '1:1 Sessions'], [num(t.groups), 'Gruppen-Sessions']]
-      .map(([n, l]) => `<li><b>${n}</b><span>${l}</span></li>`).join('');
     const rows = [
       ['Sprachen', t.langs.join(', ')],
       ['Ausbildung', t.trained],
@@ -876,7 +874,6 @@
               <div class="t-loc">${PIN}${t.city}${distHTML}</div>
             </div>
           </div>
-          <ul class="back-facts">${facts}</ul>
           <div class="back-about">${about}</div>
           <div class="back-section">
             <span class="lbl">Angebot</span>
