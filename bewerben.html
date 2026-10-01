@@ -430,7 +430,7 @@
       <fieldset class="sec" id="s-wer">
         <legend class="eyebrow">Wer du bist</legend>
         <h2 class="sec-title">Damit dich jemand <em>findet.</em></h2>
-        <p class="sec-note">Im Verzeichnis erscheinen dein Name, dein Ort, deine Website und deine Ausbildung. E-Mail, Telefon und die genaue Adresse bleiben intern.</p>
+        <p class="sec-note">Im Verzeichnis erscheinen dein Name, dein Ort, deine Website und, wann und bei wem du die Ausbildung gemacht hast. Das tragen wir selbst ein. E-Mail, Telefon und die genaue Adresse bleiben intern.</p>
 
         <div class="f" data-f="name">
           <label class="f-lbl" for="f-name">Dein Name</label>
@@ -513,13 +513,6 @@
           <p class="f-hint">Ein Link reicht: deine Website, Instagram, ein Drive-Ordner. Die Dateien selbst kommen später per Mail, wenn es passt.</p>
           <div class="ctl"><input id="f-fotos" name="fotos" type="text" inputmode="url" /></div>
           <p class="f-err" id="e-fotos"></p>
-        </div>
-
-        <div class="f" data-f="ausbildung">
-          <label class="f-lbl" for="f-ausbildung">Wann und bei wem hast du die Ausbildung bei Art of Breath gemacht?</label>
-          <p class="f-hint">Das Jahr und dein Ausbilder, und wenn du es weißt, der Durchgang oder der Ort.</p>
-          <div class="ctl"><input id="f-ausbildung" name="ausbildung" type="text" placeholder="z. B. 2024, Daniel Alan, Oberreute" /></div>
-          <p class="f-err" id="e-ausbildung"></p>
         </div>
       </fieldset>
 
@@ -718,10 +711,10 @@
             <span class="f-lbl" id="l-flyer">Möchtest du kostenlose Flyer mit deinem Code?</span>
             <p class="f-hint">Fertig gestaltet, zum Auslegen im Yogastudio, in der Praxis, im Café.</p>
             <div class="chips" role="radiogroup" aria-labelledby="l-flyer">
-              <label class="chip"><input type="radio" name="flyer" value="0" /><span>Keine Flyer</span></label>
-              <label class="chip"><input type="radio" name="flyer" value="100" checked /><span>100 Stück</span></label>
-              <label class="chip"><input type="radio" name="flyer" value="250" /><span>250 Stück</span></label>
-              <label class="chip"><input type="radio" name="flyer" value="500" /><span>500 Stück</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="0" autocomplete="off" /><span>Keine Flyer</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="100" checked autocomplete="off" /><span>100 Stück</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="250" autocomplete="off" /><span>250 Stück</span></label>
+              <label class="chip"><input type="radio" name="flyer" value="500" autocomplete="off" /><span>500 Stück</span></label>
             </div>
             <p class="f-err" id="e-flyer"></p>
           </div>
@@ -865,14 +858,14 @@
     const scrollMode = reduced ? 'auto' : 'smooth';
 
     const SECTIONS = [
-      { id: 's-wer', label: 'Wer du bist',              req: ['name', 'email', 'strasse', 'plz', 'ort', 'land', 'adresse_art', 'website', 'fotos', 'ausbildung'] },
+      { id: 's-wer', label: 'Wer du bist',              req: ['name', 'email', 'strasse', 'plz', 'ort', 'land', 'adresse_art', 'website', 'fotos'] },
       { id: 's-wie', label: 'Wie du arbeitest',         req: ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'angebote', 'schwerpunkte', 'schwerpunkte_andere', 'sprachen_andere'] },
       { id: 's-wo',  label: 'Wo du stehst',             req: ['einkommensanteil'] },
       { id: 's-was', label: 'Was du noch sagen willst', req: [] },
       { id: 's-emp', label: 'Empfehlungsprogramm',      req: EMP },
       { id: 's-abm', label: 'Die Abmachung',            req: ['backlink_zusage', 'datenschutz'] },
     ];
-    const TEXT   = ['name', 'email', 'telefon', 'strasse', 'plz', 'ort', 'land', 'website', 'social', 'fotos', 'ausbildung', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung_sonstiges', 'freitext', 'flyer_strasse', 'flyer_plz', 'flyer_ort', 'kontoinhaber', 'iban'];
+    const TEXT   = ['name', 'email', 'telefon', 'strasse', 'plz', 'ort', 'land', 'website', 'social', 'fotos', 'paket_details', 'schwerpunkte_andere', 'sprachen_andere', 'hintergrund', 'kurztext', 'unterstuetzung_sonstiges', 'freitext', 'flyer_strasse', 'flyer_plz', 'flyer_ort', 'kontoinhaber', 'iban'];
     const NUM    = ['seit_jahr', 'einzel_gesamt', 'gruppen_gesamt', 'einzel_monat', 'gruppen_monat', 'paket_anzahl'];
     const MULTI  = ['angebote', 'schwerpunkte', 'sprachen', 'unterstuetzung'];
     const SINGLE = ['adresse_art', 'einkommensanteil', 'empfehlung', 'flyer', 'flyer_adresse_gleich'];
@@ -938,7 +931,6 @@
       website: 'Ohne Website kann dein Eintrag nicht verlinkt werden.',
       website_form: 'Diese Adresse sieht nicht wie eine Website aus.',
       fotos: 'Ein Link reicht, zum Beispiel deine Website oder Instagram.',
-      ausbildung: 'Wann hast du die Ausbildung gemacht? Das Jahr reicht.',
       seit_jahr: 'Eine Jahreszahl, zum Beispiel 2021.',
       zahl: 'Eine Zahl reicht, geschätzt ist in Ordnung.',
       angebote: 'Wähl mindestens ein Angebot.',
@@ -958,7 +950,7 @@
     };
     function check(n, d) {
       switch (n) {
-        case 'name': case 'strasse': case 'ort': case 'fotos': case 'ausbildung': case 'land':
+        case 'name': case 'strasse': case 'ort': case 'fotos': case 'land':
           return d[n] ? '' : M[n];
         case 'plz': {
           if (!d.plz) return M.plz;
@@ -1199,8 +1191,9 @@
 
     /* ---- start ---- */
     restoreDraft();
-    // 100 flyers is the default; a draft that never chose keeps it
-    if (!checked('flyer').length) F.querySelector('input[name="flyer"][value="100"]').checked = true;
+    // 100 flyers is the default. Only someone already in the programme keeps another choice;
+    // a stray click from before (draft or the browser's own form restore) does not.
+    if (!checked('flyer').length || !bool('empfehlung')) F.querySelector('input[name="flyer"][value="100"]').checked = true;
     capSchwerpunkte();
     syncMore();
     syncEmp(false);
