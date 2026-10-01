@@ -283,6 +283,42 @@
   .tcard-ctas { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 10px; }
   .cta-split { flex: 1 1 160px; justify-content: center; padding: 12px 16px; font-size: 13px; }
 
+  /* ---- Phone: the whole card fits on screen, the bio opens with "mehr" ----
+     fitCard() in the script does the measuring. It sets the card's top in px (so the card
+     only ever grows downwards), cuts the bio to as many whole lines as fit, and shows the
+     button. The scrim covers the whole page, because an opened bio runs past the map. */
+  .tcard-more {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px; max-height: 44px; margin: 0 0 6px; padding: 0;
+    background: none; border: 0; cursor: pointer;
+    font-size: 14px; font-weight: 600; letter-spacing: .03em; color: var(--ink);
+    transition: opacity .24s ease, max-height .24s ease, min-height .24s ease, margin .24s ease;
+  }
+  .tcard-more[hidden] { display: none; }
+  .tcard-more span { border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+  .tcard-more svg { width: 14px; height: 14px; color: var(--muted); }
+  .tcard-more:focus-visible { outline: none; }
+  .tcard-more:focus-visible span { border-color: var(--muted); }
+  /* collapses to exactly the bio's own bottom margin, so the tags never jump at the end */
+  .tcard-more.is-going { opacity: 0; min-height: 0; max-height: 0; margin-bottom: 18px; overflow: hidden; }
+  .tcard-bio.is-clamped {
+    margin-bottom: 0; overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.62em), transparent);
+            mask-image: linear-gradient(to bottom, #000 calc(100% - 1.62em), transparent);
+  }
+  .tcard-bio.is-opening { margin-bottom: 0; overflow: hidden; transition: max-height .24s ease; }
+  .tcard-bio:focus { outline: none; }
+  @media (max-width: 720px) {
+    .tcard-body { padding: 26px 24px 24px; }
+    .tcard-photo { height: 210px; height: clamp(180px, 30svh, 260px); }
+    .scrim.is-fit { position: fixed; border-radius: 0; }
+    /* wider than the map on a phone: the screen edge is the frame, the map only the backdrop */
+    .tcard.is-fit { width: min(460px, calc(100vw - 24px)); transform: translate(-50%, 8px) scale(.98); }
+    .tcard.is-fit.show { transform: translate(-50%, 0) scale(1); }
+    .cta-split { flex-basis: 120px; padding: 12px 12px; }
+  }
+
   /* ============ ROSTER (the full list below the map) ============
      Rows, not cards: one hairline-separated line per trainer, so fourteen people
      read as one list instead of fourteen objects. Every value below comes from the
@@ -609,6 +645,7 @@
   const DA_MARK = '<svg viewBox="-254 -244 2093 2016" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(3.840279,0,0,3.840279,-2250.687952,-2212.857812)"><g transform="matrix(2.666667,0,0,2.666667,0,0)"><path d="M352.33,267.04C342.94,272.93 330.75,269.95 320.6,270.8C297.99,272.68 277.41,270.68 254.73,271.7C249.11,271.95 242.93,271.45 237.14,270.49C227.77,268.94 225.19,268.77 222.77,273.59C221.8,275.52 221.49,278.17 221.62,282.33C221.81,288.5 222.37,291.64 227.32,291.29C228.57,291.2 232.04,291.25 233.19,290.74C236.02,289.49 240.21,289.33 243,289.29C261.55,289 278.63,287.51 297.18,287.37C303.3,287.32 309.5,285.84 315.52,286.47C330.47,288.03 345.48,289.78 359.04,283.78C366.24,280.59 372.72,280.16 372.72,262.23C371.83,249.56 371.65,240.31 372.72,227.92C372.72,216.4 357.92,217.25 352.57,217.35C328.68,217.83 305.37,216.76 281.48,216.93C265.1,217.05 248.72,216.95 232.34,217.03C230.25,217.03 228.16,217.58 226.1,217.84C222.32,218.31 222.23,224.73 222.57,230.5C222.77,233.9 227.03,235.52 230.19,235.27C241.71,234.36 253.15,231.89 264.67,231.44C284.34,230.68 304.06,230.6 323.75,231.05C333.08,231.26 342.67,232.3 351.6,234.93C360.32,237.5 357.13,246.51 357.94,253.21C358.6,258.62 356.28,264.57 352.32,267.05L352.33,267.04Z"/></g><g transform="matrix(2.666667,0,0,2.666667,0,0)"><path d="M371.46,345.44C370.78,341.65 371.33,337.76 371.69,334.06C372.69,323.75 372.81,315.64 370.82,307.51C368.52,298.07 356.86,299.62 350.27,299.73C328.62,300.1 308.82,300.91 285.48,302.1C271.36,303.48 244.36,303.09 235.47,304.17C224.58,305.49 222.84,319.47 222.47,324.86C221.73,335.58 221.13,346.32 221.11,357.06C221.11,359.47 223.3,363.73 225.21,363.97C234.67,365.15 239.53,361.46 239.86,357.21C240.24,352.33 239.94,347.39 240.03,342.48C240.17,335.06 235.8,326.93 243.29,325.32C248.02,324.31 254.37,323.5 259.15,322.79C274.29,320.54 288.6,320.98 303.82,320.02C317.21,319.18 330.77,320.68 344.24,321.39C354.51,321.93 354.42,322.87 353.19,332.87C352.11,341.61 348.3,364.01 355.02,364.01C358.35,364.01 364.47,364.99 368.92,364.01C375.55,362.55 372.88,353.44 371.45,345.43L371.46,345.44Z"/></g><g transform="matrix(2.666667,0,0,2.666667,0,0)"><path d="M305.51,348.71C303.53,348.54 289.92,346.83 288.12,348.88C286.42,350.82 288.12,363.36 288.12,363.36C288.12,363.36 287.5,364.15 289.58,363.96C289.58,363.96 295.44,363.27 297.86,363.96C300.27,364.65 305.43,364.65 306.14,363.65C307.7,361.45 306.59,352.88 306.59,352.88C306.59,352.88 307.49,348.87 305.51,348.7L305.51,348.71Z"/></g></g></svg>';
   const MARKER = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.686-7-11a7 7 0 1114 0c0 5.314-7 11-7 11z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.8"/></svg>';
   const CLOSE = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const CHEVRON = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const ARROW = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   /* ---- Tag taxonomy (from trainers/README.md). These labels go on the trainer
@@ -902,7 +939,9 @@
         '<span class="wm' + (t.source ? ' wm-da' : '') + '" aria-hidden="true">' +
           (t.source ? DA_MARK : SEAL) + '</span>' +
         head +
-        '<p class="tcard-bio">' + esc(t.bio) + '</p>' +
+        '<p class="tcard-bio" id="tcard-bio" tabindex="-1">' + esc(t.bio) + '</p>' +
+        '<button class="tcard-more" type="button" aria-expanded="false" aria-controls="tcard-bio" hidden>' +
+          '<span>mehr</span>' + CHEVRON + '</button>' +
         '<div class="tcard-tags">' + tags + '</div>' +
         '<div class="tcard-ctas">' + ctas + '</div>' +
       '</div>'
@@ -915,6 +954,8 @@
     tcard.innerHTML = cardHTML(t);
     tcard.classList.toggle('has-photo', hasPhoto(t));
     tcard.querySelector('.tcard-close').addEventListener('click', closeCard);
+    tcard.querySelector('.tcard-more').addEventListener('click', openBio);
+    fitCard();
     scrim.classList.add('show');
     tcard.classList.add('show');
     TRAINERS.forEach(x => refs[x.id].el.classList.toggle('active', x.id === id));
@@ -928,6 +969,106 @@
     TRAINERS.forEach(x => refs[x.id].el.classList.remove('active'));
   }
   scrim.addEventListener('click', closeCard);
+
+  /* ---- Phone: fit the whole card on screen ----
+     The card stays centred on the map, but is held between the nav and the bottom of the
+     screen, so nothing is cut off. If it is still too tall, the bio is cut to the whole lines
+     that fit (never fewer than three) and "mehr" opens the rest. The card is placed by its
+     top edge, so opening the bio only grows it downwards: the line you are reading stays
+     where it is, and the page scrolls on as normal. Desktop keeps the centred card. */
+  const PHONE = window.matchMedia('(max-width: 720px)');
+  const CALM = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const GAP = 12;
+  let fitWidth = 0;
+
+  function fitCard() {
+    const phone = PHONE.matches;
+    // The phone card rests at a different transform than the desktop one. Switching between
+    // them must not animate, or the opening card slides in from far above.
+    if (tcard.classList.contains('is-fit') !== phone) {
+      tcard.style.transition = 'none';
+      tcard.classList.toggle('is-fit', phone);
+      void tcard.offsetWidth;
+      tcard.style.transition = '';
+    }
+    scrim.classList.toggle('is-fit', phone);
+    tcard.style.top = '';
+    if (!phone) return;
+    fitWidth = window.innerWidth;
+
+    const bio = tcard.querySelector('.tcard-bio');
+    const more = tcard.querySelector('.tcard-more');
+    const photo = tcard.querySelector('.tcard-photo');
+    if (photo) photo.style.height = '';
+    bio.classList.remove('is-clamped');
+    bio.style.maxHeight = '';
+    more.hidden = true;
+
+    const navBottom = Math.max(0, document.querySelector('.nav').getBoundingClientRect().bottom);
+    const room = window.innerHeight - navBottom - 2 * GAP;
+    const over = tcard.offsetHeight - room;
+    if (over > 0) {
+      const line = parseFloat(getComputedStyle(bio).lineHeight);
+      more.hidden = false;
+      bio.classList.add('is-clamped');
+      // measured with the button shown and the bio margin gone, since both change the height
+      let fixed = tcard.offsetHeight - bio.offsetHeight;
+      // Three lines are the least worth reading. If the tags and buttons leave less, the
+      // portrait gives up the difference, down to a strip that still shows a face. Only very
+      // short screens (an iPhone SE with the browser bars out) go down to two lines.
+      let least = 3;
+      for (const [n, floor] of [[3, 140], [2, 110]]) {
+        least = n;
+        const short = n * line - (room - fixed);
+        if (short <= 0) break;
+        if (photo) {
+          photo.style.height = Math.max(floor, photo.offsetHeight - Math.ceil(short)) + 'px';
+          fixed = tcard.offsetHeight - bio.offsetHeight;
+        }
+      }
+      const total = Math.round(bio.scrollHeight / line);
+      const lines = Math.min(total - 1, Math.max(least, Math.floor((room - fixed) / line)));
+      if (lines >= least) {
+        bio.style.maxHeight = lines * line + 'px';
+      } else {
+        more.hidden = true;
+        bio.classList.remove('is-clamped');
+      }
+    }
+
+    // centred on the map, then held inside the visible strip below the nav
+    const frame = tcard.offsetParent.getBoundingClientRect();
+    const h = tcard.offsetHeight;
+    const lo = navBottom + GAP, hi = window.innerHeight - GAP - h;
+    const y = Math.max(lo, Math.min(hi, frame.top + (frame.height - h) / 2));
+    tcard.style.top = (y - frame.top - tcard.offsetParent.clientTop) + 'px';
+  }
+
+  function openBio() {
+    const bio = tcard.querySelector('.tcard-bio');
+    const more = tcard.querySelector('.tcard-more');
+    more.setAttribute('aria-expanded', 'true');
+    bio.focus({ preventScroll: true });
+    let finished = false;
+    const done = () => {
+      if (finished) return; finished = true;
+      bio.classList.remove('is-opening'); bio.style.maxHeight = ''; more.hidden = true;
+    };
+    if (CALM.matches) { bio.classList.remove('is-clamped'); done(); return; }
+    bio.classList.add('is-opening');
+    bio.classList.remove('is-clamped');
+    more.classList.add('is-going');
+    bio.addEventListener('transitionend', (e) => { if (e.target === bio && e.propertyName === 'max-height') done(); });
+    setTimeout(done, 400); // in case no transition runs at all
+    bio.style.maxHeight = bio.scrollHeight + 'px';
+  }
+
+  // Phones fire resize whenever the browser bar slides in or out while scrolling, so only a
+  // real width change (a turned phone) re-fits an open card, and only while the bio is closed.
+  window.addEventListener('resize', () => {
+    if (openId && window.innerWidth !== fitWidth &&
+        tcard.querySelector('.tcard-more').getAttribute('aria-expanded') === 'false') fitCard();
+  });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && openId) closeCard(); });
 
   /* ---- Lead entry: the source spot, rendered above the list instead of inside it.
