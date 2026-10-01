@@ -41,8 +41,10 @@ Vor Google geht nichts raus, bevor der Besucher "Akzeptieren" klickt: In keiner 
 ein gtag-Tag, das Script-Element wird erst in `loadAnalytics()` erzeugt.
 
 **Vor dem Launch:** in `js/cookie-consent.js` die Konstante `MEASUREMENT_ID` von
-`G-XXXXXXXXXX` auf die echte GA4-ID setzen. Solange der Platzhalter drinsteht, wird die
-Zustimmung zwar gespeichert, aber nichts geladen.
+`G-XXXXXXXXXX` auf die echte GA4-ID setzen. Solange der Platzhalter drinsteht, erscheint
+kein Banner und der Link „Cookie-Einstellungen“ ist ausgeblendet (kein Tracking, keine
+Einwilligung nötig). Mit der echten ID dann auch den „Derzeit“-Satz in `datenschutz.html`
+(Das Wichtigste + Abschnitt 4) entfernen.
 
 ## Assets
 

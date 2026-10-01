@@ -15,8 +15,8 @@
 
    ─────────────────────────────────────────────────────────────────────────────
    BEFORE LAUNCH: replace MEASUREMENT_ID with the real GA4 ID from Step 1 of the
-   guide. While it is still the placeholder, accepting stores the consent but loads
-   nothing, so no request goes out with an invalid ID.
+   guide. While it is still the placeholder, init() shows no banner and hides the
+   footer link (Nico's call 2026-10-01: no tracking, no consent prompt).
    ───────────────────────────────────────────────────────────────────────────── */
 (function () {
   'use strict';
@@ -298,6 +298,15 @@
 
   /* ---------- wiring ------------------------------------------------------ */
   function init() {
+    // No real GA4 ID yet means no tracking, so there is nothing to consent to: no banner,
+    // no footer link, nothing stored. Setting MEASUREMENT_ID switches all of it back on.
+    if (MEASUREMENT_ID === 'G-XXXXXXXXXX') {
+      document.querySelectorAll('[data-consent-open]').forEach(function (el) {
+        el.style.display = 'none';
+      });
+      return;
+    }
+
     var stored = readConsent();
 
     if (!stored) {
