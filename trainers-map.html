@@ -186,6 +186,13 @@
   .pin:hover .pin-label, .pin.hot .pin-label, .pin.active .pin-label { opacity: 1; }
   .pin:focus-visible { outline: none; }
   .pin:focus-visible .pin-dot { box-shadow: 0 0 0 3px rgba(180,92,67,.5); }
+  /* Finger-sized hit area: the dot is 16px, a fingertip needs about 44. */
+  .pin::before { content: ''; position: absolute; inset: -14px; border-radius: 50%; }
+  /* Touch screens have no hover, so the name never showed there. Once the map is zoomed in
+     to a region (the postcode search lands at 8.6), every pin carries its name. */
+  @media (hover: none) {
+    #map.show-names .pin .pin-label { opacity: 1; font-size: 13px; padding: 4px 10px; }
+  }
 
   /* Floating trainer card + scrim — centered over the map card */
   .scrim {
@@ -863,6 +870,8 @@
     }
     addPins();
     map.once('idle', () => document.getElementById('map').classList.add('is-ready'));
+    const showNames = () => document.getElementById('map').classList.toggle('show-names', map.getZoom() >= 7.5);
+    map.on('zoom', showNames); showNames();
   });
 
   /* ---- Pins ---- */
