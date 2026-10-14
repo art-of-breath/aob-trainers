@@ -1,7 +1,10 @@
 /* Art of Breath — self-hosted web fonts.
-   Playfair Display (headings) and Raleway (body) are the licensable substitutes for the
-   proprietary Apple faces Athelas and Galvji. Both are SIL Open Font License; the license
-   files sit next to the woff2 files in fonts/.
+   Headings use Athelas, loaded from Adobe Fonts (web project "Daniel Alan", rbc4rgs, on
+   Nico's Creative Cloud account) by the <link> in each page's <head>; it only has 400 and
+   700, so the 500/600 headings render as Regular/Bold. Playfair Display stays here as the
+   fallback if Adobe is unreachable. Raleway (body) substitutes the unlicensable Apple
+   Galvji. Both are SIL Open Font License; the license files sit next to the woff2 files in
+   fonts/.
 
    Latin subset, woff2 only, generated from google-webfonts-helper (gwfh.mranftl.com) on
    2026-08-03. Nothing here touches fonts.googleapis.com or fonts.gstatic.com: the remote

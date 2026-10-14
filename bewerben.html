@@ -10,7 +10,8 @@
 <meta name="description" content="Bewerbung für das Verzeichnis der Absolventen von Art of Breath. Für Facilitator, die ihre Ausbildung bei Art of Breath gemacht haben." />
 <meta name="robots" content="noindex" />
 <link rel="preload" as="font" type="font/woff2" href="fonts/raleway-v37-latin-regular.woff2" crossorigin />
-<link rel="preload" as="font" type="font/woff2" href="fonts/playfair-display-v40-latin-600.woff2" crossorigin />
+<link rel="preconnect" href="https://use.typekit.net" crossorigin />
+<link rel="stylesheet" href="https://use.typekit.net/rbc4rgs.css" />
 <link rel="stylesheet" href="css/fonts.css" />
 <style>
   :root {
@@ -833,8 +834,9 @@
   document.querySelectorAll('[data-arrow]').forEach(el => el.innerHTML = ARROW);
   document.querySelectorAll('[data-chevron]').forEach(el => el.innerHTML = CHEVRON);
 
-  /* Bewerbungsformular → n8n → Google Sheet. Kein Tracker, keine Verbindung beim Laden:
-     die einzige Anfrage nach draußen geht beim Absenden an den n8n-Webhook und sonst nie.
+  /* Bewerbungsformular → n8n → Google Sheet. Kein Tracker: beim Laden holt die Seite nur
+     die Überschrift-Schrift von Adobe Fonts, Formulardaten gehen ausschließlich beim
+     Absenden an den n8n-Webhook und sonst nie.
      Der Server prüft alles noch einmal, die Prüfung hier spart nur den Umweg. */
   (function () {
     const ENDPOINT = 'https://n8n.nicosmat.com/webhook/aob-page-bewerbung';
