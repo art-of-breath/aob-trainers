@@ -11,19 +11,24 @@ wird: `index.html` ist die Einstiegsseite.
 | `trainers-map.html` | Trainer-Übersicht mit Karte |
 | `impressum.html` | Impressum |
 | `datenschutz.html` | Datenschutzerklärung |
-| `graduates.html` | Absolventen. **Noch nicht veröffentlicht**, siehe unten. |
+| `graduates.html` | Breathwork-Verzeichnis der Absolventen, siehe unten. |
 | `bewerben.html` | Bewerbungsformular für Trainer. **Nicht verlinkt**, siehe unten. |
 
-## Absolventen-Seite
+## Absolventen-Seite (Breathwork-Verzeichnis)
 
-`graduates.html` liegt im Repo, ist aber aus der Navigation von `index.html` und
-`trainers-map.html` entfernt. Die Seite ist über die direkte URL erreichbar, also nicht
-vertraulich, nur unverlinkt. Wenn sie live gehen soll, den Nav-Eintrag in beiden Seiten wieder
-einsetzen:
+`graduates.html` ist das Breathwork-Verzeichnis, verlinkt in der Navigation aller Seiten. Die
+Einträge stehen in `js/graduates-data.js`, erzeugt aus dem Bewerbungs-Sheet (Tab `bewerbungen`,
+Spalte `decision` = `zulassen` bzw. `zulassen (Ausbilder/Team markieren)`) mit
+`scripts/verzeichnis/build_graduates.py` im ais-os-Repo. Die Datei nicht von Hand ändern:
+Änderung im Sheet, Skript laufen lassen, committen.
 
-```html
-<a class="nav-link" href="graduates.html">Absolventen</a>
-```
+Fotos liegen quadratisch und fertig zugeschnitten in `images/graduates/<name>.jpg` (Dateiname
+wie der Name im Sheet, kleingeschrieben, Umlaute ausgeschrieben). Wer kein Foto hat, bekommt
+ein Monogramm. Öffentlich ist nur, was das Bewerbungsformular als öffentlich nennt; Kontakt,
+Adresse, Zahlen und Freitext kommen nie in die Datendatei.
+
+Die Postleitzahlsuche kennt nur deutsche fünfstellige PLZ (`PLZ2`). Vierstellige PLZ aus der
+Schweiz und Österreich bekommen einen Hinweis auf die Karte.
 
 ## Bewerbungsformular
 

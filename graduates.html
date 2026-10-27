@@ -292,6 +292,16 @@
     margin-bottom: 20px;
     user-select: none;
   }
+  .avatar.has-img, .g-avatar.has-img { overflow: hidden; background: #EAE5DE; }
+  .has-img img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%; }
+  /* Ausbildungsteam: a quiet mark, same family as the tags but outlined in Wood */
+  .team-mark {
+    display: inline-block; margin: -8px 0 12px;
+    font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em;
+    padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+    color: #7C705C; border: 1px solid #B2A198; /* Wood 20 */
+  }
+  .g-name .team-mark { margin: 0 0 0 6px; font-size: 9.5px; padding: 2px 8px; vertical-align: 2px; }
   .t-name {
     font-family: var(--serif); font-weight: 500; font-size: 25px; line-height: 1.15;
     letter-spacing: .005em; margin: 0 0 8px; color: var(--ink);
@@ -621,6 +631,7 @@
       <div class="nav-links">
         <a class="nav-link" href="index.html">Startseite</a>
         <a class="nav-link" href="trainers-map.html">Trainer</a>
+        <a class="nav-link is-active" href="graduates.html" aria-current="page">Absolventen</a>
       </div>
     </div>
   </nav>
@@ -700,6 +711,7 @@
     </div>
   </footer>
 
+<script src="js/graduates-data.js"></script>
 <script>
   // ---- Seal mark (from the Art of Breath logo) ----
   const SEAL = '<svg viewBox="0 0 1080 1080" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M600.311 924.135C547.881 924.666 496.585 925.201 445.289 925.723C421.337 925.967 397.383 926.113 373.432 926.435C339.253 926.895 305.057 928.375 270.902 927.694C247.5 927.227 224.101 924.288 200.814 921.502C191.903 920.436 183.024 917.432 174.626 914.072C154.447 906 142.886 890.815 141.727 868.973C140.842 852.283 140.858 835.51 141.281 818.795C141.788 798.705 143.291 778.643 144.113 758.558C145.508 724.456 147.645 690.347 147.7 656.238C147.746 627.844 145.199 599.447 143.898 571.047C143.117 554.001 142.206 536.951 141.941 519.894C141.7 504.456 148.564 495.41 163.633 492.371C175.087 490.061 186.872 488.573 198.543 488.327C232.756 487.606 266.996 488.09 301.207 487.313C323.156 486.814 345.066 484.759 367.008 483.714C379.531 483.117 392.083 482.99 404.624 482.926C427.828 482.808 451.034 482.892 474.239 482.892C477.933 482.892 481.627 482.892 485.44 482.892C485.015 462.328 484.5 443.054 484.299 423.778C484.249 418.902 485.347 414.025 485.661 409.131C486.201 400.696 491.448 396.853 499.014 396.301C511.474 395.392 524.012 394.41 536.465 394.876C548.91 395.343 561.278 397.669 573.702 398.963C588.093 400.463 591.316 405.454 590.738 419.571C589.861 441.004 590.509 462.5 590.509 484.699C605.573 485.117 619.155 485.505 632.737 485.86C635.398 485.93 638.063 485.827 640.725 485.877C668.436 486.395 696.149 487.465 723.855 487.318C756.881 487.143 789.905 486.033 822.923 485.125C842.638 484.582 862.343 483.027 882.05 483.079C899.898 483.126 916.534 487.432 929.549 501.29C940.461 512.908 943.211 527.349 944.43 542.128C945.955 560.635 946.698 579.226 947.15 597.796C948.045 634.598 948.947 671.41 948.999 708.219C949.035 733.252 947.213 758.284 947.03 783.322C946.922 798.081 949.425 812.893 948.841 827.605C948.335 840.343 946.473 853.371 942.863 865.576C932.8 899.6 904.841 920.629 869.413 921.763C841.714 922.65 813.997 923.192 786.285 923.381C724.673 923.801 663.059 923.903 600.311 924.135ZM808.583 556.705C791.923 557.446 775.258 558.908 758.603 558.814C639.624 558.145 520.632 560.692 401.66 556.838C364.071 555.62 326.397 556.113 288.786 556.946C276.093 557.228 263.19 559.966 250.908 563.437C239.331 566.709 234.218 575.467 234.475 586.465C234.765 598.916 233.14 611.415 232.274 623.888C230.308 652.213 227.991 680.519 226.469 708.868C225.945 718.642 227.221 728.529 227.908 738.348C229.626 762.914 231.303 787.486 233.417 812.019C233.86 817.156 234.96 822.899 237.721 827.061C250.853 846.853 269.027 860.14 292.576 864.517C300.909 866.065 309.773 864.646 318.391 864.792C346.099 865.26 373.802 866.049 401.511 866.294C431.557 866.561 461.61 866.573 491.654 866.229C501.083 866.121 510.557 864.917 519.901 863.494C543.023 859.971 565.823 855.931 589.633 856.71C617.955 857.636 646.395 854.014 674.802 853.604C699.446 853.249 724.153 853.968 748.763 855.406C777.854 857.106 806.377 853.667 834.674 847.879C849.655 844.815 858.645 834.201 857.986 818.718C857.519 807.731 858.574 796.687 858.445 785.675C858.379 780.039 857.351 774.393 856.5 768.791C854.821 757.742 847.827 750.885 837.538 748.379C827.677 745.977 817.394 743.93 807.315 744.015C693.719 744.978 580.075 740.809 466.516 747.422C446.913 748.564 427.11 746.391 407.404 745.633C394.186 745.124 382.204 740.635 370.988 733.838C363.554 729.334 361.399 726.053 363.715 717.982C369.722 697.047 380.719 679.151 398.273 665.769C403.003 662.164 408.146 660.744 414.306 662.539C422.296 664.868 430.447 667.483 438.661 668.048C466.253 669.942 493.897 671.909 521.534 672.128C562.166 672.449 602.817 670.578 643.446 670.983C676.426 671.311 709.302 667.551 742.336 669.845C760.126 671.08 778.074 670.041 795.95 670.072C811.937 670.099 826.602 665.234 840.387 657.64C850.786 651.911 856.926 642.313 857.489 630.891C858.215 616.181 857.255 601.329 856.141 586.604C855.069 572.439 846.712 563.704 832.946 560.605C825.594 558.95 818.05 558.147 808.583 556.705Z"/><path d="M237.309 285.627C236.407 293.197 234.31 300.25 235.655 306.57C240.13 327.603 240.212 348.78 240.025 370.053C239.92 381.841 239.751 393.638 240.072 405.418C240.401 417.516 234.314 425.45 224.506 431.222C214.113 437.337 202.736 439.975 190.777 440.221C183.935 440.362 177.086 440.306 170.242 440.237C154.976 440.085 141.383 428.034 141.365 412.718C141.335 387.689 142.406 362.652 143.381 337.633C144.076 319.834 145.113 302.038 146.476 284.277C148.042 263.876 149.772 243.489 158.544 224.46C170.07 199.458 188.062 183.451 216.556 181.551C228.649 180.745 240.741 179.664 252.848 179.394C295.364 178.445 337.889 177.914 380.406 176.981C402.017 176.507 423.623 175.641 445.222 174.724C478.546 173.311 511.861 171.657 545.183 170.192C564.501 169.343 583.824 168.574 603.149 167.932C628.935 167.075 654.726 166.378 680.514 165.611C705.922 164.856 731.327 163.91 756.74 163.391C791.663 162.678 826.598 161.75 861.518 162.062C873.051 162.165 884.84 164.835 895.999 168.091C912.167 172.809 922.839 184.251 925.79 200.909C929.084 219.507 932.487 238.366 932.718 257.15C932.971 277.871 930.192 298.696 927.765 319.362C925.795 336.147 925.571 352.623 929.875 369.054C933.826 384.135 937.085 399.287 936.23 415.091C935.477 429.01 929.398 437.969 915.545 439.433C898.274 441.257 880.773 441.03 863.365 441.34C856.575 441.461 849.764 440.259 842.969 440.327C833.125 440.427 827.081 435.448 824.28 426.662C820.332 414.277 818.472 401.337 820.041 388.475C823.797 357.672 828.453 326.98 832.533 296.215C833.329 290.214 833.414 284.083 833.378 278.015C833.317 267.66 829.59 262.502 819.34 260.39C810.472 258.562 801.361 257.593 792.309 257.051C765.079 255.42 737.804 254.504 710.586 252.723C660.502 249.444 610.393 249.626 560.267 250.846C536.757 251.418 513.249 252.173 489.752 253.124C455.282 254.52 420.711 254.932 386.386 258.021C344.186 261.819 302.185 267.866 260.121 273.119C251.346 274.215 242.89 276.514 237.309 285.627Z"/></svg>';
@@ -733,93 +745,27 @@
   const offerTags = (t) => t.offers.map(o => `<span class="tag">${OFFERS[o]}</span>`).join('');
   const specTags = (t) => t.specs.map(k => `<span class="tag">${SPECS[k] || k}</span>`).join('');
 
-  // ---- Placeholder graduates ----
-  // lon/lat place each person on the map and drive the distance sort. With real data they
-  // come from the application form's postcode, never from a street address.
-  // The fields beyond bio mirror what the application form asks (bewerbung/README.md), so the
-  // lifted card already shows the shape real entries will have. Only what is meant to be
-  // public: never income, contact details or the free text.
-  //   bio       the short text, shown on the folding map card
-  //   about     the long text, paragraphs, shown on the lifted card
-  //   since     year of the first own sessions; ones / groups: sessions so far (internal, never rendered)
+  // ---- Graduates ----
+  // js/graduates-data.js, generated from the application sheet (ais-os
+  // scripts/verzeichnis/build_graduates.py). Only what the form calls public: never contact
+  // details, street address, numbers or the free text. lon/lat are the postcode centroid.
+  //   bio       first sentences of their own text, shown on the map card
+  //   about     their own text, paragraphs, shown on the lifted card
+  //   team      part of the Ausbildungsteam, gets its own mark
   //   offers    keys of OFFERS; specs: keys of SPECS, or the free text behind „Andere“
-  //   langs     plain labels
-  //   trained   when and with whom; background, pkg: optional
-  const GRADUATES = [
-    { name: 'Lena Hofmann', city: 'Berlin', lon: 13.42, lat: 52.54, specs: ['business-leadership','nervous-system-somatics'],
-      bio: 'Begleitet Führungskräfte und Teams dabei, unter Druck ruhig zu bleiben. Ihre Arbeit verbindet Leistungsfähigkeit mit echter Erholung.',
-      about: ['Lena kommt aus der Unternehmensberatung und kennt die Wochen, in denen der Kalender keinen Atemzug Platz lässt. Genau dort setzt sie an: mit kurzen, klaren Übungen, die zwischen zwei Terminen funktionieren, und mit längeren Sessions, in denen das Nervensystem wirklich herunterfahren darf.',
-              'In ihren Gruppen arbeitet sie oft mit ganzen Teams. Es geht weniger um Entspannung als um einen verlässlichen Umgang mit Druck, der auch nach dem Workshop noch trägt.',
-              'Einzelne Menschen begleitet sie meist über mehrere Wochen, besonders wenn Schlaf und Erholung aus dem Takt geraten sind.'],
-      since: 2021, ones: 420, groups: 96, offers: ['einzel','gruppen','online'], langs: ['Deutsch','Englisch'],
-      trained: '2021, bei Daniel Alan', background: 'Systemischer Coach, zehn Jahre Unternehmensberatung',
-      pkg: 'Acht Wochen, sechs Sessions, dazwischen kurze Übungen für den Alltag und ein Gespräch zur Halbzeit.' },
-    { name: 'Jonas Berger', city: 'München', lon: 11.576, lat: 48.137, specs: ['nervous-system-somatics','coaching'],
-      bio: 'Führt Einsteiger sanft an die Grundlagen des bewussten Atmens heran und arbeitet mit Menschen, die zur Ruhe finden möchten.',
-      about: ['Jonas arbeitet am liebsten mit Menschen, die noch nie bewusst geatmet haben. Seine ersten Sessions sind langsam und erklärend, damit niemand das Gefühl hat, etwas falsch zu machen.',
-              'Wer mit Angst oder Panik zu ihm kommt, lernt zuerst, den eigenen Atem wieder als Verbündeten zu erleben. Erst danach wird es tiefer.'],
-      since: 2023, ones: 180, groups: 40, offers: ['einzel','gruppen'], langs: ['Deutsch'],
-      trained: '2023, bei Daniel Alan', background: 'Physiotherapeut',
-      pkg: null },
-    { name: 'Amira El-Sayed', city: 'Hamburg', lon: 9.993, lat: 53.551, specs: ['trauma-informed','nervous-system-somatics'],
-      bio: 'Arbeitet trauma-informiert und hält einen sicheren, geerdeten Raum. Sie begleitet durch schwere Zeiten in eigenem Tempo.',
-      about: ['Amira hat viele Jahre in der Sozialarbeit verbracht, bevor sie zum Atem kam. Diese Erfahrung prägt ihre Arbeit: Sicherheit kommt vor Tiefe, und das Tempo bestimmt immer der Mensch, der vor ihr liegt.',
-              'Ihre Sessions beginnen mit viel Zeit zum Ankommen. Sie arbeitet sanft, mit kurzen Atemphasen und langen Pausen, und bleibt nach jeder Session erreichbar.',
-              'Gruppen bietet sie bewusst klein an, mit höchstens acht Teilnehmern, damit jeder gesehen wird.'],
-      since: 2020, ones: 610, groups: 120, offers: ['einzel','gruppen'], langs: ['Deutsch','Englisch','Arabisch'],
-      trained: '2020, bei Daniel Alan', background: 'Sozialpädagogin, Weiterbildung in traumasensibler Begleitung',
-      pkg: 'Drei Monate, zehn Sessions, mit einem Vorgespräch und einem Abschlussgespräch.' },
-    { name: 'Thomas Reinhardt', city: 'Köln', lon: 6.96, lat: 50.938, specs: ['business-leadership'],
-      bio: 'Bringt jahrelange Erfahrung aus der Unternehmenswelt mit und übersetzt Atemarbeit in einen klaren, alltagstauglichen Rahmen.',
-      about: ['Thomas war zwanzig Jahre Vertriebsleiter, bevor er die Ausbildung gemacht hat. Er spricht die Sprache der Menschen, die zu ihm kommen, und erklärt, was im Körper passiert, bevor er etwas verlangt.',
-              'Sein Schwerpunkt sind Gruppen in Unternehmen: regelmäßige Termine statt einmaliger Events, damit aus einer Übung eine Gewohnheit wird.'],
-      since: 2022, ones: 150, groups: 210, offers: ['gruppen'], langs: ['Deutsch','Englisch'],
-      trained: '2022, bei Daniel Alan', background: null,
-      pkg: null },
-    { name: 'Sophie Wagner', city: 'Frankfurt', lon: 8.682, lat: 50.11, specs: ['nervous-system-somatics','clinical-background'],
-      bio: 'Spezialisiert auf innere Unruhe und Schlaf. Ihre Sitzungen helfen dem Nervensystem, wieder in einen ruhigen Grundton zu finden.',
-      about: ['Sophie hat selbst jahrelang schlecht geschlafen. Heute begleitet sie Menschen, die abends nicht abschalten können, und gibt ihnen eine Abendroutine an die Hand, die nicht mehr als zehn Minuten braucht.',
-              'Ihre Einzelsessions finden oft am frühen Abend statt, damit das Erlebte direkt in die Nacht mitgenommen werden kann. Online wie vor Ort in Frankfurt.',
-              'Einmal im Monat leitet sie einen offenen Abend für alle, die ausprobieren wollen, ob Atemarbeit etwas für sie ist.'],
-      since: 2022, ones: 290, groups: 34, offers: ['einzel','gruppen','online'], langs: ['Deutsch','Französisch'],
-      trained: '2022, bei Daniel Alan', background: 'Heilpraktikerin für Psychotherapie',
-      pkg: 'Sechs Wochen, eine Session pro Woche, dazu ein kurzes Schlafprotokoll.' },
-    { name: 'Mateo Vogel', city: 'Stuttgart', lon: 9.18, lat: 48.776, specs: ['coaching','trauma-informed'],
-      bio: 'Arbeitet mit Paaren und Einzelpersonen an Nähe, Vertrauen und Verbundenheit, durch den gemeinsamen Rhythmus des Atems.',
-      about: ['Mateo arbeitet mit Paaren, die wieder zueinander finden wollen, und mit Einzelnen, denen Nähe schwerfällt. Gemeinsames Atmen ist bei ihm oft der erste Moment seit langem, in dem zwei Menschen wirklich im selben Tempo sind.',
-              'Er arbeitet ruhig und mit viel Humor und lässt Raum für das, was zwischen den Übungen gesagt werden will.'],
-      since: 2021, ones: 380, groups: 60, offers: ['einzel','gruppen'], langs: ['Deutsch','Spanisch','Englisch'],
-      trained: '2021, bei Daniel Alan', background: 'Paartherapeut in Ausbildung',
-      pkg: 'Für Paare: fünf gemeinsame Sessions und je eine einzeln, über zwei Monate verteilt.' },
-    { name: 'Clara Neumann', city: 'Leipzig', lon: 12.374, lat: 51.34, specs: ['trauma-informed','ceremony-spirituality'],
-      bio: 'Begleitet Menschen behutsam durch Abschied und Verlust und schafft dabei Raum für das, was gefühlt werden möchte.',
-      about: ['Clara hat als Hospizbegleiterin angefangen und bringt diese Ruhe in jede Session mit. Trauer muss bei ihr nicht gelöst werden, sie darf da sein und sich bewegen.',
-              'Neben der Trauerbegleitung gibt sie Grundlagenkurse für Menschen, die den Atem einfach kennenlernen wollen, jeweils vier Abende in kleiner Runde.'],
-      since: 2023, ones: 140, groups: 48, offers: ['einzel','gruppen'], langs: ['Deutsch'],
-      trained: '2023, bei Daniel Alan', background: 'Hospizbegleiterin',
-      pkg: null },
-    { name: 'David Schuster', city: 'Düsseldorf', lon: 6.773, lat: 51.227, specs: ['business-leadership','coaching'],
-      bio: 'Verbindet Hochleistung und Menschlichkeit. Er arbeitet mit Teams, die nicht nur besser performen, sondern besser zusammenarbeiten wollen.',
-      about: ['David kommt aus dem Leistungssport und weiß, wie schmal der Grat zwischen Fokus und Überlastung ist. Mit Teams arbeitet er daran, dass Leistung nicht auf Kosten der Menschen geht, die sie bringen.',
-              'In Einzelsessions begleitet er vor allem Führungskräfte in Umbruchphasen: neue Rolle, neues Team, oder der Moment, in dem die alte Art zu arbeiten nicht mehr trägt.',
-              'Seine Gruppen verbinden Atemarbeit mit kurzen Gesprächsrunden, damit das Erlebte im Team ankommt.'],
-      since: 2020, ones: 350, groups: 175, offers: ['einzel','gruppen','retreats'], langs: ['Deutsch','Englisch'],
-      trained: '2020, bei Daniel Alan', background: 'Ehemaliger Leistungssportler, Sportpsychologie (M.Sc.)',
-      pkg: 'Für Teams: ein Quartal, alle zwei Wochen eine Gruppe, dazu zwei Einzelsessions für die Teamleitung.' },
-    { name: 'Yuki Brandt', city: 'Berlin', lon: 13.39, lat: 52.49, specs: ['yoga-meditation','trauma-informed'],
-      bio: 'Schafft einen ruhigen, geschützten Raum für Regeneration. Ihr Fokus liegt auf Erholung nach anhaltender Anspannung.',
-      about: ['Yuki begleitet Menschen, die lange funktioniert haben und jetzt merken, dass der Körper nicht mehr mitmacht. Ihre Arbeit ist leise und langsam, mit viel Zeit am Boden.',
-              'Sie verbindet Atemarbeit mit Elementen aus dem Yoga Nidra und arbeitet gern in den Abendstunden, wenn der Tag schon hinter einem liegt.'],
-      since: 2024, ones: 90, groups: 22, offers: ['einzel','online'], langs: ['Deutsch','Englisch','Japanisch'],
-      trained: '2024, bei Daniel Alan', background: 'Yogalehrerin (500h)',
-      pkg: null },
-  ];
+  //   img       square portrait in images/graduates/, empty = monogram
+  const GRADUATES = window.GRADUATES || [];
 
   /* ---- 2-digit PLZ region centroids (same table as trainers-map.html) ---- */
   const PLZ2 = {"01":[13.769,51.112],"02":[14.613,51.154],"03":[13.98,51.702],"04":[12.593,51.298],"06":[11.8,51.514],"07":[11.761,50.738],"08":[12.37,50.594],"09":[12.891,50.798],"10":[13.383,52.509],"11":[10.452,51.166],"12":[13.462,52.458],"13":[13.283,52.541],"14":[12.802,52.326],"15":[13.702,52.213],"16":[13.06,52.751],"17":[13.382,53.65],"18":[12.532,54.127],"19":[11.5,53.462],"20":[10.01,53.459],"21":[9.897,53.446],"22":[10.077,53.588],"23":[10.725,53.847],"24":[9.823,54.38],"25":[9.283,54.1],"26":[7.75,53.331],"27":[8.859,53.185],"28":[8.853,53.051],"29":[10.543,52.857],"30":[9.728,52.383],"31":[9.549,52.252],"32":[8.803,52.14],"33":[8.617,51.878],"34":[9.343,51.258],"35":[8.608,50.695],"36":[9.723,50.698],"37":[9.933,51.566],"38":[10.649,52.189],"39":[11.592,52.205],"40":[6.889,51.225],"41":[6.494,51.167],"42":[7.144,51.232],"44":[7.35,51.511],"45":[7.099,51.493],"46":[6.759,51.664],"47":[6.545,51.468],"48":[7.436,52.08],"49":[7.869,52.499],"50":[6.866,50.931],"51":[7.246,50.974],"52":[6.275,50.809],"53":[7.071,50.637],"54":[6.677,49.921],"55":[7.826,49.874],"56":[7.498,50.335],"57":[7.894,50.821],"58":[7.584,51.333],"59":[8.016,51.569],"60":[8.717,50.151],"61":[8.662,50.278],"63":[9.121,50.048],"64":[8.753,49.788],"65":[8.373,50.253],"66":[7.183,49.331],"67":[8.078,49.523],"68":[8.523,49.457],"69":[8.768,49.422],"70":[9.178,48.778],"71":[9.169,48.858],"72":[9.043,48.435],"73":[9.737,48.759],"74":[9.378,49.232],"75":[8.719,48.884],"76":[8.31,49.024],"77":[8.065,48.493],"78":[8.699,48.001],"79":[8.0,47.996],"80":[11.55,48.163],"81":[11.567,48.121],"82":[11.229,47.97],"83":[12.222,47.964],"84":[12.419,48.422],"85":[11.614,48.449],"86":[10.824,48.383],"87":[10.395,47.845],"88":[9.646,47.911],"89":[10.136,48.489],"90":[11.044,49.464],"91":[10.841,49.41],"92":[12.011,49.481],"93":[12.301,49.072],"94":[13.075,48.797],"95":[11.804,50.081],"96":[10.995,50.085],"97":[9.984,49.937],"98":[10.732,50.588],"99":[10.844,51.071]};
 
   const MONO = ['mono-a','mono-b','mono-c','mono-d'];
   const initials = (n) => n.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  // Photo when there is one, the monogram otherwise; cls is avatar or g-avatar.
+  const avatarHTML = (t, i, cls, tag = 'div') => t.img
+    ? `<${tag} class="${cls} has-img" aria-hidden="true"><img src="${t.img}" alt="" loading="lazy" decoding="async" width="300" height="300"></${tag}>`
+    : `<${tag} class="${cls} ${MONO[i % MONO.length]}" aria-hidden="true">${initials(t.name)}</${tag}>`;
+  const TEAM_MARK = '<span class="team-mark">Ausbildungsteam</span>';
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Great-circle distance in km.
@@ -840,7 +786,8 @@
     const distHTML = dist != null ? `<span class="dist">· ${distLabel(dist)}</span>` : '';
     return `
       <div class="face face--front">
-        <div class="avatar ${MONO[i % MONO.length]}" aria-hidden="true">${initials(t.name)}</div>
+        ${avatarHTML(t, i, 'avatar')}
+        ${t.team ? TEAM_MARK : ''}
         <h2 class="t-name">${t.name}</h2>
         <div class="t-loc">${PIN}${t.city}${distHTML}</div>
         <div class="tags">${tags}</div>
@@ -851,7 +798,8 @@
 
   function backHTML(t, i, dist) {
     const distHTML = dist != null ? `<span class="dist">· ${distLabel(dist)}</span>` : '';
-    const about = (t.about || [t.bio]).map(p => `<p class="back-bio">${p}</p>`).join('');
+    const about = (t.about && t.about.length ? t.about : (t.bio ? [t.bio] : []))
+      .map(p => `<p class="back-bio">${p}</p>`).join('');
     const rows = [
       ['Sprachen', t.langs.join(', ')],
       ['Ausbildung', t.trained],
@@ -868,9 +816,9 @@
         <button class="back-close" type="button" aria-label="Schließen" data-close>${CLOSE}</button>
         <div class="back-scroll">
           <div class="back-head">
-            <div class="avatar ${MONO[i % MONO.length]}" aria-hidden="true">${initials(t.name)}</div>
+            ${avatarHTML(t, i, 'avatar')}
             <div>
-              <p class="back-eyebrow">Absolvent</p>
+              <p class="back-eyebrow">${t.team ? 'Ausbildungsteam' : 'Absolvent'}</p>
               <h2 class="back-name" id="focus-name">${t.name}</h2>
               <div class="t-loc">${PIN}${t.city}${distHTML}</div>
             </div>
@@ -880,13 +828,13 @@
             <span class="lbl">Angebot</span>
             <div class="tags">${offerTags(t)}</div>
           </div>
-          <div class="back-section">
+          ${t.specs.length ? `<div class="back-section">
             <span class="lbl">Schwerpunkte</span>
             <div class="tags">${specTags(t)}</div>
-          </div>
+          </div>` : ''}
           ${pkg}
           <dl class="back-meta">${rows}</dl>
-          <a class="cta" href="#">Zur Website ${ARROW}</a>
+          ${t.website ? `<a class="cta" href="${t.website}" target="_blank" rel="noopener">Zur Website ${ARROW}</a>` : ''}
         </div>
       </div>`;
   }
@@ -1031,14 +979,14 @@
     li.className = 'gcard';
     li.innerHTML = `
       <button class="g-head" type="button" aria-expanded="false" aria-controls="${id}">
-        <span class="g-avatar ${MONO[i % MONO.length]}" aria-hidden="true">${initials(t.name)}</span>
-        <span class="g-name">${t.name}</span>
+        ${avatarHTML(t, i, 'g-avatar', 'span')}
+        <span class="g-name">${t.name}${t.team ? ' ' + TEAM_MARK : ''}</span>
         <span class="g-loc">${PIN}${t.city}${distHTML}</span>
         ${CHEV}
       </button>
       <div class="g-more" id="${id}"><div>
         <div class="g-body">
-          <p class="g-bio">${t.bio}</p>
+          ${t.bio ? `<p class="g-bio">${t.bio}</p>` : ''}
           <div class="g-foot">
             <div class="tags">${tags}</div>
             <button class="g-link" type="button" tabindex="-1" aria-haspopup="dialog">Mehr erfahren ${ARROW}</button>
@@ -1096,7 +1044,8 @@
       const card = buildCard(t, idx, dist);
       grid.appendChild(card);
       if (view === 'grid') {
-        requestAnimationFrame(() => { setTimeout(() => card.classList.add('in'), i * 55); });
+        // stagger only the first rows, so a long list does not trickle in for seconds
+        requestAnimationFrame(() => { setTimeout(() => card.classList.add('in'), Math.min(i, 12) * 55); });
       } else {
         card.classList.add('in');
       }
@@ -1131,7 +1080,9 @@
     if (!digits) { clearOrigin(); render(); return; }
     const c = digits.length === 5 ? PLZ2[digits.slice(0, 2)] : null;
     if (!c) {
-      setNote('Bitte gib eine fünfstellige deutsche Postleitzahl ein.', true);
+      setNote(digits.length === 4
+        ? 'Postleitzahlen aus der Schweiz und Österreich kann die Suche noch nicht einordnen. Auf der Karte findest du alle.'
+        : 'Bitte gib eine fünfstellige deutsche Postleitzahl ein.', true);
       return;
     }
     origin = c; originPlz = digits;
