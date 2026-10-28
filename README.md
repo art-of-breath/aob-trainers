@@ -27,6 +27,10 @@ wie der Name im Sheet, kleingeschrieben, Umlaute ausgeschrieben). Wer kein Foto 
 ein Monogramm. Öffentlich ist nur, was das Bewerbungsformular als öffentlich nennt; Kontakt,
 Adresse, Zahlen und Freitext kommen nie in die Datendatei.
 
+Die Liste ist alphabetisch. Das Ausbildungsteam trägt eine eigene Markierung, rückt aber nicht
+nach oben (Nico 2026-10-28). Paket und Hintergrund kommen so, wie sie im Formular getippt
+wurden: Absätze, Zwischenüberschriften, Listen; lange Texte starten eingeklappt („Alles lesen“).
+
 Die Postleitzahlsuche kennt nur deutsche fünfstellige PLZ (`PLZ2`). Vierstellige PLZ aus der
 Schweiz und Österreich bekommen einen Hinweis auf die Karte.
 
