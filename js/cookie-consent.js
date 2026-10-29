@@ -14,14 +14,15 @@
    accepting. There is no pre-ticked box and no hidden decline layer.
 
    ─────────────────────────────────────────────────────────────────────────────
-   BEFORE LAUNCH: replace MEASUREMENT_ID with the real GA4 ID from Step 1 of the
-   guide. While it is still the placeholder, init() shows no banner and hides the
-   footer link (Nico's call 2026-10-01: no tracking, no consent prompt).
+   MEASUREMENT_ID is the GA4 property "art-of-breath.com" (account "Art of Breath",
+   property 561151426), created 2026-10-28. Retention 2 months, Google Signals off,
+   matching the Datenschutzerklärung. If the ID is ever reset to the placeholder,
+   init() shows no banner and hides the footer link (no tracking, no consent prompt).
    ───────────────────────────────────────────────────────────────────────────── */
 (function () {
   'use strict';
 
-  var MEASUREMENT_ID = 'G-XXXXXXXXXX';   // ← Step 1 deliverable. Placeholder until then.
+  var MEASUREMENT_ID = 'G-BDV0S4ZF69';   // GA4 property art-of-breath.com (2026-10-28)
   var STORAGE_KEY    = 'aob-consent';
   var CONSENT_MAX_AGE = 365 * 24 * 60 * 60 * 1000;   // 12 months, then ask again
   var PRIVACY_URL    = 'datenschutz.html';
