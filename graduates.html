@@ -296,7 +296,7 @@
   }
   .avatar.has-img, .g-avatar.has-img { overflow: hidden; background: #EAE5DE; }
   .has-img img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%; }
-  /* Ausbildungsteam: a quiet mark, same family as the tags but outlined in Wood */
+  /* Ausbilder-Team: a quiet mark, same family as the tags but outlined in Wood */
   .team-mark {
     display: inline-block; margin: -8px 0 12px;
     font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em;
@@ -778,7 +778,7 @@
   //   bio       first sentences of their own text, shown on the map card
   //   about     their own text, paragraphs, shown on the lifted card
   //   pkg, background  their answers as blocks: {p} paragraph, {h} subheading, {ul} list
-  //   team      part of the Ausbildungsteam, gets its own mark
+  //   team      part of the Ausbilder-Team, gets its own mark
   //   offers    keys of OFFERS; specs: keys of SPECS, or the free text behind „Andere“
   //   img       square portrait in images/graduates/, empty = monogram
   const GRADUATES = window.GRADUATES || [];
@@ -792,7 +792,7 @@
   const avatarHTML = (t, i, cls, tag = 'div') => t.img
     ? `<${tag} class="${cls} has-img" aria-hidden="true"><img src="${t.img}" alt="" loading="lazy" decoding="async" width="300" height="300"></${tag}>`
     : `<${tag} class="${cls} ${MONO[i % MONO.length]}" aria-hidden="true">${initials(t.name)}</${tag}>`;
-  const TEAM_MARK = '<span class="team-mark">Ausbildungsteam</span>';
+  const TEAM_MARK = '<span class="team-mark">Ausbilder-Team</span>';
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Great-circle distance in km.
@@ -855,7 +855,7 @@
           <div class="back-head">
             ${avatarHTML(t, i, 'avatar')}
             <div>
-              <p class="back-eyebrow">${t.team ? 'Ausbildungsteam' : 'Breathworker'}</p>
+              <p class="back-eyebrow">${t.team ? 'Ausbilder-Team' : 'Breathworker'}</p>
               <h2 class="back-name" id="focus-name">${t.name}</h2>
               <div class="t-loc">${PIN}${t.city}${distHTML}</div>
             </div>
