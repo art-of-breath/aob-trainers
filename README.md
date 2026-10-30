@@ -11,12 +11,12 @@ wird: `index.html` ist die Einstiegsseite.
 | `trainers-map.html` | Trainer-Übersicht mit Karte |
 | `impressum.html` | Impressum |
 | `datenschutz.html` | Datenschutzerklärung |
-| `graduates.html` | Breathwork-Verzeichnis der Absolventen, siehe unten. |
+| `breathwork-verzeichnis.html` | Breathwork-Verzeichnis der Absolventen, siehe unten. |
 | `bewerben.html` | Bewerbungsformular für Trainer. **Nicht verlinkt**, siehe unten. |
 
 ## Absolventen-Seite (Breathwork-Verzeichnis)
 
-`graduates.html` ist das Breathwork-Verzeichnis, verlinkt in der Navigation aller Seiten. Die
+`breathwork-verzeichnis.html` ist das Breathwork-Verzeichnis, verlinkt in der Navigation aller Seiten. Die
 Einträge stehen in `js/graduates-data.js`, erzeugt aus dem Bewerbungs-Sheet (Tab `bewerbungen`,
 Spalte `decision` = `zulassen` bzw. `zulassen (Ausbilder/Team markieren)`) mit
 `scripts/verzeichnis/build_graduates.py` im ais-os-Repo. Die Datei nicht von Hand ändern:

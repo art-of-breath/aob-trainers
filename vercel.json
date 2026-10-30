@@ -10,5 +10,17 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/graduates",
+      "destination": "/breathwork-verzeichnis",
+      "permanent": true
+    },
+    {
+      "source": "/graduates.html",
+      "destination": "/breathwork-verzeichnis",
+      "permanent": true
+    }
   ]
 }
