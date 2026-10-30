@@ -2,19 +2,45 @@
 <html lang="de">
 <head>
 <meta charset="utf-8" />
+<!-- Dark design, fixed: keeps Samsung Internet / Chrome Android auto-dark from inverting it. -->
+<meta name="color-scheme" content="only light" />
+<meta name="supported-color-schemes" content="light" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#2E2725" />
 <link rel="icon" href="favicon.ico" sizes="32x32" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-<title>Bald hier · Art of Breath</title>
-<meta name="description" content="Die Übersicht der Ausbilder und Absolventen von Art of Breath entsteht gerade." />
+<title>Montag, 2. November · Art of Breath</title>
+<meta name="description" content="Am Montag, 2. November, um 10 Uhr zeigen wir euch, woran wir ein Jahr gebaut haben." />
 <meta name="robots" content="noindex" />
+
+<!-- Link previews (WhatsApp, Telegram, iMessage, Instagram DMs). Absolute URLs: crawlers need them. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Art of Breath" />
+<meta property="og:locale" content="de_DE" />
+<meta property="og:url" content="https://art-of-breath.com/" />
+<meta property="og:title" content="Am Montag zeigen wir euch, woran wir ein Jahr gebaut haben." />
+<meta property="og:description" content="Montag, 2. November, 10 Uhr. Wir wollen, dass es jeden Abend in deiner Nähe einen Breathwork Circle gibt." />
+<meta property="og:image" content="https://art-of-breath.com/images/og-bald.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Art of Breath. Am Montag zeigen wir euch, woran wir ein Jahr gebaut haben. Montag, 2. November, 10 Uhr." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Am Montag zeigen wir euch, woran wir ein Jahr gebaut haben." />
+<meta name="twitter:description" content="Montag, 2. November, 10 Uhr. art-of-breath.com" />
+<meta name="twitter:image" content="https://art-of-breath.com/images/og-bald.jpg" />
+
 <link rel="preload" as="font" type="font/woff2" href="fonts/raleway-v37-latin-regular.woff2" crossorigin />
+<link rel="preload" as="image" type="image/webp" href="images/bald-ring-720.webp" imagesrcset="images/bald-ring-720.webp 720w, images/bald-ring-1200.webp 1200w" imagesizes="(max-width: 820px) 64vw, 520px" />
 <link rel="preconnect" href="https://use.typekit.net" crossorigin />
 <link rel="stylesheet" href="https://use.typekit.net/rbc4rgs.css" />
 <link rel="stylesheet" href="css/fonts.css" />
 <style>
   :root {
+    color-scheme: only light;
+
+    /* Site tokens, unchanged: js/cookie-consent.js styles its dialog with these, so the
+       consent dialog looks exactly like on every other page. Do not repoint them. */
     --bg:          #F3F0EC;
     --bg-sink:     #EDE9E3;
     --card:        #FBFAF7;
@@ -35,121 +61,192 @@
     --r-tab:   9px;
     --r-pill:  999px;
 
-    /* Gold Seam: thin gold lines only, never a fill */
-    --seam-h: linear-gradient(90deg, #C2923F 0%, #DFBB72 50%, #C2923F 100%);
-
     --serif: 'Athelas', 'Playfair Display', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
     --sans:  'Raleway', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-    --shadow:   0 1px 2px rgba(56,53,48,.04), 0 14px 30px -20px rgba(56,53,48,.28);
-    --shadow-h: 0 2px 4px rgba(56,53,48,.05), 0 22px 44px -22px rgba(56,53,48,.34);
+    /* Teaser palette, 1:1 from the launch stories (launch-paket/slides.py: CHAR, BONE, OCHRE, DIM) */
+    --char:      #2E2725;
+    --char-sink: #272120;
+    --bone:      #E8E2D2;
+    --ochre:     #C2923F;
+    --dim:       #BCB4A4;
+    --hair:      rgba(232,226,210,.12);
   }
 
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  html { -webkit-text-size-adjust: 100%; background: var(--char); }
   body {
-    margin: 0; background: var(--bg); color: var(--ink);
+    margin: 0; background: var(--char); color: var(--bone);
     font-family: var(--sans); font-weight: 400; font-size: 16px; line-height: 1.5;
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
     /* clip, not hidden: hidden breaks the sticky nav in WebKit (iOS). hidden is the fallback. */
     overflow-x: hidden; overflow-x: clip;
+    /* short page: the footer still sits at the bottom of the screen */
+    min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column;
+  }
+  /* Fixed colours even when the OS is dark: the design is already dark, nothing to adapt. */
+  @media (prefers-color-scheme: dark) {
+    html, body { background: var(--char); color: var(--bone); }
   }
   a { color: inherit; }
   button { font-family: inherit; }
   .wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+  .nobr { white-space: nowrap; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
 
   /* ============ NAV ============ */
   .nav {
     position: sticky; top: 0; z-index: 50;
-    background: rgba(243,240,236,.92); border-bottom: 1px solid var(--line);
+    background: rgba(46,39,37,.92); border-bottom: 1px solid var(--hair);
   }
   @supports (backdrop-filter: blur(6px)) {
-    .nav { backdrop-filter: saturate(1.1) blur(8px); background: rgba(243,240,236,.82); }
+    .nav { backdrop-filter: saturate(1.1) blur(8px); background: rgba(46,39,37,.82); }
   }
   .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
-  .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; color: var(--ink); }
-  .brand .mark { width: 26px; height: 26px; display: block; color: var(--ink); }
+  .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; color: var(--bone); }
+  .brand .mark { width: 26px; height: 26px; display: block; color: var(--bone); }
   .brand-name { font-family: var(--serif); font-size: 18px; font-weight: 600; letter-spacing: .01em; }
-  .nav-links { display: flex; align-items: center; gap: 6px; }
-  .nav-link {
-    position: relative; text-decoration: none; color: var(--muted);
-    font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-    padding: 9px 16px; border-radius: var(--r-tab); transition: color .2s ease;
+
+  /* ============ TEASER ============
+     Stands in for the start page, the map and the graduates until Monday, 2 November,
+     10:00 CET. Vercel redirects those paths here (vercel.json on main). Continues the
+     Instagram teaser stories: same charcoal, bone and ochre, same voice, and the team ring
+     from teaser 3, blurred and darkened so nobody is recognisable before the reveal. */
+  .soon { flex: 1; display: flex; align-items: center; padding: clamp(48px, 8vh, 104px) 0; }
+  .soon .wrap { width: 100%; }
+  .soon-grid {
+    display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+    align-items: center; gap: clamp(40px, 6vw, 96px);
   }
-  .nav-link:hover { color: var(--ink); }
+  .soon-text { max-width: 600px; }
 
-
-  /* ============ COMING SOON ============
-     Stands in for the start page, the map and the graduates until they launch. Vercel
-     redirects those paths here (vercel.json); GitHub Pages ignores that file, so the
-     preview keeps the full site. One message, one way on, and the only gold is a short
-     seam above it: the thing is still being filled in. */
-  /* short page: the footer still sits at the bottom of the screen */
-  body { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; }
-  .soon { flex: 1; padding: clamp(72px, 12vh, 140px) 0 clamp(88px, 14vh, 160px); }
-  .nobr { white-space: nowrap; }
-  .soon-inner { max-width: 60ch; }
-  .soon .seam { width: 56px; height: 2px; border-radius: 1px; background: var(--seam-h); margin: 0 0 30px; }
-  .eyebrow {
-    font-size: 12px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: .28em; color: var(--muted); margin: 0 0 22px;
+  .kicker {
+    margin: 0 0 26px; color: var(--ochre);
+    font-size: 13px; font-weight: 600; letter-spacing: .32em; text-transform: uppercase;
   }
   .soon h1 {
-    font-family: var(--serif); font-weight: 500;
-    font-size: clamp(34px, 5vw, 54px); line-height: 1.1; letter-spacing: .005em;
-    margin: 0; max-width: 17ch; color: var(--ink);
+    margin: 0; max-width: 17ch; color: var(--bone);
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(34px, 4.4vw, 58px); line-height: 1.16; letter-spacing: .003em;
+    text-wrap: balance;
   }
-  .soon h1 em { font-style: italic; color: var(--muted); }
-  .soon .lede { margin: 22px 0 34px; max-width: 54ch; font-size: 18px; line-height: 1.7; color: var(--muted); }
-  .btn {
-    display: inline-flex; align-items: center; gap: 9px;
-    font-family: var(--sans); font-weight: 600; font-size: 14.5px; letter-spacing: .02em;
-    padding: 13px 22px; min-height: 44px; border-radius: var(--r-btn); border: 1px solid transparent;
-    background: var(--btn); color: var(--inverse); text-decoration: none;
-    transition: background .2s ease;
+  .rule { width: 64px; height: 2px; background: var(--ochre); margin: 34px 0 26px; border: 0; }
+  .when {
+    margin: 0; color: var(--dim);
+    font-size: clamp(17px, 1.5vw, 20px); font-weight: 400; letter-spacing: .01em;
   }
-  .btn:hover { background: var(--btn-hover); }
-  .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,112,92,.30); }
-  .btn svg { width: 18px; height: 18px; transition: transform .2s ease; }
-  .btn:hover svg { transform: translateX(3px); }
 
-  /* ============ FOOTER (identical on every page) ============ */
-  .foot { border-top: 1px solid var(--line); background: var(--bg-sink); }
+  /* countdown: hidden until the script fills it, so no-JS visitors just read the date */
+  .count { display: flex; margin: 22px 0 0; padding: 0; list-style: none; }
+  .count[hidden], .live[hidden] { display: none; }
+  .count li {
+    display: flex; flex-direction: column; gap: 6px;
+    min-width: 4.6em; padding: 0 22px; border-left: 1px solid var(--hair);
+  }
+  .count li:first-child { padding-left: 0; border-left: 0; min-width: 3.4em; }
+  .count .n {
+    font-family: var(--serif); font-size: clamp(32px, 3vw, 42px); line-height: 1; color: var(--bone);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .count .u {
+    font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--dim);
+  }
+
+  .live { margin: 22px 0 0; }
+  .live-title {
+    margin: 0 0 10px; font-family: var(--serif); font-size: clamp(32px, 3vw, 42px); line-height: 1.1; color: var(--bone);
+  }
+
+  .why {
+    margin: 40px 0 0; max-width: 46ch; color: var(--dim);
+    font-size: 15.5px; line-height: 1.7;
+  }
+
+  .on {
+    margin: 30px 0 0; padding-top: 22px; border-top: 1px solid var(--hair);
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 22px;
+  }
+  .link {
+    display: inline-flex; align-items: center; gap: 9px; min-height: 44px;
+    color: var(--bone); text-decoration: none; font-size: 15px; font-weight: 500; letter-spacing: .01em;
+    border-bottom: 1px solid transparent; transition: color .2s ease;
+  }
+  .link .lbl { border-bottom: 1px solid rgba(194,146,63,.55); padding-bottom: 2px; transition: border-color .2s ease; }
+  .link:hover .lbl { border-color: var(--ochre); }
+  .link:focus-visible { outline: none; }
+  .link:focus-visible .lbl { border-color: var(--bone); }
+  .link svg { width: 17px; height: 17px; color: var(--ochre); transition: transform .2s ease; flex: none; }
+  .link:hover svg { transform: translateX(3px); }
+  .link-quiet { color: var(--dim); font-size: 14px; font-weight: 400; }
+  .link-quiet .lbl { border-color: rgba(188,180,164,.35); }
+  .link-quiet:hover { color: var(--bone); }
+
+  /* the ring: blurred team image from teaser 3, breathing slowly */
+  .ring { justify-self: center; width: 100%; max-width: 520px; margin: 0; }
+  .ring img {
+    display: block; width: 100%; height: auto; aspect-ratio: 1 / 1;
+    animation: breathe 11s ease-in-out infinite alternate;
+  }
+  @keyframes breathe {
+    from { transform: scale(.975); opacity: .82; }
+    to   { transform: scale(1.015); opacity: 1; }
+  }
+
+  /* entrance: text settles in once, nothing loops but the ring */
+  .rise { animation: rise .9s cubic-bezier(.2,.7,.2,1) both; }
+  .rise-2 { animation-delay: .12s; }
+  .rise-3 { animation-delay: .24s; }
+  .rise-4 { animation-delay: .36s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  /* ============ FOOTER (identical on every page, dark here) ============ */
+  .foot { border-top: 1px solid var(--hair); background: var(--char-sink); }
   .foot-inner {
     display: flex; align-items: center; justify-content: space-between;
     flex-wrap: wrap; gap: 16px 28px; padding: 34px 0;
   }
   .foot-id { display: flex; align-items: center; gap: 12px; }
-  .foot .mark { width: 26px; height: 26px; color: var(--muted); display: block; flex: none; }
-  .foot small { color: var(--faint); font-size: 12.5px; letter-spacing: .03em; }
+  .foot .mark { width: 26px; height: 26px; color: var(--dim); display: block; flex: none; }
+  .foot small { color: var(--dim); font-size: 12.5px; letter-spacing: .03em; }
   .foot-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; }
   .foot-links a, .foot-links button {
-    font-family: inherit; font-size: 12.5px; letter-spacing: .03em; color: var(--muted);
+    font-family: inherit; font-size: 12.5px; letter-spacing: .03em; color: var(--dim);
     background: none; border: 0; padding: 0; cursor: pointer; text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: color .2s ease, border-color .2s ease;
   }
-  .foot-links a:hover, .foot-links button:hover { color: var(--ink); border-color: var(--line); }
+  .foot-links a:hover, .foot-links button:hover { color: var(--bone); border-color: var(--hair); }
   .foot-links a:focus-visible, .foot-links button:focus-visible {
-    outline: none; color: var(--ink); border-color: var(--muted);
+    outline: none; color: var(--bone); border-color: var(--dim);
   }
 
   /* ============ RESPONSIVE ============ */
+  @media (max-width: 820px) {
+    .soon { align-items: flex-start; padding: 28px 0 56px; }
+    .soon-grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+    .ring { order: -1; max-width: min(64vw, 300px); }
+    .kicker { margin-bottom: 18px; }
+    .rule { margin: 26px 0 20px; }
+    .why { margin-top: 32px; }
+  }
   @media (max-width: 640px) {
     .foot-inner { flex-direction: column; text-align: center; }
     .foot-links { justify-content: center; }
   }
-
   @media (max-width: 560px) {
     .wrap { padding: 0 20px; }
     .nav-inner { height: 62px; }
     .brand-name { display: none; }
-    .nav-links { gap: 2px; }
-    .nav-link { padding: 8px 12px; font-size: 12px; letter-spacing: .04em; }
+    .soon h1 { font-size: 31px; max-width: none; }
+    .count li { padding: 0 14px; min-width: 0; flex: 1 1 0; }
+    .count li:first-child { min-width: 0; }
+    .count .u { font-size: 9.5px; letter-spacing: .14em; }
   }
   @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; }
-    html { scroll-behavior: auto; }
+    * { transition: none !important; animation: none !important; }
   }
 </style>
 </head>
@@ -165,15 +262,42 @@
     </div>
   </nav>
 
-  <!-- ============ COMING SOON ============ -->
+  <!-- ============ TEASER ============ -->
   <main class="soon">
     <div class="wrap">
-      <div class="soon-inner">
-        <div class="seam" aria-hidden="true"></div>
-        <p class="eyebrow">Art&nbsp;of&nbsp;Breath · Ausbilder</p>
-        <h1>Die Übersicht der Ausbilder <em>entsteht gerade.</em></h1>
-        <p class="lede">Bald findest du hier die Ausbilder und Absolventen von Art of Breath, sortiert nach Ort und Schwerpunkt. Bis dahin steht alles zur Ausbildung auf <span class="nobr">daniel-alan.com</span>.</p>
-        <a class="btn" href="https://www.daniel-alan.com/breathwork-ausbildung">Zur Ausbildung <span data-arrow></span></a>
+      <div class="soon-grid">
+        <div class="soon-text">
+          <p class="kicker rise">Art of Breath</p>
+          <h1 class="rise rise-2">Am Montag zeigen wir euch, woran wir ein Jahr gebaut haben.</h1>
+          <hr class="rule rise rise-3" />
+          <p class="when rise rise-3"><time datetime="2026-11-02T10:00:00+01:00">Montag, 2.&nbsp;November, 10&nbsp;Uhr</time></p>
+
+          <ul class="count rise rise-4" data-countdown hidden role="timer" aria-label="Zeit bis Montag, 2. November, 10 Uhr">
+            <li><span class="n" data-d>0</span><span class="u" data-du>Tage</span></li>
+            <li><span class="n" data-h>00</span><span class="u" data-hu>Stunden</span></li>
+            <li><span class="n" data-m>00</span><span class="u" data-mu>Minuten</span></li>
+            <li><span class="n" data-s>00</span><span class="u" data-su>Sekunden</span></li>
+          </ul>
+
+          <div class="live" data-live hidden>
+            <p class="live-title">Jetzt live.</p>
+            <a class="link" href="/"><span class="lbl">Seite neu laden</span> <span data-arrow></span></a>
+          </div>
+
+          <p class="why rise rise-4">Wir wollen, dass es jeden Abend in deiner Nähe einen Breathwork Circle gibt. Dafür reicht einer allein nicht aus.</p>
+
+          <div class="on rise rise-4">
+            <a class="link" href="https://www.instagram.com/daniel_alan_breath/" rel="noopener"><span class="lbl">Bis dahin: Daniel Alan auf Instagram</span> <span data-arrow></span></a>
+            <a class="link link-quiet" href="https://www.daniel-alan.com/"><span class="lbl">daniel-alan.com</span></a>
+          </div>
+        </div>
+
+        <figure class="ring" aria-hidden="true">
+          <img src="images/bald-ring-720.webp"
+               srcset="images/bald-ring-720.webp 720w, images/bald-ring-1200.webp 1200w"
+               sizes="(max-width: 820px) 64vw, 520px"
+               width="720" height="720" alt="" decoding="async" fetchpriority="high" />
+        </figure>
       </div>
     </div>
   </main>
@@ -199,6 +323,50 @@
   document.querySelectorAll('[data-seal]').forEach(el => { el.innerHTML = SEAL; });
   const ARROW = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   document.querySelectorAll('[data-arrow]').forEach(el => { el.innerHTML = ARROW; });
+</script>
+<script>
+  /* Countdown to the launch. After 10:00 CET it shows "Jetzt live." and a link to the start
+     page, which Vercel serves for real once the redirects in vercel.json are gone.
+     Test the live state locally with bald.html#live. */
+  (function () {
+    var END = Date.parse('2026-11-02T10:00:00+01:00');
+    var box = document.querySelector('[data-countdown]');
+    var live = document.querySelector('[data-live]');
+    if (!box || !live || isNaN(END)) return;
+    var q = function (s) { return box.querySelector(s); };
+    var n = { d: q('[data-d]'), h: q('[data-h]'), m: q('[data-m]'), s: q('[data-s]') };
+    var u = { d: q('[data-du]'), h: q('[data-hu]'), m: q('[data-mu]'), s: q('[data-su]') };
+    var words = { d: ['Tag', 'Tage'], h: ['Stunde', 'Stunden'], m: ['Minute', 'Minuten'], s: ['Sekunde', 'Sekunden'] };
+    var forceLive = location.hash === '#live';
+    var timer = null;
+
+    function pad(v) { return v < 10 ? '0' + v : String(v); }
+    function set(k, v, padded) {
+      var t = padded ? pad(v) : String(v);
+      if (n[k].textContent !== t) n[k].textContent = t;
+      var w = words[k][v === 1 ? 0 : 1];
+      if (u[k].textContent !== w) u[k].textContent = w;
+    }
+    function tick() {
+      var ms = forceLive ? 0 : END - Date.now();
+      if (ms <= 0) {
+        box.hidden = true;
+        live.hidden = false;
+        if (timer) clearInterval(timer);
+        return;
+      }
+      var t = Math.floor(ms / 1000);
+      set('d', Math.floor(t / 86400), false);
+      set('h', Math.floor(t % 86400 / 3600), true);
+      set('m', Math.floor(t % 3600 / 60), true);
+      set('s', t % 60, true);
+    }
+    tick();
+    if (live.hidden) {
+      box.hidden = false;
+      timer = setInterval(tick, 1000);
+    }
+  })();
 </script>
 </body>
 </html>
