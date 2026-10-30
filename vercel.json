@@ -41,6 +41,16 @@
       "source": "/graduates.html",
       "destination": "/bald.html",
       "permanent": false
+    },
+    {
+      "source": "/breathwork-verzeichnis",
+      "destination": "/bald.html",
+      "permanent": false
+    },
+    {
+      "source": "/breathwork-verzeichnis.html",
+      "destination": "/bald.html",
+      "permanent": false
     }
   ]
 }
