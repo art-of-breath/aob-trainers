@@ -768,7 +768,7 @@
       ],
       tags: ['trauma-informed', 'ceremony-spirituality', 'psychedelic-integration', 'women-motherhood'],
       bio: 'Ein Leipziger Duo für tiefe, traumasensible Prozessarbeit. In ihrer gemeinsamen Ausbildung verbinden Emi und Rouven Atemarbeit nach Art of Breath Standard mit integrativer Prozessbegleitung: Integration statt Optimierung, raus aus dem Kopf, hinein in den Körper, wo die Muster sitzen. Du gehst den Weg zuerst selbst, ob du andere begleiten, deine Arbeit vertiefen oder bei dir ankommen willst.' },
-    { id: 'manisha-du', city: 'Aachen', lon: 6.083, lat: 50.776,
+    { id: 'manisha-du', city: 'Dali, China', offMap: true,  // bildet 2027 in China aus: in der Liste, ohne Pin
       people: [{ name: 'Manisha Du', website: 'https://yaohealing.me', img: 'trainers/images/cards/manisha-du.jpg' }],
       tags: ['coaching', 'ceremony-spirituality', 'sound-creative', 'psychedelic-integration'],
       bio: 'Manisha ist Künstlerin und Coach, und beides trennt sie in ihrer Arbeit nicht. Ihre Sessions folgen keinem festen Ablauf, sondern dem, was da ist: verbundenes Atmen, Circling, systemisches Coaching, Körperarbeit, Teezeremonie, Klang und kreativer Ausdruck über Stimme, Kunst und Musik. Sanft kann das sein, konfrontierend auch, meistens beides.' },
@@ -803,6 +803,7 @@
   // A spot holds one trainer or a duo (two). displayName joins the names.
   // hasPhoto is true only when every person has a portrait; a solo trainer
   // without one (img: null) falls back to an on-brand monogram card.
+  const PINNED = TRAINERS.filter(t => !t.offMap);
   const isDuo = (t) => t.people.length > 1;
   const displayName = (t) => t.people.map(p => p.name).join(' & ');
   const hasPhoto = (t) => t.people.every(p => Boolean(p.img));
@@ -826,7 +827,7 @@
      than the view, MapLibre quietly zooms in to obey it. It is kept well outside any
      framing this page asks for; minZoom still stops anyone reaching open sea. */
   const PINS = new maplibregl.LngLatBounds();
-  TRAINERS.forEach(t => PINS.extend([t.lon, t.lat]));
+  PINNED.forEach(t => PINS.extend([t.lon, t.lat]));
   // The pins stop at Hannover and Berlin, so the frame is stretched to the German coast and
   // a strip of North Sea above Sylt: the whole country reads as a country, not a cut-off.
   PINS.extend([7.9, 55.25]);
@@ -880,7 +881,7 @@
 
   /* ---- Pins ---- */
   function addPins() {
-    TRAINERS.forEach(t => {
+    PINNED.forEach(t => {
       const el = document.createElement('button');
       el.className = 'pin' + (isDuo(t) ? ' duo' : '');
       el.type = 'button';
@@ -975,7 +976,7 @@
     fitCard();
     scrim.classList.add('show');
     tcard.classList.add('show');
-    TRAINERS.forEach(x => refs[x.id].el.classList.toggle('active', x.id === id));
+    PINNED.forEach(x => refs[x.id].el.classList.toggle('active', x.id === id));
     // ease the selected pin into view
     map.easeTo({ center: [t.lon, t.lat], duration: 500, padding: { bottom: 40 } });
   }
@@ -983,7 +984,7 @@
     openId = null;
     scrim.classList.remove('show');
     tcard.classList.remove('show');
-    TRAINERS.forEach(x => refs[x.id].el.classList.remove('active'));
+    PINNED.forEach(x => refs[x.id].el.classList.remove('active'));
   }
   scrim.addEventListener('click', closeCard);
 
