@@ -1312,6 +1312,23 @@
     }
   }
 
+  // People who give the same town share one centroid, and their pins would sit exactly on
+  // top of each other. Each such group is laid out side by side in screen pixels, centred
+  // on the spot, so they stay apart at every zoom. 24px clears a dot at its largest scale.
+  const PIN_GAP = 24;
+  const pinOffsets = new Map();
+  {
+    const spots = new Map();
+    GRADUATES.forEach(t => {
+      const key = t.lon.toFixed(3) + ',' + t.lat.toFixed(3);
+      if (!spots.has(key)) spots.set(key, []);
+      spots.get(key).push(t);
+    });
+    spots.forEach(group => group.forEach((t, i) => {
+      pinOffsets.set(t, [(i - (group.length - 1) / 2) * PIN_GAP, 0]);
+    }));
+  }
+
   function addPin(t) {
     const el = document.createElement('button');
     el.type = 'button'; el.className = 'gpin';
@@ -1322,7 +1339,7 @@
     el.addEventListener('focus', () => setHot(t, true));
     el.addEventListener('blur', () => setHot(t, false));
     el.addEventListener('click', (e) => { e.stopPropagation(); selectFromPin(t); });
-    const marker = new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([t.lon, t.lat]).addTo(map);
+    const marker = new maplibregl.Marker({ element: el, anchor: 'center', offset: pinOffsets.get(t) }).setLngLat([t.lon, t.lat]).addTo(map);
     pins.set(t, { el, marker });
   }
 
