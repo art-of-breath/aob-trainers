@@ -31,8 +31,12 @@ Die Liste ist alphabetisch. Das Ausbildungsteam trägt eine eigene Markierung, r
 nach oben (Nico 2026-10-28). Paket und Hintergrund kommen so, wie sie im Formular getippt
 wurden: Absätze, Zwischenüberschriften, Listen; lange Texte starten eingeklappt („Alles lesen“).
 
-Die Postleitzahlsuche kennt nur deutsche fünfstellige PLZ (`PLZ2`). Vierstellige PLZ aus der
-Schweiz und Österreich bekommen einen Hinweis auf die Karte.
+Die Postleitzahlsuche (Verzeichnis und Karte) kennt Deutschland, die Schweiz mit Liechtenstein
+und Österreich. Fünf Ziffern sind deutsch (`PLZ2`, erste zwei Ziffern), vier Ziffern schweizerisch
+oder österreichisch (`js/plz-ch-at.js`, erste drei Ziffern, aus den GeoNames-Postleitzahldaten,
+CC BY 4.0). Die meisten vierstelligen PLZ gibt es in beiden Ländern (8001 Zürich, 8010 Graz),
+darum erscheint bei vier Ziffern ein Schalter Schweiz/Österreich, vorgewählt ist die Schweiz.
+Die Logik steht einmal in `js/plz-lookup.js`.
 
 ## Bewerbungsformular
 
