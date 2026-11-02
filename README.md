@@ -31,6 +31,9 @@ Die Liste ist alphabetisch. Das Ausbildungsteam trägt eine eigene Markierung, r
 nach oben (Nico 2026-10-28). Paket und Hintergrund kommen so, wie sie im Formular getippt
 wurden: Absätze, Zwischenüberschriften, Listen; lange Texte starten eingeklappt („Alles lesen“).
 
+Über Liste bzw. Kacheln sitzt eine Namenssuche: sie blendet aus, sortiert nicht um, ignoriert
+Groß-/Kleinschreibung, Akzente und ß. Pins am selben Ort liegen nebeneinander (24px).
+
 Die Postleitzahlsuche (Verzeichnis und Karte) kennt Deutschland, die Schweiz mit Liechtenstein
 und Österreich. Fünf Ziffern sind deutsch (`PLZ2`, erste zwei Ziffern), vier Ziffern schweizerisch
 oder österreichisch (`js/plz-ch-at.js`, erste drei Ziffern, aus den GeoNames-Postleitzahldaten,

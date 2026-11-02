@@ -637,6 +637,49 @@
     .foot-links { justify-content: center; }
   }
 
+  /* ============ NAME SEARCH ============
+     Finds someone again by name. It sits over the list column in the map view (the list is
+     what it narrows) and at the right edge above the tiles. It hides, never re-sorts: the
+     postcode order stays, everyone else steps out of the list, the grid and the map. */
+  .name-row { display: flex; justify-content: flex-end; padding-top: 20px; }
+  .gside .name-row { padding-top: 0; }
+  .gside .name-search { width: 100%; }
+  /* The right column of the map view: the search on top, the list scrolling below it. */
+  .gside { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+  .gside .glist { flex: 1; min-height: 0; }
+  .name-search {
+    width: 320px; display: flex; align-items: center; height: 44px; box-sizing: border-box;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r-input);
+    color: var(--faint); transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .name-search:hover { border-color: #D2C8BC; }
+  .name-search:focus-within { border-color: var(--muted); box-shadow: 0 0 0 3px rgba(124,112,92,.16); color: var(--muted); }
+  .name-search > svg { width: 16px; height: 16px; flex: none; margin-left: 15px; }
+  .name-search input {
+    flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; outline: none;
+    padding: 0 6px 0 10px; font-family: var(--sans); font-size: 14.5px; color: var(--ink);
+  }
+  .name-search input::placeholder { color: var(--faint); }
+  .name-search input::-webkit-search-cancel-button { display: none; }
+  .name-search button {
+    flex: none; align-self: stretch; width: 40px; display: grid; place-items: center;
+    border: 0; background: transparent; cursor: pointer; color: var(--faint);
+    border-radius: 0 var(--r-input) var(--r-input) 0; transition: color .2s ease;
+  }
+  .name-search button:hover { color: var(--ink); }
+  .name-search button:focus-visible { outline: none; color: var(--ink); background: rgba(124,112,92,.10); }
+  .name-search button svg { width: 14px; height: 14px; }
+  .name-search button[hidden] { display: none; }
+  .gcard[hidden], .card[hidden], .gpin[hidden] { display: none; }
+  /* Nobody matches: say so where the people would be, with the way out right there. */
+  .no-match { padding: 34px 4px 90px; color: var(--muted); font-size: 15px; }
+  .gside .no-match { padding: 6px 4px 0; }
+  .no-match[hidden] { display: none; }
+  .no-match button {
+    border: 0; background: none; padding: 0; cursor: pointer; font: inherit;
+    color: var(--ink); text-decoration: underline; text-underline-offset: 3px;
+  }
+
   /* ============ ENTRANCE ANIMATION ============ */
   .card { opacity: 0; transform: translateY(14px); }
   .card.in { animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; }
@@ -647,6 +690,8 @@
     .mapview { grid-template-columns: 1fr; height: auto; }
     .gmap-card { height: clamp(340px, 58vh, 520px); }
     .glist { overflow: visible; padding: 0; }
+    .gside { min-height: auto; }
+    .name-search { width: 100%; }
   }
   @media (max-width: 620px) {
     .wrap { padding: 0 20px; }
@@ -753,10 +798,23 @@
 
   <!-- ============ GRID ============ -->
   <main class="wrap">
+    <div id="name-box">
+    <div class="name-row">
+      <div class="name-search" role="search">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.2-3.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input id="name-input" type="search" placeholder="Name suchen" aria-label="Nach Namen suchen"
+               autocomplete="off" spellcheck="false" />
+        <button type="button" id="name-clear" aria-label="Suche leeren" hidden>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <p class="no-match" id="no-match" hidden>Niemand im Verzeichnis heißt so. Prüf die Schreibweise oder <button type="button" data-clear-name>leere die Suche</button>.</p>
+    </div>
     <div class="grid" id="grid" aria-live="polite"></div>
     <div class="mapview" id="mapview">
       <div class="gmap-card"><div id="gmap"></div></div>
-      <ul class="glist" id="glist" aria-label="Liste zur Karte"></ul>
+      <div class="gside" id="gside"><ul class="glist" id="glist" aria-label="Liste zur Karte"></ul></div>
     </div>
   </main>
 
@@ -946,15 +1004,21 @@
 
   // Hiding the page's scrollbar would widen the page and shift everything sideways, so the
   // body is padded by exactly the scrollbar's width for as long as it is hidden.
+  // Firefox can drop the scroll position when the root's overflow changes back (the page
+  // jumped to the top on closing a card), so the position is kept and put back by hand.
+  let lockedY = 0;
   function lockScroll(on) {
     const root = document.documentElement;
     if (on) {
+      lockedY = window.scrollY;
       const sbw = window.innerWidth - root.clientWidth;
       root.style.overflow = 'hidden';
       if (sbw > 0) document.body.style.paddingRight = sbw + 'px';
+      if (window.scrollY !== lockedY) window.scrollTo({ top: lockedY, behavior: 'instant' });
     } else {
       root.style.overflow = '';
       document.body.style.paddingRight = '';
+      if (window.scrollY !== lockedY) window.scrollTo({ top: lockedY, behavior: 'instant' });
     }
   }
   function place(r) {
@@ -1118,6 +1182,7 @@
   let view = 'map';
   let visible = GRADUATES;
   const simpleRefs = new Map();
+  const tileRefs = new Map();
 
   function currentList() {
     const list = GRADUATES.map(t => ({ t, dist: origin ? km(origin, [t.lon, t.lat]) : null }));
@@ -1134,10 +1199,12 @@
     grid.innerHTML = '';
     glist.innerHTML = '';
     simpleRefs.clear();
+    tileRefs.clear();
     list.forEach(({ t, dist }, i) => {
       // keep monogram tone tied to the person, not the sorted position
       const idx = GRADUATES.indexOf(t);
       const card = buildCard(t, idx, dist);
+      tileRefs.set(t, card);
       grid.appendChild(card);
       if (view === 'grid') {
         // stagger only the first rows, so a long list does not trickle in for seconds
@@ -1148,12 +1215,56 @@
       glist.appendChild(buildSimple(t, idx, dist));
     });
 
-    countEl.textContent = list.length;
     countLabel.textContent = 'Breathworker'; // Singular = Plural
     resetBtn.classList.toggle('show', Boolean(origin));
     if (openT) setOpen(openT);
     syncMap();
+    applyName();
   }
+
+  // ---- Name search ----
+  // Case, accents and ß don't matter, and every word typed has to appear in the name, so
+  // "muller emi" finds Emi Müller.
+  const nameInput = document.getElementById('name-input');
+  const nameClear = document.getElementById('name-clear');
+  const noMatch = document.getElementById('no-match');
+  const fold = (x) => x.toLowerCase().replace(/ß/g, 'ss').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  let nameQuery = [];
+  const matchesName = (t) => nameQuery.every(w => fold(t.name).includes(w));
+  function applyName() {
+    let n = 0;
+    GRADUATES.forEach(t => {
+      const on = matchesName(t);
+      if (on) n++;
+      const tile = tileRefs.get(t); if (tile) { tile.hidden = !on; if (on) tile.classList.add('in'); }
+      const item = simpleRefs.get(t); if (item) item.hidden = !on;
+      const pin = pins.get(t); if (pin) pin.el.hidden = !on;
+    });
+    countEl.textContent = n;
+    noMatch.hidden = n > 0;
+    nameClear.hidden = !nameInput.value;
+  }
+  let nameTimer = 0;
+  nameInput.addEventListener('input', () => {
+    clearTimeout(nameTimer);
+    nameTimer = setTimeout(() => {
+      nameQuery = fold(nameInput.value).split(/\s+/).filter(Boolean);
+      applyName();
+      // Frame whoever is left on the map; one hit gets opened in the list as well.
+      const hits = nameQuery.length ? GRADUATES.filter(matchesName) : [];
+      if (mapReady && hits.length) frame(hits.map(t => [t.lon, t.lat]));
+      if (hits.length === 1 && view === 'map') setOpen(hits[0]);
+    }, 160);
+  });
+  function clearName() {
+    nameInput.value = '';
+    nameQuery = [];
+    applyName();
+    nameInput.focus();
+  }
+  nameClear.addEventListener('click', clearName);
+  noMatch.querySelector('[data-clear-name]').addEventListener('click', clearName);
+  nameInput.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nameInput.value) { e.preventDefault(); clearName(); } });
 
   function reset() {
     plzInput.value = '';
@@ -1227,6 +1338,10 @@
     view = v;
     document.body.classList.toggle('view-map', v === 'map');
     toggles.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+    // The name search heads the list column on the map, and sits above the tiles otherwise.
+    const nameBox = document.getElementById('name-box');
+    if (v === 'map') document.getElementById('gside').prepend(nameBox);
+    else grid.before(nameBox);
     if (v === 'map') ensureMap();
     else if (mapReady) map.resize();
   }
@@ -1279,6 +1394,7 @@
         recolor();
         GRADUATES.forEach(addPin);
         mapReady = true;
+        applyName();
         syncMap();
         if (origin) fitToOrigin(true); else fitToVisible(true);
         map.once('idle', () => document.getElementById('gmap').classList.add('is-ready'));
@@ -1332,7 +1448,6 @@
   function addPin(t) {
     const el = document.createElement('button');
     el.type = 'button'; el.className = 'gpin';
-    el.setAttribute('aria-label', t.name + ', ' + t.city);
     el.innerHTML = '<span class="gpin-label">' + t.name + '</span><span class="gpin-dot"></span>';
     el.addEventListener('mouseenter', () => setHot(t, true));
     el.addEventListener('mouseleave', () => setHot(t, false));
@@ -1340,6 +1455,8 @@
     el.addEventListener('blur', () => setHot(t, false));
     el.addEventListener('click', (e) => { e.stopPropagation(); selectFromPin(t); });
     const marker = new maplibregl.Marker({ element: el, anchor: 'center', offset: pinOffsets.get(t) }).setLngLat([t.lon, t.lat]).addTo(map);
+    // addTo() overwrites the label with a generic "Map marker", so it is set again after.
+    el.setAttribute('aria-label', t.name + ', ' + t.city);
     pins.set(t, { el, marker });
   }
 

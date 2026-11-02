@@ -931,7 +931,6 @@
       const el = document.createElement('button');
       el.className = 'pin' + (isDuo(t) ? ' duo' : '');
       el.type = 'button';
-      el.setAttribute('aria-label', displayName(t) + ', ' + t.city);
       el.innerHTML = '<span class="pin-label">' + esc(displayName(t)) + '</span><span class="pin-dot"></span>';
       el.addEventListener('mouseenter', () => setHot(t.id, true));
       el.addEventListener('mouseleave', () => setHot(t.id, false));
@@ -939,6 +938,8 @@
       el.addEventListener('blur', () => setHot(t.id, false));
       el.addEventListener('click', (e) => { e.stopPropagation(); openCard(t.id); });
       const marker = new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([t.lon, t.lat]).addTo(map);
+      // addTo() overwrites the label with a generic "Map marker", so it is set again after.
+      el.setAttribute('aria-label', displayName(t) + ', ' + t.city);
       refs[t.id] = { el, marker };
     });
   }
