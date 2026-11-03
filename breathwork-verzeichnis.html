@@ -680,6 +680,28 @@
     color: var(--ink); text-decoration: underline; text-underline-offset: 3px;
   }
 
+  /* ============ BACK-TO-MAP BUTTON ============
+     Appears once the page has scrolled past the map (after a pin click the list card sits
+     below it) and takes you back to it. In the card view it goes to the filters instead.
+     Fixed at the bottom right, 48px high so a thumb hits it; below the nav (50), the lifted
+     card (90) and the cookie dialog (998). */
+  .to-map {
+    position: fixed; z-index: 40;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(18px, calc(env(safe-area-inset-bottom) + 10px));
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 48px; padding: 0 20px 0 16px; border: 0; border-radius: var(--r-btn);
+    background: var(--btn); color: var(--inverse); cursor: pointer;
+    font-family: var(--sans); font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    box-shadow: var(--shadow-h);
+    opacity: 0; visibility: hidden; transform: translateY(10px);
+    transition: opacity .24s ease, transform .24s ease, visibility 0s linear .24s, background .2s ease;
+  }
+  .to-map.show { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .to-map:hover { background: var(--btn-hover); }
+  .to-map:focus-visible { outline: none; box-shadow: var(--shadow-h), 0 0 0 3px rgba(124,112,92,.4); }
+  .to-map svg { width: 16px; height: 16px; flex: none; }
+
   /* ============ ENTRANCE ANIMATION ============ */
   .card { opacity: 0; transform: translateY(14px); }
   .card.in { animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; }
@@ -721,7 +743,7 @@
     * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; }
     .focus.animating, .focus.animating .focus-inner, .focus-scrim { transition: none; }
     .card { opacity: 1; transform: none; }
-    .gpin .gpin-dot, #gmap, .view-toggle button, .g-more, .g-chev { transition: none; }
+    .gpin .gpin-dot, #gmap, .view-toggle button, .g-more, .g-chev, .to-map { transition: none; }
   }
 </style>
 </head>
@@ -817,6 +839,12 @@
       <div class="gside" id="gside"><ul class="glist" id="glist" aria-label="Liste zur Karte"></ul></div>
     </div>
   </main>
+
+  <!-- ============ BACK-TO-MAP BUTTON ============ -->
+  <button type="button" class="to-map" id="to-map" aria-label="Zurück zur Karte">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span id="to-map-label">Zur Karte</span>
+  </button>
 
   <!-- ============ LIFTED CARD ============ -->
   <div class="focus-scrim" id="focus-scrim"></div>
@@ -1519,6 +1547,45 @@
     const near = visible.slice(0, 3).map(t => [t.lon, t.lat]);
     frame([origin, ...near, ...near.map(([x, y]) => [2 * ox - x, 2 * oy - y])], instant);
   }
+
+  // ---- Back-to-map button ----
+  // Shown once the map (card view: the filters) has scrolled up behind the sticky nav. On a
+  // phone the list sits below the map, so a pin click leaves the map far above; one tap brings
+  // it back, with the nav's height left free above it.
+  const toMap = document.getElementById('to-map');
+  const toMapLabel = document.getElementById('to-map-label');
+  const mapCard = document.querySelector('.gmap-card');
+  const filtersEl = document.querySelector('.filters');
+  const navEl = document.querySelector('.nav');
+  const upTarget = () => (view === 'map' ? mapCard : filtersEl);
+  let toMapTick = false;
+
+  function syncToMap() {
+    toMapTick = false;
+    const navH = navEl.offsetHeight;
+    const show = upTarget().getBoundingClientRect().bottom < navH + 80;
+    toMap.classList.toggle('show', show);
+    const label = view === 'map' ? 'Zur Karte' : 'Zur Suche';
+    if (toMapLabel.textContent !== label) {
+      toMapLabel.textContent = label;
+      toMap.setAttribute('aria-label', view === 'map' ? 'Zurück zur Karte' : 'Zurück zur Suche');
+    }
+  }
+  function queueToMap() {
+    if (!toMapTick) { toMapTick = true; requestAnimationFrame(syncToMap); }
+  }
+  window.addEventListener('scroll', queueToMap, { passive: true });
+  window.addEventListener('resize', queueToMap);
+  toggles.forEach(b => b.addEventListener('click', queueToMap));
+
+  toMap.addEventListener('click', () => {
+    const y = upTarget().getBoundingClientRect().top + window.scrollY - navEl.offsetHeight - 12;
+    window.scrollTo({ top: Math.max(0, y), behavior: REDUCED ? 'auto' : 'smooth' });
+    // The button is about to hide; hand focus to the marked pin so keyboard users keep their place.
+    const p = openT && pins.get(openT);
+    if (view === 'map' && p) p.el.focus({ preventScroll: true });
+  });
+  syncToMap();
 
   // ---- Inject seal marks in nav/footer ----
   document.querySelectorAll('[data-seal]').forEach(el => { el.innerHTML = SEAL; });
