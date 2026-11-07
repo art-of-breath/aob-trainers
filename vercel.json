@@ -21,6 +21,16 @@
       "source": "/graduates.html",
       "destination": "/breathwork-verzeichnis",
       "permanent": true
+    },
+    {
+      "source": "/trainers-map",
+      "destination": "/ausbilder",
+      "permanent": true
+    },
+    {
+      "source": "/trainers-map.html",
+      "destination": "/ausbilder",
+      "permanent": true
     }
   ]
 }

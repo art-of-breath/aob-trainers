@@ -133,7 +133,7 @@
   /* ---------- banner ------------------------------------------------------ */
   /* Design derives from each page's :root tokens (fallbacks included in case a page is
      ever served without them). A centred dialog over a dimmed page, which makes it the
-     sibling of the trainer card on trainers-map.html: the scrim colour, the blur, the
+     sibling of the trainer card on ausbilder.html: the scrim colour, the blur, the
      centring and the settle-into-place entrance are that component's values, reused
      rather than reinvented so the site has one way of asking for attention. */
   var STYLES = [
