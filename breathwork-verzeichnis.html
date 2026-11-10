@@ -1321,10 +1321,18 @@
       b.disabled = !hit.countries.includes(b.dataset.country);
     });
   }
+  // The full German list (js/plz-de.js) loads on first use of the field; a five-digit code
+  // typed before it arrives waits for it, a failed load falls back to the two-digit table.
+  let plzDeReady = false;
+  plzInput.addEventListener('focus', () => loadPlzDe(), { once: true });
   function applyPlz() {
     clearTimeout(plzTimer);
     const digits = (plzInput.value.match(/\d/g) || []).join('');
     if (!digits) { clearOrigin(); render(); return; }
+    if (digits.length === 5 && !plzDeReady) {
+      loadPlzDe().then(() => { plzDeReady = true; applyPlz(); });
+      return;
+    }
     const hit = plzLookup(digits, PLZ2, plzCountry);
     syncCountryToggle(hit);
     if (!hit) {
