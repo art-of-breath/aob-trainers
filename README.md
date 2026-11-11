@@ -8,7 +8,7 @@ wird: `index.html` ist die Einstiegsseite.
 | Datei | Was |
 |---|---|
 | `index.html` | Startseite |
-| `trainers-map.html` | Trainer-Übersicht mit Karte |
+| `ausbilder.html` | Trainer-Übersicht mit Karte |
 | `impressum.html` | Impressum |
 | `datenschutz.html` | Datenschutzerklärung |
 | `breathwork-verzeichnis.html` | Breathwork-Verzeichnis (zertifizierte und praktizierende Breathworker), siehe unten. |
