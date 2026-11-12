@@ -7,11 +7,18 @@
    element is created inside loadAnalytics() and nowhere else. The trainer map is not
    gated, it sets no cookies (see Datenschutzerklärung §7).
 
+   Layout since 2026-11-12 (Nico's decision, Asana 1220158834171960): first layer
+   "Einstellungen" (outline) | "Akzeptieren" (filled); second layer the Statistik box,
+   never pre-ticked, with "Auswahl speichern" | "Akzeptieren". Focus lands on the dialog,
+   not on a button. A refusal is asked again after 6 months, consent after 12. Every
+   display and every choice is counted anonymously (count(), n8n "Consent-Zähler"
+   Rbgc5Yoo3SHz25z1 → Google Sheet): event, choice, device type, time; no ID, nothing
+   stored in the browser. Described in datenschutz.html, section 4.
+
    Presentation changed on request 2026-08-03: a centred dialog over a dimmed page,
    instead of the bottom-left card the guide's step 5 originally described. It is modal
    now, so the page waits for an answer. What does not change, and is the part that
-   actually matters: declining is one click, in the same row, at the same size as
-   accepting. There is no pre-ticked box and no hidden decline layer.
+   still holds: there is no pre-ticked box, and nothing from Google loads before a yes.
 
    ─────────────────────────────────────────────────────────────────────────────
    MEASUREMENT_ID is the GA4 property "art-of-breath.com" (account "Art of Breath",
@@ -24,7 +31,22 @@
 
   var MEASUREMENT_ID = 'G-BDV0S4ZF69';   // GA4 property art-of-breath.com (2026-10-28)
   var STORAGE_KEY    = 'aob-consent';
-  var CONSENT_MAX_AGE = 365 * 24 * 60 * 60 * 1000;   // 12 months, then ask again
+  var CONSENT_MAX_AGE = 365 * 24 * 60 * 60 * 1000;   // consent: 12 months, then ask again
+  var DECLINE_MAX_AGE = 182 * 24 * 60 * 60 * 1000;   // refusal: 6 months, then ask again
+  var COUNTER_URL    = 'https://n8n.nicosmat.com/webhook/consent-zaehler';
+
+  /* Anonymous counter: which event, which choice, phone or computer. No ID, no storage.
+     Only the live site counts, so previews and local work do not skew the rates. */
+  function count(ereignis, analytics) {
+    if (!/(^|\.)art-of-breath\.com$/.test(location.hostname)) return;
+    try {
+      var body = { seite: 'art-of-breath.com', ereignis: ereignis,
+                   geraet: window.matchMedia('(max-width: 767px)').matches ? 'mobil' : 'desktop' };
+      if (typeof analytics === 'boolean') body.statistik = analytics;
+      fetch(COUNTER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                           body: JSON.stringify(body), keepalive: true }).catch(function () {});
+    } catch (e) { /* the counter must never get in the way */ }
+  }
   var PRIVACY_URL    = 'datenschutz.html';
 
   /* ---------- where the choice lives -------------------------------------- */
@@ -63,7 +85,8 @@
       var parsed = JSON.parse(raw);
       if (!parsed || parsed.v !== 1 || typeof parsed.analytics !== 'boolean') return null;
       var ts = Date.parse(parsed.ts);
-      if (!isFinite(ts) || (Date.now() - ts) > CONSENT_MAX_AGE) return null;
+      var maxAge = parsed.analytics ? CONSENT_MAX_AGE : DECLINE_MAX_AGE;
+      if (!isFinite(ts) || (Date.now() - ts) > maxAge) return null;
       return parsed;
     } catch (e) {
       return null;   // private mode / storage disabled: behave as if nothing was stored
@@ -183,6 +206,17 @@
     '.aob-cc-btn-solid { background: var(--btn, #6B6150); color: var(--inverse, #F2EEE9); }',
     '.aob-cc-btn-solid:hover { background: var(--btn-hover, #5B5244); }',
     '.aob-cc-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,112,92,.4); }',
+    '.aob-cc:focus { outline: none; }',
+    '.aob-cc-opts { display: none; margin: 0 0 18px; }',
+    '.aob-cc.is-details .aob-cc-opts { display: block; }',
+    '.aob-cc-opt {',
+    '  display: flex; gap: 12px; align-items: flex-start; cursor: pointer;',
+    '  border: 1px solid var(--line, #E1DBD1); border-radius: 14px; padding: 12px 14px;',
+    '  font-size: 13.5px; line-height: 1.45; color: var(--ink, #383530);',
+    '}',
+    '.aob-cc-opt input { margin: 3px 0 0; width: 16px; height: 16px; flex: none; accent-color: var(--btn, #6B6150); }',
+    '.aob-cc-opt small { display: block; font-size: 13px; color: var(--muted, #7C705C); }',
+    '.aob-cc.is-details .aob-cc-actions { flex-direction: column; }',
     '@media (max-width: 560px) {',
     '  .aob-cc { width: calc(100vw - 28px); padding: 22px 20px 20px; }',
     '}',
@@ -215,29 +249,47 @@
     banner.setAttribute('aria-modal', 'true');
     banner.setAttribute('aria-labelledby', 'aob-cc-title');
     banner.innerHTML =
-      '<h2 class="aob-cc-title" id="aob-cc-title">Kurz gefragt: Statistik erlauben?</h2>' +
-      '<p class="aob-cc-text">Diese Website nutzt Google Analytics, um zu verstehen, wie Besucher ' +
-        'die Seite verwenden. Dafür werden Cookies gesetzt, aber nur, wenn du zustimmst. Deine ' +
-        'Entscheidung wird im Browser gespeichert; ändern kannst du sie jederzeit unter ' +
-        '„Cookie-Einstellungen“ im Fußbereich. Mehr dazu in der ' +
-        '<a href="' + PRIVACY_URL + '">Datenschutzerklärung</a>.</p>' +
+      '<h2 class="aob-cc-title" id="aob-cc-title">Kurz gefragt: Dürfen wir messen, was ankommt?</h2>' +
+      '<p class="aob-cc-text">Mit deinem Okay sehen wir, welche Inhalte Menschen zu einem Ausbilder ' +
+        'in ihrer Nähe führen (Google Analytics). Dafür setzt der Dienst Cookies, nur mit deiner ' +
+        'Zustimmung. Ändern kannst du das jederzeit unter „Cookie-Einstellungen“ im Fußbereich. ' +
+        'Mehr dazu in der <a href="' + PRIVACY_URL + '">Datenschutzerklärung</a>.</p>' +
+      '<div class="aob-cc-opts">' +
+        '<label class="aob-cc-opt"><input type="checkbox" data-aob-cc="analytics" />' +
+          '<span><strong>Statistik</strong><small>Google Analytics: welche Seiten wie genutzt werden.</small></span></label>' +
+      '</div>' +
       '<div class="aob-cc-actions">' +
-        '<button type="button" class="aob-cc-btn aob-cc-btn-quiet" data-aob-cc="decline">Ablehnen</button>' +
+        '<button type="button" class="aob-cc-btn aob-cc-btn-quiet" data-aob-cc="settings">Einstellungen</button>' +
         '<button type="button" class="aob-cc-btn aob-cc-btn-solid" data-aob-cc="accept">Akzeptieren</button>' +
       '</div>';
+    banner.tabIndex = -1;
 
-    banner.querySelector('[data-aob-cc="decline"]').addEventListener('click', function () { decide(false); });
+    /* One quiet button, two jobs: on the first layer it opens the categories, on the
+       second it saves what is ticked. */
+    banner.querySelector('[data-aob-cc="settings"]').addEventListener('click', function () {
+      if (banner.classList.contains('is-details')) {
+        decide(banner.querySelector('[data-aob-cc="analytics"]').checked);
+      } else {
+        showDetails(true);
+        count('einstellungen');
+      }
+    });
     banner.querySelector('[data-aob-cc="accept"]').addEventListener('click', function () { decide(true); });
 
     document.body.appendChild(banner);
     return banner;
   }
 
+  function showDetails(on) {
+    banner.classList.toggle('is-details', on);
+    banner.querySelector('[data-aob-cc="settings"]').textContent = on ? 'Auswahl speichern' : 'Einstellungen';
+  }
+
   /* The dialog covers the page, so keyboard focus has to stay inside it and the page
      behind must not scroll away underneath. Locking the scrollbar away would shift the
      layout, so its width is added back as padding. */
   function focusables() {
-    return banner ? [].slice.call(banner.querySelectorAll('a[href], button')) : [];
+    return banner ? [].slice.call(banner.querySelectorAll('a[href], button, input')).filter(function (n) { return n.offsetParent !== null; }) : [];
   }
 
   function lockScroll(on) {
@@ -258,13 +310,18 @@
   function openBanner(trigger) {
     var el = buildBanner();
     lastFocus = trigger || document.activeElement;
+    // Someone who already chose and comes back through the footer wants the categories.
+    var stored = readConsent();
+    showDetails(!!stored);
+    el.querySelector('[data-aob-cc="analytics"]').checked = !!(stored && stored.analytics);
+    if (!stored) count('gezeigt');
     lockScroll(true);
     // Next frame, so the opening transition actually runs from the closed state.
     requestAnimationFrame(function () {
       scrim.classList.add('is-open');
       el.classList.add('is-open');
     });
-    el.querySelector('[data-aob-cc="decline"]').focus();
+    el.focus();
   }
 
   function closeBanner() {
@@ -285,6 +342,7 @@
     var wasGranted = !!(previous && previous.analytics);
 
     writeConsent(analytics);
+    count(previous ? 'geaendert' : analytics ? 'akzeptiert' : 'abgelehnt', analytics);
     closeBanner();
 
     if (analytics) {
