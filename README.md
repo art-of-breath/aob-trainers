@@ -105,3 +105,14 @@ und die Vorschau still zerlegen.
 | Vercel | Die echte Seite, aus demselben Repo, ebenfalls aus dem Root. |
 
 Beide bauen nichts, sie liefern die Dateien aus, wie sie hier liegen.
+
+## SEO
+
+- `sitemap.xml` listet die Seiten, die Google finden soll (Startseite, Ausbilder, Verzeichnis).
+  **Neue öffentliche Seite = neue Zeile dort.** Seiten mit `noindex` (Bewerbung, Impressum,
+  Datenschutz, bald) gehören nicht hinein.
+- `robots.txt` erlaubt alles und nennt die Sitemap. Nichts per `Disallow` sperren, was `noindex`
+  trägt: Google muss die Seite lesen dürfen, um das `noindex` zu sehen.
+- Jede öffentliche Seite hat ein `<link rel="canonical">` mit der absoluten www-Adresse. Das
+  verhindert auch, dass die GitHub-Pages-Vorschau als Doppel der echten Seite im Index landet.
+- Strukturdaten (Organisation, Website) stehen als JSON-LD im `<head>` der Startseite.
