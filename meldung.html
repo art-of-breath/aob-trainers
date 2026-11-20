@@ -395,6 +395,10 @@
   .notice .notice-t { font-family: var(--serif); font-size: 20px; line-height: 1.3; color: var(--ink); margin: 0 0 6px; }
   .notice:not([hidden]) { animation: moreIn .24s ease; }
   #gate h2 { max-width: 20ch; }
+  /* .apply's own padding shorthand drops .wrap's side padding: put it back */
+  .apply { padding-left: 28px; padding-right: 28px; }
+  @media (max-width: 620px) { .apply { padding-left: 20px; padding-right: 20px; } }
+  #dreip { margin: 0 0 clamp(36px, 4vw, 48px); }
 </style>
 </head>
 <body>
@@ -419,7 +423,7 @@
       <p class="eyebrow fade-up">Art&nbsp;of&nbsp;Breath · Ausbilder</p>
       <h1 class="fade-up d1">Deine Zahlen, <em>einmal im Monat.</em></h1>
       <p class="lede fade-up d2">
-        <span id="hallo"></span>Hier meldest du jeden Monat sieben Zahlen und dein 3P. Das dauert etwa fünf Minuten.
+        <span id="hallo"></span>Hier meldest du jeden Monat sieben Zahlen. Das dauert etwa fünf Minuten. Dein 3P schickst du wie bisher als Sprachmemo oder Nachricht an Nico.
         Deine Einzelzahlen sieht nur Nico. In die Gruppe und in den Monatsreport gehen nur Summen.
       </p>
     </div>
@@ -434,10 +438,9 @@
         <li><button type="button" data-go="s-monat">Der Monat</button></li>
         <li><button type="button" data-go="s-zahlen">Deine Zahlen</button></li>
         <li><button type="button" data-go="s-ausbildung">Deine Ausbildung</button></li>
-        <li><button type="button" data-go="s-3p">Dein 3P</button></li>
       </ol>
       <p class="rail-note">Dein Entwurf bleibt in diesem Browser gespeichert, bis du abschickst.</p>
-      <p class="rail-mobile" aria-live="polite"><b id="rail-now">Der Monat</b><span id="rail-count">0 von 4</span></p>
+      <p class="rail-mobile" aria-live="polite"><b id="rail-now">Der Monat</b><span id="rail-count">0 von 3</span></p>
     </aside>
 
     <!-- ============ GATE: kein oder unbekannter Link ============ -->
@@ -554,34 +557,14 @@
             <p class="f-err" id="e-plaetze_min"></p>
           </div>
         </div>
-      </fieldset>
-
-      <!-- ---- 4 ---- -->
-      <fieldset class="sec" id="s-3p">
-        <legend class="eyebrow">Dein 3P</legend>
-        <h2 class="sec-title">Progress, Problems, <em>Plans.</em></h2>
-        <p class="sec-note">Ein paar Sätze pro Feld reichen. Wenn du dein 3P lieber als Sprachnachricht schickst, lass die Felder leer und schick sie wie bisher.</p>
-
-        <div class="f" data-f="progress">
-          <label class="f-lbl" for="f-progress">Progress <span class="opt">optional</span></label>
-          <p class="f-hint">Was ist seit deiner letzten Meldung vorangegangen?</p>
-          <div class="ctl"><textarea id="f-progress" name="progress" maxlength="3000"></textarea></div>
-        </div>
-
-        <div class="f" data-f="problems">
-          <label class="f-lbl" for="f-problems">Problems <span class="opt">optional</span></label>
-          <p class="f-hint">Wo hängt es gerade, und wobei brauchst du Unterstützung?</p>
-          <div class="ctl"><textarea id="f-problems" name="problems" maxlength="3000"></textarea></div>
-        </div>
-
-        <div class="f" data-f="plans">
-          <label class="f-lbl" for="f-plans">Plans <span class="opt">optional</span></label>
-          <p class="f-hint">Was nimmst du dir für den nächsten Monat vor?</p>
-          <div class="ctl"><textarea id="f-plans" name="plans" maxlength="3000"></textarea></div>
-        </div>
 
         <label class="hp" aria-hidden="true">Bitte leer lassen<input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label>
       </fieldset>
+
+      <div class="notice" id="dreip">
+        <p class="notice-t">Dein 3P kommt wie bisher.</p>
+        <p>Progress, Problems, Plans schickst du zusammen mit dieser Meldung als Sprachmemo oder Nachricht an Nico. Beides gehört zur Monatsmeldung: die Zahlen hier, dein 3P direkt an ihn.</p>
+      </div>
 
       <div class="form-foot">
         <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
@@ -595,7 +578,7 @@
       <p class="eyebrow">Angekommen</p>
       <h2 tabindex="-1" id="done-title">Danke, deine Meldung ist <em>da.</em></h2>
       <p id="done-text"></p>
-      <p>Die nächste Meldung ist zum Monatsende dran, mit demselben Link. Speicher ihn dir am besten ab.</p>
+      <p>Denk an dein 3P als Sprachmemo oder Nachricht an Nico. Die nächste Meldung ist zum Monatsende dran, mit demselben Link. Speicher ihn dir am besten ab.</p>
       <p class="done-id" id="done-id"></p>
     </section>
 
@@ -650,15 +633,13 @@
 
     const INT  = ['circles', 'teilnehmer', 'followups', 'erstgespraeche', 'abschlussgespraeche', 'anmeldungen'];
     const STAMM_INT = ['plaetze_max', 'plaetze_min'];
-    const TEXT = ['progress', 'problems', 'plans'];
     const SECTIONS = [
       { id: 's-monat',      label: 'Der Monat',        req: ['monat'] },
       { id: 's-zahlen',     label: 'Deine Zahlen',     req: INT.concat(['kontoeingaenge_eur']) },
       { id: 's-ausbildung', label: 'Deine Ausbildung', req: ['startdatum', 'plaetze_max', 'plaetze_min'] },
-      { id: 's-3p',         label: 'Dein 3P',          req: [] },
     ];
     const ALL_REQ = SECTIONS.flatMap(s => s.req);
-    const DRAFT_FIELDS = INT.concat(['kontoeingaenge_eur', 'startdatum'], STAMM_INT, TEXT);
+    const DRAFT_FIELDS = INT.concat(['kontoeingaenge_eur', 'startdatum'], STAMM_INT);
 
     /* ---- the personal link ---- */
     const TOKEN = (new URLSearchParams(location.search).get('a') || '').trim();
@@ -682,7 +663,6 @@
       INT.concat(STAMM_INT).forEach(n => { d[n] = num(n); });
       d.kontoeingaenge_eur = num('kontoeingaenge_eur');
       d.startdatum = one('startdatum');
-      TEXT.forEach(n => { d[n] = one(n); });
       d._honey = one('_honey');
       return d;
     }
@@ -731,7 +711,6 @@
       const d = collect();
       let done = 0;
       for (const s of SECTIONS) { if (s.req.every(n => !check(n, d))) done++; else break; }
-      // the last section has nothing required: it only counts once the ones before it do
       ITEMS.forEach((li, i) => li.classList.toggle('is-done', i < done));
       const px = done > 0 ? ITEMS[done - 1].offsetTop + 10 : 0;
       RAIL.style.setProperty('--seam-px', px + 'px');
@@ -787,7 +766,8 @@
     /* ---- first report = one sum for the whole cohort so far ---- */
     function syncErste() {
       const monat = one('monat');
-      const erste = person.erster_monat === '' || (person.erster_monat !== null && person.erster_monat === monat);
+      // unknown (the prefill did not answer): in the launch month assume the first report, so nobody misses the notice
+      const erste = person.erster_monat === '' || person.erster_monat === monat || (person.erster_monat === null && monat === ERSTER_MONAT);
       document.getElementById('erste').hidden = !erste;
       document.getElementById('zeitraum').textContent = erste ? ', als Summe über alles bisher' : ' für ' + monatName(monat);
       document.getElementById('h-konto').textContent = erste

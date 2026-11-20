@@ -54,7 +54,8 @@ liegt nicht in diesem Repo, sondern im Arbeitsordner unter `bewerbung/`. Datensc
 ## Monatsmeldung der Ausbilder
 
 `meldung.html` (`/meldung?a=<Token>`) ist das Formular, mit dem die Ausbilder jeden Monat sieben
-Zahlen, ihre Stammdaten (Startdatum, Plätze) und ihr 3P melden. Es steht in keiner Navigation und
+Zahlen und ihre Stammdaten (Startdatum, Plätze) melden. Das 3P läuft nicht über das Formular,
+es geht wie bisher als Sprachmemo oder Nachricht an Nico. Es steht in keiner Navigation und
 ist `noindex`. Jeder Ausbilder hat einen eigenen Link mit Token; ohne gültigen Token zeigt die
 Seite nur einen Hinweis. Die Token stehen nicht in diesem Repo.
 
