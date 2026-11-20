@@ -13,6 +13,7 @@ wird: `index.html` ist die Einstiegsseite.
 | `datenschutz.html` | Datenschutzerklärung |
 | `breathwork-verzeichnis.html` | Breathwork-Verzeichnis (zertifizierte und praktizierende Breathworker), siehe unten. |
 | `bewerben.html` | Bewerbungsformular für Trainer. **Nicht verlinkt**, siehe unten. |
+| `meldung.html` | Monatliche KPI-Meldung der Ausbilder. **Nicht verlinkt**, nur über persönliche Links, siehe unten. |
 
 ## Breathwork-Verzeichnis
 
@@ -49,6 +50,21 @@ Erst beim Absenden schickt sie die Angaben als JSON an den n8n-Webhook, dessen A
 Konstante `ENDPOINT` im Script der Seite steht. Alles dahinter (Tabelle, Ablauf, Fragenkatalog)
 liegt nicht in diesem Repo, sondern im Arbeitsordner unter `bewerbung/`. Datenschutzerklärung
 § 10 beschreibt die Verarbeitung.
+
+## Monatsmeldung der Ausbilder
+
+`meldung.html` (`/meldung?a=<Token>`) ist das Formular, mit dem die Ausbilder jeden Monat sieben
+Zahlen, ihre Stammdaten (Startdatum, Plätze) und ihr 3P melden. Es steht in keiner Navigation und
+ist `noindex`. Jeder Ausbilder hat einen eigenen Link mit Token; ohne gültigen Token zeigt die
+Seite nur einen Hinweis. Die Token stehen nicht in diesem Repo.
+
+Beim Laden fragt die Seite mit dem Token Name, ersten Meldemonat und zuletzt gemeldete Stammdaten
+ab (`STAND`), beim Absenden gehen die Angaben als JSON an den n8n-Webhook (`ENDPOINT`). Beide
+Adressen stehen als Konstanten im Script der Seite. Der Workflow dahinter („AoB-Ausbilder-Meldung“)
+prüft alles noch einmal, ordnet die Meldung über den Token zu und schreibt eine Zeile pro Ausbilder
+und Monat in ein Sheet, das nur Nico sieht. Eine zweite Meldung für denselben Monat ersetzt die
+erste. Neue Felder brauchen drei Stellen: Seite, Prüf-Knoten im Workflow, Spaltenkopf im Sheet.
+Bauplan und Skripte liegen im ais-os-Repo unter `scripts/ausbilder-kpi/`.
 
 ## Cookie-Banner und Google Analytics
 
