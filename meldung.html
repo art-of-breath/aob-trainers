@@ -767,7 +767,10 @@
     function syncErste() {
       const monat = one('monat');
       // unknown (the prefill did not answer): in the launch month assume the first report, so nobody misses the notice
-      const erste = person.erster_monat === '' || person.erster_monat === monat || (person.erster_monat === null && monat === ERSTER_MONAT);
+      const istErste = m => person.erster_monat === '' || person.erster_monat === m || (person.erster_monat === null && m === ERSTER_MONAT);
+      const erste = istErste(monat);
+      // the dropdown says it too: the first report is the total so far, every later one a single month
+      Array.from(field('monat').options).forEach(o => { o.textContent = monatName(o.value) + (istErste(o.value) ? ' · Gesamtstand bis heute' : ''); });
       document.getElementById('erste').hidden = !erste;
       document.getElementById('zeitraum').textContent = erste ? ', als Summe über alles bisher' : ' für ' + monatName(monat);
       document.getElementById('h-konto').textContent = erste
